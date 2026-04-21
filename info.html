@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Info — Emilio Dümar Photography" />
+  <title>Info — Emilio Dümar</title>
+  <style>
+/* ============================================================
+   EMILIO DÜMAR — style.css
+   Shared across all pages
+   ============================================================ */
+
+/* ── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { cursor: pointer; background: none; border: none; font: inherit; }
+
+/* ── TOP NAVIGATION ──────────────────────────────────────── */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  justify-content: space-between;
+}
+
+.site-nav__logo {
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Desktop nav links (right side) */
+.site-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Dropdown wrapper */
+.nav-item {
+  position: relative;
+}
+
+.nav-item__trigger {
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  height: 60px;
+  font-size: 14px;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+.nav-item__trigger:hover { color: #555; }
+
+/* Dropdown panel */
+.nav-item__dropdown {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  min-width: 240px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-top: none;
+  padding: 8px 0;
+  display: none;
+  z-index: 300;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.nav-item:hover .nav-item__dropdown,
+.nav-item:focus-within .nav-item__dropdown {
+  display: block;
+}
+
+.nav-item__dropdown a {
+  display: block;
+  padding: 7px 20px;
+  font-size: 13px;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: background 0.1s;
+}
+.nav-item__dropdown a:hover { background: #f5f5f5; }
+
+/* Standalone nav links */
+.nav-standalone-link {
+  padding: 0 18px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+.nav-standalone-link:hover { color: #555; }
+
+/* Instagram icon */
+.nav-instagram {
+  padding: 0 6px 0 12px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  color: #1a1a1a;
+  transition: color 0.15s;
+}
+.nav-instagram:hover { color: #555; }
+.nav-instagram svg { width: 20px; height: 20px; }
+
+/* ── MOBILE HEADER ───────────────────────────────────────── */
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 50px;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 200;
+}
+.mobile-header__logo { font-size: 14px; font-weight: 400; }
+
+.burger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.burger span {
+  display: block;
+  width: 22px; height: 1px;
+  background: #1a1a1a;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ── MOBILE MENU OVERLAY ─────────────────────────────────── */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 50px; left: 0; right: 0; bottom: 0;
+  background: #fff;
+  z-index: 190;
+  overflow-y: auto;
+  padding: 20px 20px 40px;
+}
+.mobile-menu.open { display: block; }
+
+.mobile-menu__section { margin-bottom: 20px; }
+.mobile-menu__heading {
+  font-size: 11px;
+  color: #999;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  text-transform: none;
+}
+.mobile-menu__section a {
+  display: block;
+  font-size: 14px;
+  color: #1a1a1a;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: color 0.15s;
+}
+.mobile-menu__section a:hover { color: #555; }
+.mobile-menu__section a:last-child { border-bottom: none; }
+
+.mobile-menu__standalone {
+  display: block;
+  font-size: 14px;
+  color: #1a1a1a;
+  padding: 8px 0;
+  border-top: 1px solid #e8e8e8;
+  margin-top: 8px;
+}
+
+/* ── PAGE BODY (offset for fixed nav) ───────────────────── */
+.page-body {
+  padding-top: 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HOME: TAGLINE ───────────────────────────────────────── */
+.home-tagline {
+  padding: 28px 28px 20px;
+  font-size: 13px;
+  color: #555;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+}
+
+/* ── HOME: MASONRY GRID (4 cols) ─────────────────────────── */
+.home-grid {
+  padding: 0 28px 0;
+  columns: 4;
+  column-gap: 6px;
+}
+
+.home-grid__item {
+  break-inside: avoid;
+  margin-bottom: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+.home-grid__item img {
+  width: 100%;
+  display: block;
+  transition: opacity 0.25s ease;
+}
+.home-grid__item:hover img { opacity: 0.84; }
+
+/* ── PROJECT PAGE ────────────────────────────────────────── */
+.project-header {
+  padding: 32px 28px 4px;
+}
+.project-header h1 {
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  margin-bottom: 4px;
+}
+.project-header p {
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Project images — single column, full width below header */
+.project-grid {
+  padding: 20px 28px 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.project-grid__item {
+  overflow: hidden;
+  cursor: pointer;
+}
+.project-grid__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.25s ease;
+  aspect-ratio: 3/4;
+}
+.project-grid__item img:hover { opacity: 0.84; }
+
+/* ── INFO PAGE ───────────────────────────────────────────── */
+.info-page {
+  padding: 40px 28px 60px;
+  max-width: 680px;
+}
+.info-page img {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 28px;
+}
+.info-page p {
+  font-size: 13px;
+  line-height: 1.75;
+  color: #333;
+  margin-bottom: 12px;
+}
+.info-page a {
+  color: #1a1a1a;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1px;
+  transition: border-color 0.15s;
+}
+.info-page a:hover { border-color: #1a1a1a; }
+.info-page hr {
+  border: none;
+  border-top: 1px solid #e8e8e8;
+  margin: 24px 0;
+}
+.info-page h2 {
+  font-size: 11px;
+  font-weight: 400;
+  color: #999;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  margin-top: 4px;
+}
+.info-page .info-block { margin-bottom: 20px; }
+.info-page .info-block p { margin-bottom: 6px; }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+.site-footer {
+  margin-top: auto;
+  padding: 24px 28px;
+  border-top: 1px solid #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 0.03em;
+  position: relative;
+}
+.site-footer__center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.site-footer a {
+  font-size: 12px;
+  color: #1a1a1a;
+  transition: color 0.15s;
+}
+.site-footer a:hover { color: #666; }
+
+/* ── LIGHTBOX ────────────────────────────────────────────── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox.open { display: flex; }
+.lightbox__img {
+  max-width: 88vw;
+  max-height: 90vh;
+  object-fit: contain;
+  display: block;
+  background: #fff;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.18);
+}
+.lightbox__close {
+  position: absolute;
+  top: 20px; right: 24px;
+  font-size: 28px;
+  color: #1a1a1a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+.lightbox__close:hover { opacity: 1; }
+.lightbox__prev,
+.lightbox__next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: #1a1a1a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 16px;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  line-height: 1;
+}
+.lightbox__prev { left: 8px; }
+.lightbox__next { right: 8px; }
+.lightbox__prev:hover,
+.lightbox__next:hover { opacity: 1; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+/* 3 cols at medium screens */
+@media (max-width: 1200px) {
+  .home-grid { columns: 3; }
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .home-grid { columns: 2; }
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Mobile — switch to top burger nav */
+@media (max-width: 700px) {
+  .site-nav { display: none; }
+  .mobile-header { display: flex; }
+
+  .page-body { padding-top: 50px; }
+
+  .home-tagline { padding: 18px 14px 12px; font-size: 12px; }
+  .home-grid { columns: 2; column-gap: 3px; padding: 0 14px; }
+  .home-grid__item { margin-bottom: 3px; }
+
+  .project-header { padding: 20px 14px 4px; }
+  .project-grid { padding: 14px 14px 0; grid-template-columns: repeat(1, 1fr); }
+
+  .info-page { padding: 24px 14px 40px; }
+  .info-page img { max-width: 100%; }
+
+  .site-footer { padding: 16px 14px; flex-direction: column; gap: 10px; align-items: flex-start; }
+}
+
+/* Very small phones */
+@media (max-width: 420px) {
+  .home-grid { columns: 1; }
+}
+
+  </style>
+  <style>
+    /* ── INFO-PAGE SPECIFIC ───────────────────────────────── */
+
+    /* ── TOP SPLIT: image left, text+buttons right ─────────── */
+    .info-top {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 48px;
+      align-items: start;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 52px 40px 48px;
+    }
+
+    /* Portrait — small, left column */
+    .info-portrait {
+      width: 100%;
+      display: block;
+    }
+
+    /* Right column */
+    .info-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 4px;
+    }
+
+    .info-tagline {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .info-email {
+      font-size: 13px;
+      margin-bottom: 32px;
+    }
+    .info-email a {
+      color: #1a1a1a;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 1px;
+      transition: border-color 0.15s;
+      text-decoration: none;
+    }
+    .info-email a:hover { border-color: #1a1a1a; }
+
+    /* ── THREE CTA BUTTONS ─────────────────────────────────── */
+    .info-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    /* Contact Now — primary, largest */
+    .btn-contact-now {
+      display: inline-block;
+      background: #1a1a1a;
+      color: #fff;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 18px 44px;
+      text-decoration: none;
+      transition: background 0.18s, letter-spacing 0.2s;
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+    }
+    .btn-contact-now:hover {
+      background: #333;
+      letter-spacing: 0.14em;
+    }
+
+    /* Network Casting + Mentoring — outlined */
+    .btn-secondary {
+      display: inline-block;
+      background: transparent;
+      color: #1a1a1a;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 13px 36px;
+      border: 1px solid #1a1a1a;
+      text-decoration: none;
+      transition: background 0.18s, color 0.18s;
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+    }
+    .btn-secondary:hover {
+      background: #1a1a1a;
+      color: #fff;
+    }
+
+    /* ── BOTTOM: centred sections ──────────────────────────── */
+    .info-bottom {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+      text-align: center;
+    }
+
+    .info-hr {
+      border: none;
+      border-top: 1px solid #e8e8e8;
+      margin: 36px 0;
+    }
+
+    .info-section {
+      margin-bottom: 28px;
+    }
+    .info-section h2 {
+      font-size: 10px;
+      font-weight: 400;
+      color: #aaa;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .info-section p {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.85;
+      margin-bottom: 5px;
+    }
+    .info-section em { font-style: italic; }
+
+    /* ── WORK WITH ME BUTTONS (centred, below sections) ───────── */
+    .info-work-btns {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .info-work-btns .btn-secondary {
+      width: auto;
+      max-width: none;
+    }
+
+    /* ── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 760px) {
+      .info-top {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 28px 20px 36px;
+      }
+      .info-portrait {
+        max-width: 180px;
+      }
+      .info-buttons { align-items: stretch; }
+      .btn-contact-now,
+      .btn-secondary { max-width: 100%; }
+      .info-bottom { padding: 0 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── TOP NAV (desktop) ─────────────────────────────────── -->
+  <nav class="site-nav">
+    <a href="index.html" class="site-nav__logo">Emilio D&uuml;mar</a>
+    <div class="site-nav__right">
+
+      <div class="nav-item">
+        <a href="commercial.html" class="nav-item__trigger">Commercial</a>
+        <div class="nav-item__dropdown">
+          <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+          <a href="rollie-nation.html">Rollie Nation</a>
+          <a href="cleonie.html">Cleonie</a>
+          <a href="baker-bleu.html">Baker Bleu</a>
+          <a href="ena-pelly.html">Ena Pelly</a>
+          <a href="inbluem.html">Inbluem</a>
+          <a href="the-wolf-gang.html">The Wolf Gang</a>
+          <a href="linden-cook.html">Linden Cook</a>
+          <a href="san-lorenzo.html">San Lorenzo</a>
+          <a href="utopia.html">Utopia</a>
+          <a href="rogue-season.html">Rogue Season</a>
+          <a href="maatsuyker.html">Maatsuyker</a>
+          <a href="yo-chi.html">YO-CHI</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a href="editorial.html" class="nav-item__trigger">Editorial</a>
+        <div class="nav-item__dropdown">
+          <a href="grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
+          <a href="makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
+          <a href="rahart-adams.html">Rahart Adams — Arabian Moda</a>
+          <a href="wax-wings.html">Wax Wings — Enzomnia Magazine</a>
+          <a href="valley-summer.html">Valley Summer</a>
+          <a href="out-of-office.html">Out of Office</a>
+          <a href="learn-twice.html">Learn Twice — C Heads Magazine</a>
+          <a href="burbank-views.html">Burbank Views</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a href="personal.html" class="nav-item__trigger">Personal</a>
+        <div class="nav-item__dropdown">
+          <a href="portugal.html">Portugal</a>
+          <a href="new-york-city.html">New York City</a>
+          <a href="california.html">California</a>
+          <a href="indonesia.html">Indonesia</a>
+          <a href="peru.html">Peru</a>
+          <a href="colombia.html">Colombia</a>
+          <a href="tasmania.html">Tasmania</a>
+          <a href="mexico.html">Mexico</a>
+        </div>
+      </div>
+
+      <a href="info.html" class="nav-standalone-link" style="font-weight:600;">Info</a>
+
+      <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="nav-instagram" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── MOBILE HEADER ─────────────────────────────────────── -->
+  <header class="mobile-header">
+    <a href="index.html" class="mobile-header__logo">Emilio D&uuml;mar</a>
+    <button class="burger" id="burger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ── MOBILE MENU ───────────────────────────────────────── -->
+  <nav class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__section">
+      <p class="mobile-menu__heading">Commercial</p>
+      <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+      <a href="rollie-nation.html">Rollie Nation</a>
+      <a href="cleonie.html">Cleonie</a>
+      <a href="baker-bleu.html">Baker Bleu</a>
+      <a href="ena-pelly.html">Ena Pelly</a>
+      <a href="inbluem.html">Inbluem</a>
+      <a href="the-wolf-gang.html">The Wolf Gang</a>
+      <a href="linden-cook.html">Linden Cook</a>
+      <a href="san-lorenzo.html">San Lorenzo</a>
+      <a href="utopia.html">Utopia</a>
+      <a href="rogue-season.html">Rogue Season</a>
+      <a href="maatsuyker.html">Maatsuyker</a>
+      <a href="yo-chi.html">YO-CHI</a>
+    </div>
+    <div class="mobile-menu__section">
+      <p class="mobile-menu__heading">Editorial</p>
+      <a href="grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
+      <a href="makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
+      <a href="rahart-adams.html">Rahart Adams — Arabian Moda</a>
+      <a href="wax-wings.html">Wax Wings — Enzomnia Magazine</a>
+      <a href="valley-summer.html">Valley Summer</a>
+      <a href="out-of-office.html">Out of Office</a>
+      <a href="learn-twice.html">Learn Twice — C Heads Magazine</a>
+      <a href="burbank-views.html">Burbank Views</a>
+    </div>
+    <div class="mobile-menu__section">
+      <p class="mobile-menu__heading">Personal</p>
+      <a href="portugal.html">Portugal</a>
+      <a href="new-york-city.html">New York City</a>
+      <a href="california.html">California</a>
+      <a href="indonesia.html">Indonesia</a>
+      <a href="peru.html">Peru</a>
+      <a href="colombia.html">Colombia</a>
+      <a href="tasmania.html">Tasmania</a>
+      <a href="mexico.html">Mexico</a>
+    </div>
+    <a href="info.html" class="mobile-menu__standalone">Info</a>
+  </nav>
+
+  <!-- ── PAGE CONTENT ──────────────────────────────────────── -->
+  <div class="page-body" id="page">
+
+    <!-- TOP: image left, text + buttons right -->
+    <div class="info-top">
+
+      <!-- Left: portrait -->
+      <img
+        class="info-portrait"
+        src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4e0f18b9-a462-49ca-a173-5cf7c46ba851/Screenshot+2025-11-22+at+2.17.40%E2%80%AFpm.png"
+        alt="Emilio D&uuml;mar"
+        loading="lazy"
+      />
+
+      <!-- Right: bio + buttons -->
+      <div class="info-right">
+        <p class="info-tagline">
+          Melbourne / Noosa based editorial and commercial<br />
+          lifestyle photographer. Available for travel worldwide.
+        </p>
+        <p class="info-email">
+          <a href="mailto:emiliodumar@gmail.com">emiliodumar@gmail.com</a>
+        </p>
+
+        <div class="info-buttons">
+          <a href="booking.html" class="btn-contact-now">Contact Now</a>
+        </div>
+      </div>
+
+    </div><!-- /.info-top -->
+
+    <!-- BOTTOM: centred sections -->
+    <div class="info-bottom">
+
+      <hr class="info-hr" />
+
+      <div class="info-section">
+        <h2>Clients include</h2>
+        <p>The Wolf Gang, Rollie Nation, Ena Pelly, Yo-Chi, Linden Cook, Inbluem, Cleonie, Baker Bleu, San Lorenzo Bikinis, Rogue Season &amp; more.</p>
+      </div>
+
+      <div class="info-section">
+        <h2>Publications include</h2>
+        <p>C-heads Magazine, Vanguard Magazine, Numero Netherlands, Wonderland Magazine, Untitled Magazine, Hung Supply, Arabian MODA Magazine &amp; more</p>
+      </div>
+
+      <div class="info-section">
+        <h2>Self Publications</h2>
+        <p><em>Saudade</em> &mdash; 2024</p>
+        <p><em>Before We Became Stranger/s</em> &mdash; 2024</p>
+        <p><em>All American Summer</em> &mdash; 2023</p>
+      </div>
+
+      <hr class="info-hr" />
+
+      <div class="info-section">
+        <h2>Exhibitions</h2>
+        <p><em>&ldquo;No Rain, No Flowers&rdquo;</em> (Collective), Out Of Office gallery,<br />23&ndash;30 November 2024. Sydney, Australia.</p>
+        <p><em>&ldquo;Photographer Of The Month&rdquo;</em> Feature (Solo Exhibition),<br />Film Never Die, Jan&ndash;Feb 2023. Melbourne, Australia.</p>
+        <p><em>&ldquo;Finest Hours&rdquo;</em> (Collective), Black Cat Gallery,<br />22 Oct &ndash; 4 Nov 2023. Melbourne, Australia.</p>
+        <p><em>&ldquo;Am I Dreaming&rdquo;</em> (Collective), Old Bar Gallery,<br />28th February 2023. Melbourne, Australia.</p>
+        <p><em>&ldquo;All American Summer&rdquo;</em> Book Launch (Solo Exhibition),<br />One Star Lounge, 24th Feb 2023. Melbourne, Australia.</p>
+        <p><em>&ldquo;An Exhibition&rdquo;</em> (Collective), Golden Fleece Hotel,<br />4th Nov 2022. Melbourne, Australia.</p>
+        <p><em>&ldquo;Cool Hang&rdquo;</em> (Collective), 380co. Gallery,<br />3rd December 2022. Melbourne, Australia.</p>
+      </div>
+
+      <hr class="info-hr" />
+
+      <div class="info-section">
+        <h2>Work with me</h2>
+        <div class="info-work-btns">
+          <a href="network-casting.html" class="btn-secondary">Network Casting</a>
+          <a href="mentoring.html" class="btn-secondary">1 to 1 Mentoring</a>
+        </div>
+      </div>
+
+    </div><!-- /.info-bottom -->
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <span>&copy; Emilio D&uuml;mar</span>
+      <a href="info.html" class="site-footer__center">Contact</a>
+      <a href="#page" aria-label="Back to top">&uarr;</a>
+    </footer>
+
+  </div><!-- /.page-body -->
+
+  <!-- Lightbox (shared) -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox__close" id="lightboxClose">&times;</button>
+    <button class="lightbox__prev" id="lightboxPrev">&#8249;</button>
+    <img class="lightbox__img" id="lightboxImg" src="" alt="" />
+    <button class="lightbox__next" id="lightboxNext">&#8250;</button>
+  </div>
+
+  <script>
+/* ============================================================
+   EMILIO DÜMAR — main.js
+   Shared across all pages
+   ============================================================ */
+
+(function () {
+  'use strict';
+
+  /* ── MOBILE BURGER ──────────────────────────────────────── */
+  const burger     = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  if (burger && mobileMenu) {
+    burger.addEventListener('click', function () {
+      var open = burger.classList.toggle('open');
+      mobileMenu.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  /* ── LIGHTBOX ───────────────────────────────────────────── */
+  var lightbox    = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var allImgs     = [];
+  var currentIdx  = 0;
+
+  if (lightbox && lightboxImg) {
+    // Collect all clickable images
+    document.querySelectorAll('[data-lightbox]').forEach(function (el, i) {
+      allImgs.push(el.dataset.lightbox);
+      el.addEventListener('click', function () {
+        currentIdx = i;
+        openLightbox(allImgs[i]);
+      });
+    });
+
+    function openLightbox(src) {
+      lightboxImg.src = src;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function prev() {
+      currentIdx = (currentIdx - 1 + allImgs.length) % allImgs.length;
+      lightboxImg.src = allImgs[currentIdx];
+    }
+    function next() {
+      currentIdx = (currentIdx + 1) % allImgs.length;
+      lightboxImg.src = allImgs[currentIdx];
+    }
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxPrev').addEventListener('click', prev);
+    document.getElementById('lightboxNext').addEventListener('click', next);
+
+    lightbox.addEventListener('click', function (e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    });
+  }
+
+  /* ── MARK ACTIVE NAV LINK ───────────────────────────────── */
+  var path = window.location.pathname.replace(/\/$/, '');
+  document.querySelectorAll('.site-nav a, .mobile-menu a').forEach(function (a) {
+    var href = a.getAttribute('href').replace(/\/$/, '');
+    if (href && href !== '/' && path.endsWith(href)) {
+      a.style.fontWeight = '600';
+    }
+  });
+
+})();
+
+  </script>
+</body>
+</html>

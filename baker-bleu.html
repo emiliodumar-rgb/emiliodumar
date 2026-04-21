@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baker Bleu — Emilio Dümar</title>
+  <style>
+/* ── RESET ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #fff; color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { cursor: pointer; background: none; border: none; font: inherit; }
+
+/* ── TOP NAV ────────────────────────────────────────────────── */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: #fff; border-bottom: 1px solid #e8e8e8;
+  height: 60px; display: flex; align-items: center;
+  padding: 0 28px; justify-content: space-between;
+}
+.site-nav__logo { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; white-space: nowrap; flex-shrink: 0; }
+.site-nav__right { display: flex; align-items: center; }
+.nav-item { position: relative; }
+.nav-item__trigger {
+  display: flex; align-items: center; padding: 0 18px; height: 60px;
+  font-size: 14px; color: #1a1a1a; cursor: pointer; user-select: none;
+  transition: color 0.15s; white-space: nowrap;
+}
+.nav-item__trigger:hover { color: #555; }
+.nav-item__dropdown {
+  position: absolute; top: 60px; left: 0; min-width: 240px;
+  background: #fff; border: 1px solid #e8e8e8; border-top: none;
+  padding: 8px 0; display: none; z-index: 300;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.nav-item:hover .nav-item__dropdown { display: block; }
+.nav-item__dropdown a {
+  display: block; padding: 7px 20px; font-size: 13px; color: #1a1a1a;
+  white-space: nowrap; transition: background 0.1s;
+}
+.nav-item__dropdown a:hover { background: #f5f5f5; }
+.nav-standalone-link {
+  padding: 0 18px; height: 60px; display: flex; align-items: center;
+  font-size: 14px; color: #1a1a1a; transition: color 0.15s; white-space: nowrap;
+}
+.nav-standalone-link:hover { color: #555; }
+.nav-instagram {
+  padding: 0 6px 0 12px; height: 60px; display: flex; align-items: center;
+  color: #1a1a1a; transition: color 0.15s;
+}
+.nav-instagram svg { width: 20px; height: 20px; }
+
+/* ── MOBILE HEADER ──────────────────────────────────────────── */
+.mobile-header {
+  display: none; position: fixed; top: 0; left: 0; right: 0;
+  height: 50px; background: #fff; border-bottom: 1px solid #e8e8e8;
+  padding: 0 16px; align-items: center; justify-content: space-between; z-index: 200;
+}
+.mobile-header__logo { font-size: 14px; font-weight: 400; }
+.burger { display: flex; flex-direction: column; gap: 5px; padding: 5px; background: none; border: none; cursor: pointer; }
+.burger span { display: block; width: 22px; height: 1px; background: #1a1a1a; transition: transform 0.25s ease, opacity 0.25s ease; }
+.burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.mobile-menu {
+  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
+  background: #fff; z-index: 190; overflow-y: auto; padding: 20px 20px 40px;
+}
+.mobile-menu.open { display: block; }
+.mobile-menu__section { margin-bottom: 20px; }
+.mobile-menu__heading { font-size: 11px; color: #999; letter-spacing: 0.06em; margin-bottom: 8px; }
+.mobile-menu__section a {
+  display: block; font-size: 14px; color: #1a1a1a;
+  padding: 6px 0; border-bottom: 1px solid #f0f0f0; transition: color 0.15s;
+}
+.mobile-menu__section a:last-child { border-bottom: none; }
+.mobile-menu__standalone { display: block; font-size: 14px; color: #1a1a1a; padding: 8px 0; border-top: 1px solid #e8e8e8; margin-top: 8px; }
+
+/* ── PAGE BODY ──────────────────────────────────────────────── */
+.page-body { padding-top: 60px; }
+
+/* ── PROJECT HEADER ─────────────────────────────────────────── */
+.project-header { padding: 32px 28px 4px; }
+.project-header h1 { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; margin-bottom: 4px; }
+.project-header p { font-size: 13px; color: #666; font-style: italic; line-height: 1.5; }
+
+/* ── MASONRY GRID ───────────────────────────────────────────── */
+/* grid-auto-rows is tiny (6px); JS sets each item's row span   */
+/* based on natural image dimensions so there's no white gap    */
+.project-grid {
+  padding: 20px 28px 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 6px;
+  column-gap: 6px;
+  /* no row-gap — the span calculation adds 6px padding itself  */
+}
+.project-grid__item {
+  overflow: hidden;
+  cursor: pointer;
+}
+.project-grid__item img {
+  width: 100%;
+  height: auto;         /* original crop — never clipped         */
+  display: block;
+  transition: opacity 0.25s ease;
+}
+.project-grid__item:hover img { opacity: 0.84; }
+
+/* ── PREV / NEXT ────────────────────────────────────────────── */
+.proj-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 28px 0;
+}
+.proj-nav__btn {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 28px;
+  border: none;
+  text-decoration: none;
+  color: #1a1a1a;
+  transition: background 0.15s, color 0.15s;
+  min-width: 180px;
+}
+.proj-nav__btn:hover { background: #1a1a1a; color: #fff; }
+.proj-nav__btn--next { text-align: right; }
+.proj-nav__label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.5;
+}
+.proj-nav__name {
+  font-size: 13px;
+  color: inherit;
+  letter-spacing: 0.01em;
+}
+
+/* ── FOOTER ─────────────────────────────────────────────────── */
+.site-footer {
+  padding: 32px 28px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 0.03em;
+}
+.site-footer__center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.site-footer { position: relative; }
+.site-footer a { font-size: 12px; color: #1a1a1a; transition: color 0.15s; }
+.site-footer a:hover { color: #666; }
+
+/* ── LIGHTBOX ───────────────────────────────────────────────── */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 500; display: none;
+  align-items: center; justify-content: center;
+}
+.lightbox.open { display: flex; }
+.lightbox__img {
+  max-width: 88vw; max-height: 90vh;
+  object-fit: contain; display: block;
+  background: #fff;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.18);
+}
+.lightbox__close {
+  position: absolute; top: 20px; right: 24px;
+  font-size: 28px; color: #1a1a1a; background: none; border: none;
+  cursor: pointer; line-height: 1; opacity: 0.5; transition: opacity 0.15s;
+}
+.lightbox__close:hover { opacity: 1; }
+.lightbox__prev, .lightbox__next {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: 28px; color: #1a1a1a; background: none; border: none;
+  cursor: pointer; padding: 16px; opacity: 0.4; transition: opacity 0.15s; line-height: 1;
+}
+.lightbox__prev { left: 8px; }
+.lightbox__next { right: 8px; }
+.lightbox__prev:hover, .lightbox__next:hover { opacity: 1; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 1200px) { .project-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px)  { .project-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 700px) {
+  .site-nav { display: none; }
+  .mobile-header { display: flex; }
+  .page-body { padding-top: 50px; }
+  .project-header { padding: 20px 14px 4px; }
+  .project-grid { grid-template-columns: repeat(2, 1fr); padding: 14px 14px 0; }
+  .proj-nav { padding: 32px 14px 0; }
+  .proj-nav__btn { min-width: 0; }
+  .site-footer { padding: 24px 14px; }
+  .site-footer__center { position: static; transform: none; }
+}
+@media (max-width: 420px) { .project-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- ── TOP NAV ──────────────────────────────────────────────── -->
+<nav class="site-nav">
+  <a href="index.html" class="site-nav__logo">Emilio Dümar</a>
+  <div class="site-nav__right">
+    <div class="nav-item">
+      <a href="commercial.html" class="nav-item__trigger">Commercial</a>
+      <div class="nav-item__dropdown">
+        <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+        <a href="rollie-nation.html">Rollie Nation</a>
+        <a href="cleonie.html">Cleonie</a>
+        <a href="baker-bleu.html">Baker Bleu</a>
+        <a href="ena-pelly.html">Ena Pelly</a>
+        <a href="inbluem.html">Inbluem</a>
+        <a href="the-wolf-gang.html">The Wolf Gang</a>
+        <a href="linden-cook.html">Linden Cook</a>
+        <a href="san-lorenzo.html">San Lorenzo</a>
+        <a href="utopia.html">Utopia</a>
+        <a href="rogue-season.html">Rogue Season</a>
+        <a href="maatsuyker.html">Maatsuyker</a>
+        <a href="yo-chi.html">YO-CHI</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="editorial.html" class="nav-item__trigger">Editorial</a>
+      <div class="nav-item__dropdown">
+        <a href="grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
+        <a href="makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
+        <a href="rahart-adams.html">Rahart Adams — Arabian Moda</a>
+        <a href="wax-wings.html">Wax Wings — Enzomnia Magazine</a>
+        <a href="valley-summer.html">Valley Summer</a>
+        <a href="out-of-office.html">Out of Office</a>
+        <a href="learn-twice.html">Learn Twice — C Heads Magazine</a>
+        <a href="burbank-views.html">Burbank Views</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="personal.html" class="nav-item__trigger">Personal</a>
+      <div class="nav-item__dropdown">
+        <a href="portugal.html">Portugal</a>
+        <a href="new-york-city.html">New York City</a>
+        <a href="california.html">California</a>
+        <a href="indonesia.html">Indonesia</a>
+        <a href="peru.html">Peru</a>
+        <a href="colombia.html">Colombia</a>
+        <a href="tasmania.html">Tasmania</a>
+        <a href="mexico.html">Mexico</a>
+      </div>
+    </div>
+    <a href="info.html" class="nav-standalone-link">Info</a>
+    <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="nav-instagram" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ── MOBILE HEADER ────────────────────────────────────────── -->
+<header class="mobile-header">
+  <a href="index.html" class="mobile-header__logo">Emilio Dümar</a>
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ── MOBILE MENU ──────────────────────────────────────────── -->
+<nav class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu__section">
+    <p class="mobile-menu__heading">Commercial</p>
+    <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+    <a href="rollie-nation.html">Rollie Nation</a>
+    <a href="cleonie.html">Cleonie</a>
+    <a href="baker-bleu.html">Baker Bleu</a>
+    <a href="ena-pelly.html">Ena Pelly</a>
+    <a href="inbluem.html">Inbluem</a>
+    <a href="the-wolf-gang.html">The Wolf Gang</a>
+    <a href="linden-cook.html">Linden Cook</a>
+    <a href="san-lorenzo.html">San Lorenzo</a>
+    <a href="utopia.html">Utopia</a>
+    <a href="rogue-season.html">Rogue Season</a>
+    <a href="maatsuyker.html">Maatsuyker</a>
+    <a href="yo-chi.html">YO-CHI</a>
+  </div>
+  <div class="mobile-menu__section">
+    <p class="mobile-menu__heading">Editorial</p>
+    <a href="grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
+    <a href="makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
+    <a href="rahart-adams.html">Rahart Adams — Arabian Moda</a>
+    <a href="wax-wings.html">Wax Wings — Enzomnia Magazine</a>
+    <a href="valley-summer.html">Valley Summer</a>
+    <a href="out-of-office.html">Out of Office</a>
+    <a href="learn-twice.html">Learn Twice — C Heads Magazine</a>
+    <a href="burbank-views.html">Burbank Views</a>
+  </div>
+  <div class="mobile-menu__section">
+    <p class="mobile-menu__heading">Personal</p>
+    <a href="portugal.html">Portugal</a>
+    <a href="new-york-city.html">New York City</a>
+    <a href="california.html">California</a>
+    <a href="indonesia.html">Indonesia</a>
+    <a href="peru.html">Peru</a>
+    <a href="colombia.html">Colombia</a>
+    <a href="tasmania.html">Tasmania</a>
+    <a href="mexico.html">Mexico</a>
+  </div>
+  <a href="info.html" class="mobile-menu__standalone">Info</a>
+</nav>
+
+<!-- ── PAGE BODY ────────────────────────────────────────────── -->
+<div class="page-body" id="page">
+
+  <div class="project-header">
+    <h1>Baker Bleu</h1>
+    <p>Website relaunch — Shot on location in South Yarra, Cremorne &amp; Caulfield, Melbourne</p>
+  </div>
+
+  <div class="project-grid">
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/0331fc6c-88ba-4b29-bd43-2c4e9846b60c/BKB_FILM_-14.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/0331fc6c-88ba-4b29-bd43-2c4e9846b60c/BKB_FILM_-14.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/01e4e56e-c343-4652-9f7a-a9d928c6f4e3/EMILIODUMAR_BKB_DAY2-2.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/01e4e56e-c343-4652-9f7a-a9d928c6f4e3/EMILIODUMAR_BKB_DAY2-2.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4211d1e2-874d-4eae-abe2-139244f74a9a/BKB_FILM_-40.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4211d1e2-874d-4eae-abe2-139244f74a9a/BKB_FILM_-40.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1620c613-73fc-45f8-a636-ef96aedf827f/BKB_FILM_-17.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1620c613-73fc-45f8-a636-ef96aedf827f/BKB_FILM_-17.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/2d4d803d-69c0-4c5c-bcef-8baa72627828/EMILIODUMAR_BKB_DAY2-37.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/2d4d803d-69c0-4c5c-bcef-8baa72627828/EMILIODUMAR_BKB_DAY2-37.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a6922474-2d60-41b4-9c0d-d33178669999/BKB_FILM_-18.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a6922474-2d60-41b4-9c0d-d33178669999/BKB_FILM_-18.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/53d324fa-2bb6-4988-8310-8bfc7e61b6f5/EMILIODUMAR_BAKERBLEU_DAY3_-155.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/53d324fa-2bb6-4988-8310-8bfc7e61b6f5/EMILIODUMAR_BAKERBLEU_DAY3_-155.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3409a94-4c84-4180-b6c7-fedb12235794/BKB_FILM_-20.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3409a94-4c84-4180-b6c7-fedb12235794/BKB_FILM_-20.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/7e28e874-7148-4f33-a7a5-99bad6439f68/EMILIODUMAR_BKB_DAY2-220.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/7e28e874-7148-4f33-a7a5-99bad6439f68/EMILIODUMAR_BKB_DAY2-220.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/49fef305-9350-49bd-b329-ce34e526aa09/BKB_FILM_-7.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/49fef305-9350-49bd-b329-ce34e526aa09/BKB_FILM_-7.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87331961-4142-457c-9d54-ca4453de60f3/BKB_FILM_-37.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87331961-4142-457c-9d54-ca4453de60f3/BKB_FILM_-37.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f90c65c7-f488-4689-b086-fce8a64fa054/BKB_FILM_-21.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f90c65c7-f488-4689-b086-fce8a64fa054/BKB_FILM_-21.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c2b9201a-81e2-4a2e-be8f-f244c691429e/BKB_FILM_-26.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c2b9201a-81e2-4a2e-be8f-f244c691429e/BKB_FILM_-26.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c9663cb8-2df7-44d5-9c33-7d377b158def/BKB_FILM_-30.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c9663cb8-2df7-44d5-9c33-7d377b158def/BKB_FILM_-30.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/58140fa5-21e6-4471-9573-ad7aa5424e73/EMILIODUMAR_BKB_DAY2-13.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/58140fa5-21e6-4471-9573-ad7aa5424e73/EMILIODUMAR_BKB_DAY2-13.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f170e2bc-5f74-49b4-a9af-5222489bdeb7/BKB_FILM_-44.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f170e2bc-5f74-49b4-a9af-5222489bdeb7/BKB_FILM_-44.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e3a56b6a-6583-4814-a7dd-c30293989705/EMILIODUMAR_BKB_DAY2-142.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e3a56b6a-6583-4814-a7dd-c30293989705/EMILIODUMAR_BKB_DAY2-142.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/67fe9def-f4c5-4bea-a730-63b72ea8ea24/EMILIODUMAR_BKB_DAY2-48.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/67fe9def-f4c5-4bea-a730-63b72ea8ea24/EMILIODUMAR_BKB_DAY2-48.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f8f6e41a-9c9d-4e65-8ec9-b24ef7b1c70b/BKB_FILM_-45.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f8f6e41a-9c9d-4e65-8ec9-b24ef7b1c70b/BKB_FILM_-45.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d8e986eb-b2ad-4158-b865-4c1346c99b20/BKB_FILM_.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d8e986eb-b2ad-4158-b865-4c1346c99b20/BKB_FILM_.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f3c6f023-f0ef-4286-bb9c-cefcd384bf11/EMILIODUMAR_BAKERBLEU_DAY3_-215.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f3c6f023-f0ef-4286-bb9c-cefcd384bf11/EMILIODUMAR_BAKERBLEU_DAY3_-215.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/16d45e64-80b4-46b1-b834-924613fecede/EMILIODUMAR_BKB_DAY2-60.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/16d45e64-80b4-46b1-b834-924613fecede/EMILIODUMAR_BKB_DAY2-60.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/92664f1e-52bd-4d0f-a193-957371ad83e0/EMILIODUMAR_BAKERBLEU_DAY3_-162.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/92664f1e-52bd-4d0f-a193-957371ad83e0/EMILIODUMAR_BAKERBLEU_DAY3_-162.jpg" /></div>
+  </div>
+
+  <!-- ── PREV / NEXT ───────────────────────────────────────────── -->
+  <div class="proj-nav">
+    <a href="cleonie.html" class="proj-nav__btn proj-nav__btn--prev">
+      <span class="proj-nav__label">Previous</span>
+      <span class="proj-nav__name">Cleonie</span>
+    </a>
+    <a href="ena-pelly.html" class="proj-nav__btn proj-nav__btn--next">
+      <span class="proj-nav__label">Next Project</span>
+      <span class="proj-nav__name">Ena Pelly</span>
+    </a>
+  </div>
+
+  <!-- ── FOOTER ───────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <span>&copy; Emilio Dümar</span>
+    <a href="info.html" class="site-footer__center">Contact</a>
+    <a href="#page" aria-label="Back to top">↑</a>
+  </footer>
+
+</div><!-- /.page-body -->
+
+<!-- ── LIGHTBOX ─────────────────────────────────────────────── -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightboxClose">&times;</button>
+  <button class="lightbox__prev"  id="lightboxPrev">&#8249;</button>
+  <img class="lightbox__img" id="lightboxImg" src="" alt="" />
+  <button class="lightbox__next"  id="lightboxNext">&#8250;</button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── MASONRY ───────────────────────────────────────────────── */
+  var ROW_PX = 6;
+  var GAP_PX = 6;
+
+  function setSpan(item) {
+    var img = item.querySelector('img');
+    if (!img) return;
+    var colW = item.getBoundingClientRect().width;
+    var renderedH = img.naturalHeight > 0
+      ? (colW * img.naturalHeight / img.naturalWidth)
+      : img.getBoundingClientRect().height;
+    var spans = Math.ceil((renderedH + GAP_PX) / ROW_PX);
+    item.style.gridRowEnd = 'span ' + spans;
+  }
+
+  function resizeAll() {
+    document.querySelectorAll('.project-grid__item').forEach(setSpan);
+  }
+
+  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
+    if (img.complete && img.naturalHeight > 0) {
+      setSpan(img.closest('.project-grid__item'));
+    } else {
+      img.addEventListener('load', function () {
+        setSpan(img.closest('.project-grid__item'));
+      });
+    }
+  });
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeAll, 100);
+  });
+
+  /* ── MOBILE BURGER ─────────────────────────────────────────── */
+  var burger     = document.getElementById('burger');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if (burger && mobileMenu) {
+    burger.addEventListener('click', function () {
+      var open = burger.classList.toggle('open');
+      mobileMenu.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  /* ── LIGHTBOX ──────────────────────────────────────────────── */
+  var lightbox    = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var allImgs = [];
+  var currentIdx = 0;
+
+  document.querySelectorAll('[data-lightbox]').forEach(function (el, i) {
+    allImgs.push(el.dataset.lightbox);
+    el.addEventListener('click', function () { currentIdx = i; openLB(allImgs[i]); });
+  });
+
+  function openLB(src) { lightboxImg.src = src; lightbox.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeLB()   { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+  function prevLB()    { currentIdx = (currentIdx - 1 + allImgs.length) % allImgs.length; lightboxImg.src = allImgs[currentIdx]; }
+  function nextLB()    { currentIdx = (currentIdx + 1) % allImgs.length; lightboxImg.src = allImgs[currentIdx]; }
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLB);
+  document.getElementById('lightboxPrev').addEventListener('click', prevLB);
+  document.getElementById('lightboxNext').addEventListener('click', nextLB);
+  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLB(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLB();
+    if (e.key === 'ArrowLeft')  prevLB();
+    if (e.key === 'ArrowRight') nextLB();
+  });
+
+})();
+</script>
+</body>
+</html>

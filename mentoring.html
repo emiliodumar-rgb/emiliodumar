@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1 to 1 Mentoring / Emilio Dümar</title>
+  <style>
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #faf8f5;
+    --text: #1a1612;
+    --muted: #999;
+    --border: #e0dcd6;
+    --border-focus: #1a1612;
+    --accent-light: #f0ede8;
+    --option-hover: #f4f1ec;
+    --option-selected-bg: #1a1612;
+    --btn-bg: #1a1612;
+    --btn-text: #faf8f5;
+    --btn-hover: #3a342e;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .top-logo { font-size: 13px; letter-spacing: 0.02em; font-weight: 400; }
+  .top-logo strong { font-weight: 700; }
+  .top-count { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; }
+
+  .progress-bar {
+    position: fixed; top: 56px; left: 0; right: 0; height: 1px;
+    background: var(--border); z-index: 9;
+  }
+  .progress-fill {
+    height: 100%; background: var(--text);
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .form-shell {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 100px 24px 80px;
+  }
+  .form-inner { width: 100%; max-width: 560px; }
+
+  .step { display: none; }
+  .step.active {
+    display: block;
+    animation: stepIn 0.35s cubic-bezier(0.4,0,0.2,1) both;
+  }
+  @keyframes stepIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-num { font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 18px; font-weight: 400; }
+  .step-title { font-size: 34px; font-weight: 700; line-height: 1.18; margin-bottom: 8px; }
+  .step-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; line-height: 1.6; font-weight: 400; }
+
+  .field-group { margin-bottom: 28px; }
+  .text-input {
+    width: 100%; background: transparent;
+    border: none; border-bottom: 1px solid var(--border);
+    color: var(--text); font-size: 17px;
+    padding: 10px 0; outline: none;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif; font-weight: 300;
+    transition: border-color 0.2s;
+  }
+  .text-input::placeholder { color: #ccc; }
+  .text-input:focus { border-bottom-color: var(--border-focus); }
+
+  .option-list { margin-bottom: 4px; }
+  .option-row {
+    display: flex; align-items: center; gap: 16px;
+    border-top: 1px solid var(--border);
+    padding: 15px 6px; cursor: pointer;
+    transition: background 0.12s; border-radius: 3px;
+  }
+  .option-row:last-of-type { border-bottom: 1px solid var(--border); }
+  .option-row:hover { background: var(--option-hover); }
+  .option-row.selected { background: var(--option-selected-bg); }
+  .option-key {
+    width: 24px; height: 24px;
+    border: 1px solid var(--border); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--muted); flex-shrink: 0; font-weight: 500; transition: all 0.12s;
+  }
+  .option-row.selected .option-key { background: #faf8f5; border-color: #faf8f5; color: #1a1612; }
+  .option-text { font-size: 14px; color: var(--text); flex: 1; line-height: 1.4; }
+  .option-sub-text { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 300; }
+  .option-row.selected .option-text { color: #faf8f5; }
+  .option-row.selected .option-sub-text { color: rgba(250,248,245,0.5); }
+
+  .btn-continue {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--btn-bg); color: var(--btn-text);
+    border: none; border-radius: 4px;
+    padding: 16px 28px; font-size: 14px; font-weight: 500;
+    cursor: pointer; margin-top: 28px;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.04em;
+    transition: background 0.15s;
+  }
+  .btn-continue:hover { background: var(--btn-hover); }
+  .btn-continue .arrow { transition: transform 0.15s; }
+  .btn-continue:hover .arrow { transform: translateX(3px); }
+
+  .btn-back {
+    background: transparent; border: none; color: var(--muted); font-size: 12px; cursor: pointer;
+    margin-bottom: 36px; padding: 0;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-back:hover { color: var(--text); }
+
+  .enter-hint {
+    font-size: 12px; color: var(--muted); margin-top: 14px;
+    letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 5px;
+  }
+  .enter-key { border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; font-size: 11px; color: var(--muted); }
+
+  .welcome-screen { text-align: center; }
+  .welcome-title { font-size: 52px; font-weight: 700; line-height: 1.1; margin-bottom: 16px; }
+  .welcome-sub { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 380px; margin: 0 auto 40px; }
+  .btn-start {
+    background: var(--btn-bg); color: var(--btn-text); border: none; border-radius: 4px;
+    padding: 18px 40px; font-size: 15px; font-weight: 500; cursor: pointer;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.04em; transition: background 0.15s;
+  }
+  .btn-start:hover { background: var(--btn-hover); }
+
+  .finish-screen { padding: 8px 0; }
+  .finish-line { width: 36px; height: 1px; background: var(--border); margin-bottom: 40px; }
+  .finish-title { font-size: 52px; font-weight: 700; line-height: 1.05; margin-bottom: 20px; }
+  .finish-sub { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 400px; }
+
+  .ig-wrap {
+    display: flex; align-items: baseline;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .ig-wrap:focus-within { border-bottom-color: var(--border-focus); }
+  .ig-prefix { font-size: 17px; color: var(--muted); white-space: nowrap; font-weight: 700; padding-bottom: 10px; }
+  .ig-input {
+    flex: 1; background: transparent; border: none;
+    color: var(--text); font-size: 17px;
+    padding: 10px 0 10px 4px; outline: none;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif; font-weight: 300;
+  }
+  .ig-input::placeholder { color: #ccc; }
+
+  @media (max-width: 480px) {
+    .top-bar { padding: 16px 20px; }
+    .form-shell { padding: 90px 20px 60px; }
+    .step-title { font-size: 26px; }
+    .welcome-title { font-size: 38px; }
+    .finish-title { font-size: 40px; }
+  }
+
+
+    /* Push form below site nav */
+    .top-bar { top: 60px !important; }
+    .progress-bar { top: calc(60px + 57px) !important; }
+    .form-shell { padding-top: calc(100px + 60px) !important; }
+    /* Mobile: hide site nav, keep form bar at top */
+    @media (max-width: 700px) {
+      .top-bar { top: 0 !important; }
+      .progress-bar { top: 57px !important; }
+      .form-shell { padding-top: 100px !important; }
+      nav.site-nav { display: none !important; }
+    }
+    
+  </style>
+</head>
+<body>
+
+
+  <!-- ── SITE NAV (desktop) ─────────────────────────────────── -->
+  <nav class="site-nav" style="position:fixed;top:0;left:0;right:0;z-index:500;background:#fff;border-bottom:1px solid #e8e8e8;height:60px;display:flex;align-items:center;padding:0 28px;justify-content:space-between;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+    <a href="index.html" style="font-size:15px;font-weight:400;text-decoration:none;color:#1a1a1a;white-space:nowrap;">Emilio D&uuml;mar</a>
+    <div style="display:flex;align-items:center;">
+
+      <div class="sn-item" style="position:relative;">
+        <div class="sn-trigger" style="padding:0 18px;height:60px;display:flex;align-items:center;font-size:14px;color:#1a1a1a;cursor:pointer;white-space:nowrap;">Commercial</div>
+        <div class="sn-drop" style="display:none;position:absolute;top:60px;left:0;min-width:240px;background:#fff;border:1px solid #e8e8e8;border-top:none;padding:8px 0;z-index:600;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+          <a href="ciao-ciao-vacation.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Ciao Ciao Vacation</a>
+          <a href="rollie-nation.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Rollie Nation</a>
+          <a href="cleonie.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Cleonie</a>
+          <a href="baker-bleu.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Baker Bleu</a>
+          <a href="ena-pelly.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Ena Pelly</a>
+          <a href="inbluem.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Inbluem</a>
+          <a href="the-wolf-gang.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">The Wolf Gang</a>
+          <a href="linden-cook.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Linden Cook</a>
+          <a href="san-lorenzo.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">San Lorenzo</a>
+          <a href="utopia.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Utopia</a>
+          <a href="rogue-season.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Rogue Season</a>
+          <a href="maatsuyker.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Maatsuyker</a>
+          <a href="yo-chi.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">YO-CHI</a>
+        </div>
+      </div>
+
+      <div class="sn-item" style="position:relative;">
+        <div class="sn-trigger" style="padding:0 18px;height:60px;display:flex;align-items:center;font-size:14px;color:#1a1a1a;cursor:pointer;white-space:nowrap;">Editorial</div>
+        <div class="sn-drop" style="display:none;position:absolute;top:60px;left:0;min-width:260px;background:#fff;border:1px solid #e8e8e8;border-top:none;padding:8px 0;z-index:600;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+          <a href="grit-grace.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Grit &amp; Grace &mdash; Vanguard Magazine</a>
+          <a href="makers-lane.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Makers Lane &mdash; Melbourne Fashion Week 2025</a>
+          <a href="rahart-adams.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Rahart Adams &mdash; Arabian Moda</a>
+          <a href="wax-wings.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Wax Wings &mdash; Enzomnia Magazine</a>
+          <a href="valley-summer.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Valley Summer</a>
+          <a href="out-of-office.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Out of Office</a>
+          <a href="learn-twice.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Learn Twice &mdash; C Heads Magazine</a>
+          <a href="burbank-views.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Burbank Views</a>
+        </div>
+      </div>
+
+      <div class="sn-item" style="position:relative;">
+        <div class="sn-trigger" style="padding:0 18px;height:60px;display:flex;align-items:center;font-size:14px;color:#1a1a1a;cursor:pointer;white-space:nowrap;">Personal</div>
+        <div class="sn-drop" style="display:none;position:absolute;top:60px;left:0;min-width:180px;background:#fff;border:1px solid #e8e8e8;border-top:none;padding:8px 0;z-index:600;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+          <a href="portugal.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Portugal</a>
+          <a href="new-york-city.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">New York City</a>
+          <a href="california.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">California</a>
+          <a href="indonesia.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Indonesia</a>
+          <a href="peru.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Peru</a>
+          <a href="colombia.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Colombia</a>
+          <a href="tasmania.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Tasmania</a>
+          <a href="mexico.html" style="display:block;padding:7px 20px;font-size:13px;color:#1a1a1a;text-decoration:none;">Mexico</a>
+        </div>
+      </div>
+
+      <a href="info.html" style="padding:0 18px;height:60px;display:flex;align-items:center;font-size:14px;color:#1a1a1a;text-decoration:none;white-space:nowrap;">Info</a>
+
+      <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" style="padding:0 6px 0 12px;height:60px;display:flex;align-items:center;color:#1a1a1a;" aria-label="Instagram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Nav hover JS (self-contained, no dependency on main.js) -->
+  <script>
+    document.querySelectorAll('.sn-item').forEach(function(item) {
+      var drop = item.querySelector('.sn-drop');
+      item.addEventListener('mouseenter', function(){ drop.style.display = 'block'; });
+      item.addEventListener('mouseleave', function(){ drop.style.display = 'none'; });
+    });
+  </script>
+
+
+
+
+<div class="top-bar">
+  <div class="top-logo"><strong>Emilio Dümar</strong> / Mentoring</div>
+  <div class="top-count" id="topCount"></div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<div class="form-shell"><div class="form-inner">
+
+  <!-- WELCOME -->
+  <div class="step active" id="step-0">
+    <div class="welcome-screen">
+      <div class="welcome-title">1:1<br>Mentoring</div>
+      <div class="welcome-sub">A private mentorship for people who feel the gap between where they are and where they know they could be. Takes about 2 minutes.</div>
+      <button class="btn-start" onclick="goTo(1)">Apply now</button>
+    </div>
+  </div>
+
+  <!-- 01: Name -->
+  <div class="step" id="step-1">
+    <div class="step-num" id="num-1"></div>
+    <div class="step-title">What should we call you?</div>
+    <div class="step-sub">First name is fine.</div>
+    <div class="field-group">
+      <input class="text-input" id="inp-name" placeholder="Your name" autocomplete="off" />
+    </div>
+    <button class="btn-continue" onclick="advance(1)">Continue <span class="arrow">→</span></button>
+    <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
+  </div>
+
+  <!-- 02: Why -->
+  <div class="step" id="step-2">
+    <button class="btn-back" onclick="back(2)">← back</button>
+    <div class="step-num" id="num-2"></div>
+    <div class="step-title">What's driving you to level up your creative work?</div>
+    <div class="step-sub">Pick the main reason.</div>
+    <div class="option-list" id="opts-2">
+      <div class="option-row" onclick="pick(this,'single',2)"><div class="option-key">A</div><div class="option-text">Career: I want to go pro or grow professionally</div></div>
+      <div class="option-row" onclick="pick(this,'single',2)"><div class="option-key">B</div><div class="option-text">Brand: I need stronger content for my business</div></div>
+      <div class="option-row" onclick="pick(this,'single',2)"><div class="option-key">C</div><div class="option-text">Travel: I want to capture my experiences at a higher level</div></div>
+      <div class="option-row" onclick="pick(this,'single',2)"><div class="option-key">D</div><div class="option-text">Passion: I love this and want to get genuinely great</div></div>
+      <div class="option-row" onclick="pick(this,'single',2)"><div class="option-key">E</div><div class="option-text">All of the above</div></div>
+    </div>
+    <button class="btn-continue" onclick="advance(2)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- 03: Top priority -->
+  <div class="step" id="step-3">
+    <button class="btn-back" onclick="back(3)">← back</button>
+    <div class="step-num" id="num-3"></div>
+    <div class="step-title">If you could lock in one skill in 90 days, what would move the needle most?</div>
+    <div class="step-sub">Pick the one that changes everything else.</div>
+    <div class="option-list" id="opts-3">
+      <div class="option-row" onclick="pick(this,'single',3)"><div class="option-key">A</div><div class="option-text">A sharper eye<span class="option-sub-text">Knowing instinctively what works vs. what doesn't</span></div></div>
+      <div class="option-row" onclick="pick(this,'single',3)"><div class="option-key">B</div><div class="option-text">Execution that matches my vision<span class="option-sub-text">Closing the gap between idea and output</span></div></div>
+      <div class="option-row" onclick="pick(this,'single',3)"><div class="option-key">C</div><div class="option-text">A direction people can't ignore<span class="option-sub-text">Cohesive visual identity across everything</span></div></div>
+      <div class="option-row" onclick="pick(this,'single',3)"><div class="option-key">D</div><div class="option-text">Charging what my work is worth<span class="option-sub-text">Better positioning, better clients</span></div></div>
+      <div class="option-row" onclick="pick(this,'single',3)"><div class="option-key">E</div><div class="option-text">Something else. I'll explain on the call</div></div>
+    </div>
+    <button class="btn-continue" onclick="advance(3)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- 04: Who it's for -->
+  <div class="step" id="step-4">
+    <button class="btn-back" onclick="back(4)">← back</button>
+    <div class="step-num" id="num-4"></div>
+    <div class="step-title">Who are you doing this for?</div>
+    <div class="step-sub">Different structures work better for different situations.</div>
+    <div class="option-list" id="opts-4">
+      <div class="option-row" onclick="pick(this,'single',4)"><div class="option-key">A</div><div class="option-text">Just me</div></div>
+      <div class="option-row" onclick="pick(this,'single',4)"><div class="option-key">B</div><div class="option-text">My team: I need them working at a higher standard</div></div>
+      <div class="option-row" onclick="pick(this,'single',4)"><div class="option-key">C</div><div class="option-text">Both, me and my team</div></div>
+    </div>
+    <button class="btn-continue" onclick="advance(4)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- 05: Urgency -->
+  <div class="step" id="step-5">
+    <button class="btn-back" onclick="back(5)">← back</button>
+    <div class="step-num" id="num-5"></div>
+    <div class="step-title">How quickly do you want to get there?</div>
+    <div class="option-list" id="opts-5">
+      <div class="option-row" onclick="pick(this,'single',5)"><div class="option-key">A</div><div class="option-text">Yesterday. I'm already behind</div></div>
+      <div class="option-row" onclick="pick(this,'single',5)"><div class="option-key">B</div><div class="option-text">This quarter. Building toward something specific</div></div>
+      <div class="option-row" onclick="pick(this,'single',5)"><div class="option-key">C</div><div class="option-text">Within 6 months</div></div>
+      <div class="option-row" onclick="pick(this,'single',5)"><div class="option-key">D</div><div class="option-text">Just exploring for now</div></div>
+    </div>
+    <button class="btn-continue" onclick="advance(5)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- 06: Readiness -->
+  <div class="step" id="step-6">
+    <button class="btn-back" onclick="back(6)">← back</button>
+    <div class="step-num" id="num-6"></div>
+    <div class="step-title">If one spot opened up today, when could you start?</div>
+    <div class="option-list" id="opts-6">
+      <div class="option-row" onclick="pick(this,'single',6)"><div class="option-key">A</div><div class="option-text">Right away</div></div>
+      <div class="option-row" onclick="pick(this,'single',6)"><div class="option-key">B</div><div class="option-text">Within 1 to 2 weeks</div></div>
+      <div class="option-row" onclick="pick(this,'single',6)"><div class="option-key">C</div><div class="option-text">Next month</div></div>
+      <div class="option-row" onclick="pick(this,'single',6)"><div class="option-key">D</div><div class="option-text">Not sure yet</div></div>
+    </div>
+    <button class="btn-continue" onclick="advance(6)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- 07: Mentored before -->
+  <div class="step" id="step-7">
+    <button class="btn-back" onclick="back(7)">← back</button>
+    <div class="step-num" id="num-7"></div>
+    <div class="step-title">Have you worked with a mentor or coach before?</div>
+    <div class="option-list" id="opts-7">
+      <div class="option-row" onclick="pick(this,'single',7)"><div class="option-key">A</div><div class="option-text">No, this would be my first time</div></div>
+      <div class="option-row" onclick="pick(this,'single',7)"><div class="option-key">B</div><div class="option-text">Yes</div></div>
+    </div>
+    <button class="btn-continue" onclick="advance(7)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- 08: Contact -->
+  <div class="step" id="step-8">
+    <button class="btn-back" onclick="back(8)">← back</button>
+    <div class="step-num" id="num-8"></div>
+    <div class="step-title">Where should we reach you?</div>
+    <div class="step-sub">We only follow up with people we think we can genuinely help.</div>
+    <div class="field-group">
+      <input class="text-input" id="inp-email" placeholder="your@email.com" type="email" autocomplete="off" />
+    </div>
+    <div class="field-group">
+      <div class="ig-wrap">
+        <span class="ig-prefix">instagram.com/</span>
+        <input class="ig-input" id="inp-ig" placeholder="username (optional)" autocomplete="off" />
+      </div>
+    </div>
+    <button class="btn-continue" onclick="goTo('done')">Submit application <span class="arrow">→</span></button>
+    <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
+  </div>
+
+  <!-- DONE -->
+  <div class="step" id="step-done">
+    <div class="finish-screen">
+      <div class="finish-line"></div>
+      <div class="finish-title">Application<br>received.</div>
+      <div class="finish-sub">We read every one. If there's a fit, you'll hear from us within a few days.</div>
+    </div>
+  </div>
+
+</div></div>
+
+<script>
+  var FLOW = [0,1,2,3,4,5,6,7,8,'done'];
+  var TOTAL = 8;
+
+  function goTo(sid) {
+    document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById('step-' + sid).classList.add('active');
+
+    var idx = FLOW.indexOf(sid);
+    var isSpecial = (sid === 0 || sid === 'done');
+
+    document.getElementById('topCount').textContent = isSpecial ? '' : idx + ' / ' + TOTAL;
+
+    var numEl = document.getElementById('num-' + sid);
+    if (numEl) numEl.textContent = idx + ' / ' + TOTAL;
+
+    var pct = isSpecial ? (sid === 'done' ? 100 : 0) : Math.round((idx / TOTAL) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (sid === 1) setTimeout(function(){ document.getElementById('inp-name').focus(); }, 200);
+    if (sid === 8) setTimeout(function(){ document.getElementById('inp-email').focus(); }, 200);
+  }
+
+  function advance(sid) {
+    var idx = FLOW.indexOf(sid);
+    if (idx === -1 || idx >= FLOW.length - 1) return;
+    goTo(FLOW[idx + 1]);
+  }
+
+  function back(sid) {
+    var idx = FLOW.indexOf(sid);
+    if (idx <= 1) { goTo(0); return; }
+    goTo(FLOW[idx - 1]);
+  }
+
+  function pick(el, mode, stageNum) {
+    var parent = el.parentElement;
+    parent.querySelectorAll('.option-row').forEach(function(r){ r.classList.remove('selected'); });
+    el.classList.add('selected');
+    setTimeout(function(){ advance(stageNum); }, 240);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    var active = document.querySelector('.step.active');
+    if (!active) return;
+    var sid = active.id.replace('step-','');
+    var sidParsed = isNaN(+sid) ? sid : +sid;
+    if (sidParsed === 0) { goTo(1); return; }
+    if (sidParsed === 8) { goTo('done'); return; }
+    if (sidParsed !== 'done') advance(sidParsed);
+  });
+
+  goTo(0);
+</script>
+
+
+</body>
+</html>
