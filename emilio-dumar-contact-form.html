@@ -462,6 +462,7 @@
 
 <script>
   var TOTAL = 10;
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwneZda57copa8LvqxqCrbJ3WWQylRJTDhCzmtP1dHLdz9bg-Sb5_5k3a7uyC8Jymel/exec';
 
   function goTo(n) {
     document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
@@ -478,20 +479,66 @@
       countEl.textContent = (n - 1) + ' / ' + TOTAL;
     }
 
-    // Step num labels
     for (var i = 1; i <= TOTAL; i++) {
       var el = document.getElementById('num-' + i);
       if (el) el.textContent = (i - 1) + ' / ' + TOTAL;
     }
 
+    if (n === 11) submitForm();
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function getSelected(listId) {
+    var rows = document.querySelectorAll('#' + listId + ' .option-row.selected');
+    var vals = [];
+    rows.forEach(function(r) { vals.push(r.querySelector('.option-text').textContent.trim()); });
+    return vals.join(', ') || 'Not answered';
+  }
+
+  function getVal(id) {
+    var el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function submitForm() {
+    var data = {
+      'Name':             (getVal('inp-first') + ' ' + getVal('inp-last')).trim() || 'Not provided',
+      'Email':            getVal('inp-email') || 'Not provided',
+      'What are we making': getSelected('opts-2') + (document.getElementById('other-making').classList.contains('visible') ? ' — ' + (document.querySelector('#other-making input') ? document.querySelector('#other-making input').value.trim() : '') : ''),
+      'How we connected': getSelected('opts-3'),
+      'Location':         getSelected('opts-4') + (document.getElementById('other-location').classList.contains('visible') ? ' — ' + (document.querySelector('#other-location input') ? document.querySelector('#other-location input').value.trim() : '') : ''),
+      'Date':             getSelected('opts-5'),
+      'Date range':       (getVal('') || '').trim(),
+      'What they need':   getSelected('opts-6'),
+      'Looks':            getSelected('opts-7'),
+      'Hours':            getSelected('opts-7b') + (document.getElementById('other-hours').classList.contains('visible') ? ' — ' + (document.querySelector('#other-hours input') ? document.querySelector('#other-hours input').value.trim() : '') : ''),
+      'Image placement':  getSelected('opts-8'),
+      'License duration': getSelected('opts-8b'),
+      'Turnaround':       getSelected('opts-9'),
+      'Additional notes': (document.querySelector('.textarea-input') ? document.querySelector('.textarea-input').value.trim() : '') || 'None'
+    };
+
+    // Get date range fields
+    var dateInputs = document.querySelectorAll('#date-fields input');
+    if (dateInputs.length >= 2) {
+      var earliest = dateInputs[0].value.trim();
+      var latest = dateInputs[1].value.trim();
+      if (earliest || latest) data['Date range'] = 'Earliest: ' + (earliest || 'n/a') + ', Latest: ' + (latest || 'n/a');
+      else delete data['Date range'];
+    }
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(function(err) { console.warn('Submission error:', err); });
   }
 
   function pick(el, mode, subgroup) {
     var parent = subgroup ? document.getElementById('opts-7b') || document.getElementById('opts-8b') : el.parentElement;
-    // Determine correct subgroup parent
     if (subgroup) {
-      // figure out which subgroup by walking up
       var pid = el.parentElement.id;
       parent = document.getElementById(pid);
     }
@@ -513,7 +560,6 @@
     if (el) el.classList.remove('visible');
   }
 
-  // Enter to advance
   document.addEventListener('keydown', function(e) {
     if (e.key !== 'Enter') return;
     var active = document.querySelector('.step.active');
@@ -524,7 +570,6 @@
     if (noAuto.indexOf(sid) === -1) goTo(sid + 1);
   });
 
-  // Init
   goTo(1);
 </script>
 </body>
