@@ -70,7 +70,7 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 .burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-/* mobile-menu replaced */
+
 
 
 
@@ -461,60 +461,45 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 (function () {
   'use strict';
 
-  /* ── MASONRY: set each item's row-span based on image height ── */
-  var ROW_PX = 6;
-  var GAP_PX = 6;
+  /* ── MASONRY (desktop only) ──────────────────────────────── */
+  var ROW_PX = 6, GAP_PX = 6;
 
   function setSpan(item) {
-    /* Skip masonry on mobile — CSS handles 2-col auto layout */
-    if (window.innerWidth <= 700) {
-      item.style.gridRowEnd = 'auto';
-      return;
-    }
+    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
     var img = item.querySelector('img');
-    if (!img) return;
+    if (!img || !img.naturalWidth) return;
     var colW = item.getBoundingClientRect().width;
-    var renderedH = img.naturalHeight > 0
-      ? (colW * img.naturalHeight / img.naturalWidth)
-      : img.getBoundingClientRect().height;
-    var spans = Math.ceil((renderedH + GAP_PX) / ROW_PX);
-    item.style.gridRowEnd = 'span ' + spans;
+    var h = colW * img.naturalHeight / img.naturalWidth;
+    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP_PX) / ROW_PX);
   }
 
-  function resizeAllItems() {
+  function layoutAll() {
     document.querySelectorAll('.project-grid__item').forEach(setSpan);
   }
 
-  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
+  /* Use decode() so we wait until browser has actual dimensions */
+  document.querySelectorAll('.project-grid__item img').forEach(function(img) {
+    var item = img.closest('.project-grid__item');
     if (img.complete && img.naturalHeight > 0) {
-      setSpan(img.closest('.project-grid__item'));
+      setSpan(item);
     } else {
-      img.addEventListener('load', function () {
-        setSpan(img.closest('.project-grid__item'));
-      });
+      (img.decode ? img.decode() : Promise.reject())
+        .then(function() { setSpan(item); })
+        .catch(function() {
+          img.addEventListener('load', function() { setSpan(item); });
+        });
     }
   });
 
-  /* Re-run aggressively to catch late CDN images */
-  window.addEventListener('load', function () {
-    resizeAllItems();
-    setTimeout(resizeAllItems, 100);
-    setTimeout(resizeAllItems, 500);
-    setTimeout(resizeAllItems, 1000);
-    setTimeout(resizeAllItems, 2500);
-  });
-  /* Also re-run whenever any image fully loads */
-  document.querySelectorAll('.project-grid__item img').forEach(function(img) {
-    img.addEventListener('load', function() {
-      setSpan(img.closest('.project-grid__item'));
-      setTimeout(resizeAllItems, 50);
-    });
+  window.addEventListener('load', function() {
+    layoutAll();
+    setTimeout(layoutAll, 400);
+    setTimeout(layoutAll, 1200);
   });
 
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resizeAllItems, 100);
+  var _rt;
+  window.addEventListener('resize', function() {
+    clearTimeout(_rt); _rt = setTimeout(layoutAll, 120);
   });
 
     /* ── MOBILE BURGER ─────────────────────────────────────────── */
