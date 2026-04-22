@@ -70,19 +70,13 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 .burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-.mobile-menu {
-  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
-  background: #fff; z-index: 190; overflow-y: auto; padding: 20px 20px 40px;
-}
-.mobile-menu.open { display: block; }
-.mobile-menu__section { margin-bottom: 20px; }
-.mobile-menu__heading { font-size: 11px; color: #999; letter-spacing: 0.06em; margin-bottom: 8px; }
-.mobile-menu__section a {
-  display: block; font-size: 14px; color: #1a1a1a;
-  padding: 6px 0; border-bottom: 1px solid #f0f0f0; transition: color 0.15s;
-}
-.mobile-menu__section a:last-child { border-bottom: none; }
-.mobile-menu__standalone { display: block; font-size: 14px; color: #1a1a1a; padding: 8px 0; border-top: 1px solid #e8e8e8; margin-top: 8px; }
+/* mobile-menu replaced */
+
+
+
+
+
+
 
 /* ── PAGE BODY ──────────────────────────────────────────────── */
 .page-body { padding-top: 60px; min-height: 100vh; display: flex; flex-direction: column; }
@@ -103,6 +97,8 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 .project-grid__item {
   overflow: hidden;
   cursor: pointer;
+  /* Fallback min-height prevents slivers before JS fires */
+  min-height: 200px;
 }
 .project-grid__item img {
   width: 100%;
@@ -212,10 +208,52 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   .proj-nav__btn { min-width: 0; flex: 1; }
   .site-footer { padding: 24px 14px; flex-direction: column; gap: 10px; align-items: flex-start; }
 }
-@media (max-width: 420px) {
-  .project-grid { grid-template-columns: 1fr; }
+
+  /* ── MOBILE MENU (accordion) ─────────────────────────────── */
+.mobile-menu {
+  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
+  background: #fff; z-index: 190; overflow-y: auto; padding: 12px 0 40px;
 }
-  </style>
+.mobile-menu.open { display: block; }
+
+/* Accordion item */
+.mob-accordion { border-bottom: 1px solid #f0f0f0; }
+.mob-accordion__trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 14px 20px;
+  font-family: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a;
+  background: none; border: none; cursor: pointer; text-align: left;
+}
+.mob-accordion__arrow {
+  font-size: 18px; color: #aaa;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.mob-accordion.open .mob-accordion__arrow { transform: rotate(90deg); }
+.mob-accordion__panel {
+  display: none; padding: 0 0 8px;
+}
+.mob-accordion.open .mob-accordion__panel { display: block; }
+.mob-accordion__panel a {
+  display: block; padding: 9px 32px;
+  font-size: 13px; color: #555;
+  border-bottom: 1px solid #f8f8f8;
+  transition: color 0.15s;
+}
+.mob-accordion__panel a:last-child { border-bottom: none; }
+.mob-accordion__panel a:hover { color: #1a1a1a; }
+
+/* Standalone links */
+.mob-standalone {
+  display: block; padding: 14px 20px;
+  font-size: 16px; color: #1a1a1a;
+  border-bottom: 1px solid #f0f0f0;
+  text-decoration: none;
+}
+.mob-instagram {
+  display: flex; align-items: center; gap: 8px;
+}
+</style>
 </head>
 <body>
 
@@ -287,45 +325,72 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 
 <!-- ── MOBILE MENU ──────────────────────────────────────────── -->
 <nav class="mobile-menu" id="mobileMenu">
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Commercial</p>
-    <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
-    <a href="rollie-nation.html">Rollie Nation</a>
-    <a href="cleonie.html">Cleonie</a>
-    <a href="baker-bleu.html">Baker Bleu</a>
-    <a href="ena-pelly.html">Ena Pelly</a>
-    <a href="inbluem.html">Inbluem</a>
-    <a href="the-wolf-gang.html">The Wolf Gang</a>
-    <a href="linden-cook.html">Linden Cook</a>
-    <a href="san-lorenzo.html">San Lorenzo</a>
-    <a href="utopia.html">Utopia</a>
-    <a href="rogue-season.html">Rogue Season</a>
-    <a href="maatsuyker.html">Maatsuyker</a>
-    <a href="yo-chi.html">YO-CHI</a>
+
+  <!-- Commercial accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-commercial">
+      Commercial <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-commercial">
+      <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+      <a href="rollie-nation.html">Rollie Nation</a>
+      <a href="cleonie.html">Cleonie</a>
+      <a href="baker-bleu.html">Baker Bleu</a>
+      <a href="ena-pelly.html">Ena Pelly</a>
+      <a href="inbluem.html">Inbluem</a>
+      <a href="the-wolf-gang.html">The Wolf Gang</a>
+      <a href="linden-cook.html">Linden Cook</a>
+      <a href="san-lorenzo.html">San Lorenzo</a>
+      <a href="utopia.html">Utopia</a>
+      <a href="rogue-season.html">Rogue Season</a>
+      <a href="maatsuyker.html">Maatsuyker</a>
+      <a href="yo-chi.html">YO-CHI</a>
+    </div>
   </div>
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Editorial</p>
-    <a href="grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
-    <a href="makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
-    <a href="rahart-adams.html">Rahart Adams — Arabian Moda</a>
-    <a href="wax-wings.html">Wax Wings — Enzomnia Magazine</a>
-    <a href="valley-summer.html">Valley Summer</a>
-    <a href="out-of-office.html">Out of Office</a>
-    <a href="learn-twice.html">Learn Twice — C Heads Magazine</a>
-    <a href="burbank-views.html">Burbank Views</a>
+
+  <!-- Editorial accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-editorial">
+      Editorial <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-editorial">
+      <a href="grit-grace.html">Grit &amp; Grace &mdash; Vanguard Magazine</a>
+      <a href="makers-lane.html">Makers Lane &mdash; Melbourne Fashion Week 2025</a>
+      <a href="rahart-adams.html">Rahart Adams &mdash; Arabian Moda</a>
+      <a href="wax-wings.html">Wax Wings &mdash; Enzomnia Magazine</a>
+      <a href="valley-summer.html">Valley Summer</a>
+      <a href="out-of-office.html">Out of Office</a>
+      <a href="learn-twice.html">Learn Twice &mdash; C Heads Magazine</a>
+      <a href="burbank-views.html">Burbank Views</a>
+    </div>
   </div>
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Personal</p>
-    <a href="portugal.html">Portugal</a>
-    <a href="new-york-city.html">New York City</a>
-    <a href="california.html">California</a>
-    <a href="indonesia.html">Indonesia</a>
-    <a href="peru.html">Peru</a>
-    <a href="colombia.html">Colombia</a>
-    <a href="tasmania.html">Tasmania</a>
-    <a href="mexico.html">Mexico</a>
+
+  <!-- Personal accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-personal">
+      Personal <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-personal">
+      <a href="portugal.html">Portugal</a>
+      <a href="new-york-city.html">New York City</a>
+      <a href="california.html">California</a>
+      <a href="indonesia.html">Indonesia</a>
+      <a href="peru.html">Peru</a>
+      <a href="colombia.html">Colombia</a>
+      <a href="tasmania.html">Tasmania</a>
+      <a href="mexico.html">Mexico</a>
+    </div>
   </div>
-  <a href="info.html" class="mobile-menu__standalone">Info</a>
+
+  <a href="info.html" class="mob-standalone">Info</a>
+  <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="mob-standalone mob-instagram" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+
 </nav>
 
 <!-- ── PAGE BODY ────────────────────────────────────────────── -->
@@ -337,28 +402,28 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   </div>
 
   <div class="project-grid" id="masonryGrid">
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d6d8e45e-ce68-4988-9b8a-1c5e09b66de7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-33.jpg"   alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d6d8e45e-ce68-4988-9b8a-1c5e09b66de7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-33.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bc77ab60-f25e-43af-ac04-eef8e043327c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-174.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bc77ab60-f25e-43af-ac04-eef8e043327c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-174.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cfc2954c-243c-41b3-ae1e-3fd27ff7f09c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-139.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cfc2954c-243c-41b3-ae1e-3fd27ff7f09c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-139.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d50135dc-ba87-4892-9705-c94727961378/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-159.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d50135dc-ba87-4892-9705-c94727961378/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-159.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b4ee06c-63af-468c-b7fa-cdbb1caadc5c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-47.jpg"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b4ee06c-63af-468c-b7fa-cdbb1caadc5c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-47.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/aa5307eb-7cd4-4ddf-b3e3-2569d3a292a8/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-70.jpg"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/aa5307eb-7cd4-4ddf-b3e3-2569d3a292a8/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-70.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4381e203-f0c5-40d0-849b-c5f18a35689b/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-145.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4381e203-f0c5-40d0-849b-c5f18a35689b/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-145.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/372d9a0b-e9c1-41b2-a7b9-880658df75e6/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-78.jpg"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/372d9a0b-e9c1-41b2-a7b9-880658df75e6/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-78.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/59a0a620-0b4a-4080-9024-d5c3ff8d147c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-140.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/59a0a620-0b4a-4080-9024-d5c3ff8d147c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-140.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a702b383-2b68-4f5b-9992-b06b0f4f3d05/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-45.jpg"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a702b383-2b68-4f5b-9992-b06b0f4f3d05/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-45.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1f105c42-9e1d-444d-82fa-e64ce309d616/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-176.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1f105c42-9e1d-444d-82fa-e64ce309d616/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-176.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ff5a1048-4561-4d90-910b-d2dba2b3b58d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-143.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ff5a1048-4561-4d90-910b-d2dba2b3b58d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-143.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cc474a4-df55-4025-a0f2-d09b9617a7a3/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-141.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cc474a4-df55-4025-a0f2-d09b9617a7a3/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-141.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ab34761f-46fe-4580-9605-b2c9a17f87d2/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-146.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ab34761f-46fe-4580-9605-b2c9a17f87d2/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-146.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4a606894-a866-44ae-95a0-379d83f2b82e/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-152.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4a606894-a866-44ae-95a0-379d83f2b82e/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-152.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a5906dbb-89d7-4a95-9c3a-716d95960646/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-154.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a5906dbb-89d7-4a95-9c3a-716d95960646/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-154.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fa66538e-31d4-4e88-8bcb-38ce02f0ee57/EMILIODUMAR_CCV_SHIBUYA_PHOTOS.jpg"     alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fa66538e-31d4-4e88-8bcb-38ce02f0ee57/EMILIODUMAR_CCV_SHIBUYA_PHOTOS.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b93fbf5-1194-48a7-a26c-492964ac7121/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-163.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b93fbf5-1194-48a7-a26c-492964ac7121/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-163.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5bbcce01-5f03-4483-9e4c-d9fbbfb1008a/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-164.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5bbcce01-5f03-4483-9e4c-d9fbbfb1008a/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-164.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f22aae9-57c6-4866-9351-86217c250eb1/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-170.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f22aae9-57c6-4866-9351-86217c250eb1/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-170.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1e7a725e-0b4d-4816-920f-423a8894e4a7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-171.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1e7a725e-0b4d-4816-920f-423a8894e4a7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-171.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/74616ac4-9b32-4ad0-b189-e95de979e94d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-180.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/74616ac4-9b32-4ad0-b189-e95de979e94d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-180.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d6d8e45e-ce68-4988-9b8a-1c5e09b66de7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-33.jpg?format=1500w"   alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d6d8e45e-ce68-4988-9b8a-1c5e09b66de7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-33.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bc77ab60-f25e-43af-ac04-eef8e043327c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-174.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bc77ab60-f25e-43af-ac04-eef8e043327c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-174.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cfc2954c-243c-41b3-ae1e-3fd27ff7f09c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-139.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cfc2954c-243c-41b3-ae1e-3fd27ff7f09c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-139.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d50135dc-ba87-4892-9705-c94727961378/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-159.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d50135dc-ba87-4892-9705-c94727961378/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-159.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b4ee06c-63af-468c-b7fa-cdbb1caadc5c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-47.jpg?format=1500w"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b4ee06c-63af-468c-b7fa-cdbb1caadc5c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-47.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/aa5307eb-7cd4-4ddf-b3e3-2569d3a292a8/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-70.jpg?format=1500w"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/aa5307eb-7cd4-4ddf-b3e3-2569d3a292a8/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-70.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4381e203-f0c5-40d0-849b-c5f18a35689b/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-145.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4381e203-f0c5-40d0-849b-c5f18a35689b/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-145.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/372d9a0b-e9c1-41b2-a7b9-880658df75e6/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-78.jpg?format=1500w"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/372d9a0b-e9c1-41b2-a7b9-880658df75e6/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-78.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/59a0a620-0b4a-4080-9024-d5c3ff8d147c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-140.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/59a0a620-0b4a-4080-9024-d5c3ff8d147c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-140.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a702b383-2b68-4f5b-9992-b06b0f4f3d05/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-45.jpg?format=1500w"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a702b383-2b68-4f5b-9992-b06b0f4f3d05/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-45.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1f105c42-9e1d-444d-82fa-e64ce309d616/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-176.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1f105c42-9e1d-444d-82fa-e64ce309d616/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-176.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ff5a1048-4561-4d90-910b-d2dba2b3b58d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-143.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ff5a1048-4561-4d90-910b-d2dba2b3b58d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-143.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cc474a4-df55-4025-a0f2-d09b9617a7a3/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-141.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cc474a4-df55-4025-a0f2-d09b9617a7a3/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-141.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ab34761f-46fe-4580-9605-b2c9a17f87d2/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-146.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ab34761f-46fe-4580-9605-b2c9a17f87d2/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-146.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4a606894-a866-44ae-95a0-379d83f2b82e/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-152.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4a606894-a866-44ae-95a0-379d83f2b82e/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-152.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a5906dbb-89d7-4a95-9c3a-716d95960646/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-154.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a5906dbb-89d7-4a95-9c3a-716d95960646/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-154.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fa66538e-31d4-4e88-8bcb-38ce02f0ee57/EMILIODUMAR_CCV_SHIBUYA_PHOTOS.jpg?format=1500w"     alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fa66538e-31d4-4e88-8bcb-38ce02f0ee57/EMILIODUMAR_CCV_SHIBUYA_PHOTOS.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b93fbf5-1194-48a7-a26c-492964ac7121/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-163.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b93fbf5-1194-48a7-a26c-492964ac7121/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-163.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5bbcce01-5f03-4483-9e4c-d9fbbfb1008a/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-164.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5bbcce01-5f03-4483-9e4c-d9fbbfb1008a/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-164.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f22aae9-57c6-4866-9351-86217c250eb1/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-170.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f22aae9-57c6-4866-9351-86217c250eb1/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-170.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1e7a725e-0b4d-4816-920f-423a8894e4a7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-171.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1e7a725e-0b4d-4816-920f-423a8894e4a7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-171.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/74616ac4-9b32-4ad0-b189-e95de979e94d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-180.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/74616ac4-9b32-4ad0-b189-e95de979e94d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-180.jpg" /></div>
   </div>
 
   <!-- ── PREV / NEXT BUTTONS — Ciao Ciao is first so no Previous ── -->
@@ -419,13 +484,29 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
     }
   });
 
+  /* Re-run aggressively to catch late CDN images */
+  window.addEventListener('load', function () {
+    resizeAllItems();
+    setTimeout(resizeAllItems, 100);
+    setTimeout(resizeAllItems, 500);
+    setTimeout(resizeAllItems, 1000);
+    setTimeout(resizeAllItems, 2500);
+  });
+  /* Also re-run whenever any image fully loads */
+  document.querySelectorAll('.project-grid__item img').forEach(function(img) {
+    img.addEventListener('load', function() {
+      setSpan(img.closest('.project-grid__item'));
+      setTimeout(resizeAllItems, 50);
+    });
+  });
+
   var resizeTimer;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(resizeAllItems, 100);
   });
 
-  /* ── MOBILE BURGER ─────────────────────────────────────────── */
+    /* ── MOBILE BURGER ─────────────────────────────────────────── */
   var burger     = document.getElementById('burger');
   var mobileMenu = document.getElementById('mobileMenu');
   if (burger && mobileMenu) {
@@ -434,6 +515,20 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
       mobileMenu.classList.toggle('open', open);
       document.body.style.overflow = open ? 'hidden' : '';
     });
+    // Accordion triggers
+    mobileMenu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.closest('.mob-accordion');
+        var wasOpen = acc.classList.contains('open');
+        // Close all
+        mobileMenu.querySelectorAll('.mob-accordion').forEach(function (a) {
+          a.classList.remove('open');
+        });
+        // Toggle clicked
+        if (!wasOpen) acc.classList.add('open');
+      });
+    });
+    // Close menu on link click
     mobileMenu.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
         burger.classList.remove('open');
@@ -441,6 +536,7 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
         document.body.style.overflow = '';
       });
     });
+  });
   }
 
   /* ── LIGHTBOX ──────────────────────────────────────────────── */
