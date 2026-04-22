@@ -204,6 +204,12 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   .page-body { padding-top: 50px; }
   .project-header { padding: 20px 14px 4px; }
   .project-grid { grid-template-columns: repeat(2, 1fr); padding: 14px 14px 0; }
+  .project-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-rows: auto !important;
+    gap: 4px !important;
+  }
+  .project-grid__item { grid-row-end: auto !important; }
   .proj-nav { padding: 32px 14px 0; flex-wrap: wrap; }
   .proj-nav__btn { min-width: 0; flex: 1; }
   .site-footer { padding: 24px 14px; flex-direction: column; gap: 10px; align-items: flex-start; }
@@ -460,6 +466,11 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   var GAP_PX = 6;
 
   function setSpan(item) {
+    /* Skip masonry on mobile — CSS handles 2-col auto layout */
+    if (window.innerWidth <= 700) {
+      item.style.gridRowEnd = 'auto';
+      return;
+    }
     var img = item.querySelector('img');
     if (!img) return;
     var colW = item.getBoundingClientRect().width;
