@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact / Emilio Dümar</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #0a0a0a;
+    --muted: #888;
+    --border: #ddd;
+    --border-focus: #0a0a0a;
+    --accent-light: #f4f4f4;
+    --option-hover: #f7f7f7;
+    --option-selected-bg: #0a0a0a;
+    --btn-bg: #0a0a0a;
+    --btn-text: #ffffff;
+    --btn-hover: #333;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .top-logo { font-size: 13px; letter-spacing: 0.02em; font-weight: 400; }
+  .top-logo strong { font-weight: 700; }
+  .top-count { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; }
+
+  .progress-bar {
+    position: fixed; top: 56px; left: 0; right: 0; height: 1px;
+    background: var(--border); z-index: 9;
+  }
+  .progress-fill {
+    height: 100%; background: var(--text);
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .form-shell {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 100px 24px 80px;
+  }
+  .form-inner { width: 100%; max-width: 560px; }
+
+  .step { display: none; }
+  .step.active {
+    display: block;
+    animation: stepIn 0.35s cubic-bezier(0.4,0,0.2,1) both;
+  }
+  @keyframes stepIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-num { font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 18px; font-weight: 400; }
+  .step-title { font-size: 34px; font-weight: 700; line-height: 1.18; margin-bottom: 8px; }
+  .step-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; line-height: 1.6; font-weight: 400; }
+
+  .field-group { margin-bottom: 28px; }
+  .field-label {
+    display: block; font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px; font-weight: 500;
+  }
+  .text-input {
+    width: 100%; background: transparent;
+    border: none; border-bottom: 1px solid var(--border);
+    color: var(--text); font-size: 17px;
+    padding: 10px 0; outline: none;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif; font-weight: 300;
+    transition: border-color 0.2s;
+  }
+  .text-input::placeholder { color: #ccc; }
+  .text-input:focus { border-bottom-color: var(--border-focus); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .option-list { margin-bottom: 4px; }
+  .option-row {
+    display: flex; align-items: center; gap: 16px;
+    border-top: 1px solid var(--border);
+    padding: 15px 6px; cursor: pointer;
+    transition: background 0.12s; border-radius: 3px;
+  }
+  .option-row:last-of-type { border-bottom: 1px solid var(--border); }
+  .option-row:hover { background: var(--option-hover); }
+  .option-row.selected { background: var(--option-selected-bg); }
+  .option-key {
+    width: 24px; height: 24px;
+    border: 1px solid var(--border); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--muted); flex-shrink: 0; font-weight: 500; transition: all 0.12s;
+  }
+  .option-row.selected .option-key { background: #fff; border-color: #fff; color: #0a0a0a; }
+  .option-text { font-size: 14px; color: var(--text); flex: 1; line-height: 1.4; }
+  .option-row.selected .option-text { color: #fff; }
+
+  .write-in {
+    margin-top: 12px;
+    display: none;
+  }
+  .write-in.visible { display: block; }
+
+  .section-divider {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    margin: 32px 0 4px;
+  }
+  .section-sub { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+  .btn-continue {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--btn-bg); color: var(--btn-text);
+    border: none; border-radius: 4px;
+    padding: 16px 28px; font-size: 14px; font-weight: 500;
+    cursor: pointer; margin-top: 28px;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.04em;
+    transition: background 0.15s;
+  }
+  .btn-continue:hover { background: var(--btn-hover); }
+  .btn-continue .arrow { transition: transform 0.15s; }
+  .btn-continue:hover .arrow { transform: translateX(3px); }
+
+  .btn-skip {
+    display: inline-block; background: transparent; border: none;
+    color: var(--muted); font-size: 13px; cursor: pointer;
+    margin-top: 12px; margin-left: 16px;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif; transition: color 0.15s;
+  }
+  .btn-skip:hover { color: var(--text); }
+
+  .btn-back {
+    background: transparent; border: none; color: var(--muted); font-size: 12px; cursor: pointer;
+    margin-bottom: 36px; padding: 0;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-back:hover { color: var(--text); }
+
+  .enter-hint {
+    font-size: 12px; color: var(--muted); margin-top: 14px;
+    letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 5px;
+  }
+  .enter-key { border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; font-size: 11px; color: var(--muted); }
+
+  .textarea-input {
+    width: 100%; background: var(--accent-light);
+    border: 1px solid var(--border); border-radius: 4px;
+    color: var(--text); font-size: 15px;
+    padding: 16px; outline: none;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300; resize: none; min-height: 130px; line-height: 1.6;
+    transition: border-color 0.2s;
+  }
+  .textarea-input::placeholder { color: #bbb; }
+  .textarea-input:focus { border-color: var(--border-focus); }
+
+  .date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+  .date-col label {
+    font-size: 11px; letter-spacing: 0.1em; color: var(--muted);
+    display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 500;
+  }
+
+  .finish-screen { padding: 8px 0; }
+  .finish-line { width: 36px; height: 1px; background: var(--border); margin-bottom: 40px; }
+  .finish-title { font-size: 52px; font-weight: 700; line-height: 1.05; margin-bottom: 20px; }
+  .finish-sub { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 400px; margin-bottom: 28px; }
+
+  .btn-book {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 22px;
+    font-size: 14px; font-weight: 500;
+    color: var(--text); background: transparent;
+    cursor: pointer;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.03em;
+    transition: background 0.15s, border-color 0.15s;
+    text-decoration: none;
+  }
+  .btn-book:hover { background: var(--text); color: #fff; border-color: var(--text); }
+
+  .credit { margin-top: 48px; font-size: 12px; color: #bbb; letter-spacing: 0.04em; }
+
+  @media (max-width: 600px) {
+    .top-bar { padding: 14px 20px; }
+    .top-logo { font-size: 12px; }
+    .top-count { font-size: 11px; }
+    .progress-bar { top: 50px; }
+    .form-shell {
+      align-items: flex-start;
+      padding: 74px 20px 100px;
+      min-height: 100svh;
+    }
+    .step-title { font-size: 26px; }
+    .step-sub { font-size: 13px; margin-bottom: 24px; }
+    .step-num { margin-bottom: 14px; }
+    .two-col { grid-template-columns: 1fr; gap: 0; }
+    .two-col .field-group { margin-bottom: 20px; }
+    .text-input { font-size: 16px; padding: 12px 0; }
+    .option-row { padding: 16px 8px; gap: 14px; }
+    .option-text { font-size: 14px; }
+    .option-key { width: 26px; height: 26px; flex-shrink: 0; }
+    .btn-continue {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      padding: 17px 24px;
+      font-size: 15px;
+      margin-top: 24px;
+    }
+    .btn-skip {
+      display: block;
+      margin-left: 0;
+      margin-top: 14px;
+      text-align: center;
+      width: 100%;
+    }
+    .btn-back { margin-bottom: 28px; }
+    .enter-hint { display: none; }
+    .section-divider { margin-top: 28px; font-size: 12px; }
+    .date-row { grid-template-columns: 1fr; gap: 0; }
+    .date-col { margin-bottom: 20px; }
+    .textarea-input { font-size: 15px; min-height: 110px; }
+    .finish-title { font-size: 38px; line-height: 1.1; }
+    .finish-sub { font-size: 14px; }
+    .finish-line { margin-bottom: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-logo"><strong>Emilio Dümar</strong> / Contact</div>
+  <div class="top-count" id="topCount"></div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<div class="form-shell"><div class="form-inner">
+
+  <!-- Step 1: Name + Email -->
+  <div class="step active" id="step-1">
+    <div class="step-num" id="num-1"></div>
+    <div class="step-title">What's your name?</div>
+    <div class="two-col" style="margin-bottom: 28px;">
+      <div class="field-group"><input class="text-input" id="inp-first" placeholder="First name" autocomplete="off" /></div>
+      <div class="field-group"><input class="text-input" id="inp-last" placeholder="Last name" autocomplete="off" /></div>
+    </div>
+    <div class="field-label">Your email</div>
+    <div class="field-group"><input class="text-input" id="inp-email" placeholder="your@email.com" type="email" autocomplete="off" /></div>
+    <button class="btn-continue" onclick="goTo(2)">Continue <span class="arrow">→</span></button>
+    <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
+  </div>
+
+  <!-- Step 2: What are we making? -->
+  <div class="step" id="step-2">
+    <button class="btn-back" onclick="goTo(1)">← back</button>
+    <div class="step-num" id="num-2"></div>
+    <div class="step-title">What are we making?</div>
+    <div class="option-list" id="opts-2">
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-making')"><div class="option-key">A</div><div class="option-text">Brand campaign for a product or service</div></div>
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-making')"><div class="option-key">B</div><div class="option-text">Talent project, press or personal branding</div></div>
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-making')"><div class="option-key">C</div><div class="option-text">Artist project, album art or visual identity</div></div>
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-making')"><div class="option-key">D</div><div class="option-text">Magazine or editorial feature</div></div>
+      <div class="option-row" onclick="pick(this,'single');showWriteIn('other-making')"><div class="option-key">E</div><div class="option-text">Something else</div></div>
+    </div>
+    <div class="write-in" id="other-making">
+      <input class="text-input" placeholder="Tell me about it" autocomplete="off" />
+    </div>
+    <button class="btn-continue" onclick="goTo(3)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- Step 3: How did we get connected? -->
+  <div class="step" id="step-3">
+    <button class="btn-back" onclick="goTo(2)">← back</button>
+    <div class="step-num" id="num-3"></div>
+    <div class="step-title">How did we get connected?</div>
+    <div class="option-list" id="opts-3">
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">A</div><div class="option-text">Instagram, been following for a while</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">B</div><div class="option-text">A referral from someone I trust</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">C</div><div class="option-text">We've shot together before</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">D</div><div class="option-text">Found you through your portfolio</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">E</div><div class="option-text">Someone passed this form along</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">F</div><div class="option-text">Honestly not sure</div></div>
+    </div>
+    <button class="btn-continue" onclick="goTo(4)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- Step 4: Where would this happen? -->
+  <div class="step" id="step-4">
+    <button class="btn-back" onclick="goTo(3)">← back</button>
+    <div class="step-num" id="num-4"></div>
+    <div class="step-title">Where would this happen?</div>
+    <div class="step-sub">No wrong answer.</div>
+    <div class="option-list" id="opts-4">
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-location')"><div class="option-key">A</div><div class="option-text">Melbourne</div></div>
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-location')"><div class="option-key">B</div><div class="option-text">Sydney</div></div>
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-location')"><div class="option-key">C</div><div class="option-text">Noosa</div></div>
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-location')"><div class="option-key">D</div><div class="option-text">Interstate</div></div>
+      <div class="option-row" onclick="pick(this,'single');showWriteIn('other-location')"><div class="option-key">E</div><div class="option-text">International</div></div>
+      <div class="option-row" onclick="pick(this,'single');showWriteIn('other-location')"><div class="option-key">F</div><div class="option-text">Somewhere else</div></div>
+      <div class="option-row" onclick="pick(this,'single');hideWriteIn('other-location')"><div class="option-key">G</div><div class="option-text">You choose, take us somewhere worth it</div></div>
+    </div>
+    <div class="write-in" id="other-location">
+      <input class="text-input" placeholder="Where are you thinking?" autocomplete="off" />
+    </div>
+    <button class="btn-continue" onclick="goTo(5)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- Step 5: Date in mind? -->
+  <div class="step" id="step-5">
+    <button class="btn-back" onclick="goTo(4)">← back</button>
+    <div class="step-num" id="num-5"></div>
+    <div class="step-title">Do you have a date in mind?</div>
+    <div class="step-sub">All dates pending availability and confirmation.</div>
+    <div class="option-list" id="opts-5">
+      <div class="option-row" onclick="pick(this,'single');document.getElementById('date-fields').style.display='grid'"><div class="option-key">A</div><div class="option-text">Yes, pending your availability</div></div>
+      <div class="option-row" onclick="pick(this,'single');document.getElementById('date-fields').style.display='grid'"><div class="option-key">B</div><div class="option-text">A rough window in mind</div></div>
+      <div class="option-row" onclick="pick(this,'single');document.getElementById('date-fields').style.display='grid'"><div class="option-key">C</div><div class="option-text">Working toward a hard deadline</div></div>
+      <div class="option-row" onclick="pick(this,'single');document.getElementById('date-fields').style.display='none'"><div class="option-key">D</div><div class="option-text">Still early days, just feeling things out</div></div>
+    </div>
+    <div class="date-row" id="date-fields" style="display:none;">
+      <div class="date-col">
+        <label>Earliest</label>
+        <input class="text-input" placeholder="e.g. May 1" style="margin-bottom:0;" />
+      </div>
+      <div class="date-col">
+        <label>Latest</label>
+        <input class="text-input" placeholder="e.g. May 30" style="margin-bottom:0;" />
+      </div>
+    </div>
+    <button class="btn-continue" onclick="goTo(6)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- Step 6: What do you need beyond shooting? -->
+  <div class="step" id="step-6">
+    <button class="btn-back" onclick="goTo(5)">← back</button>
+    <div class="step-num" id="num-6"></div>
+    <div class="step-title">Outside of shooting, what do you need?</div>
+    <div class="step-sub">Select all that apply.</div>
+    <div class="option-list" id="opts-6">
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">A</div><div class="option-text">Just a photographer, nothing more</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">B</div><div class="option-text">Creative direction built from scratch</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">C</div><div class="option-text">Creative input on a concept already in motion</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">D</div><div class="option-text">Full production, locations, crew and all</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">E</div><div class="option-text">Casting through my network</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">F</div><div class="option-text">Styling and glam from my team</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">G</div><div class="option-text">Production guidance on locations, vendors, logistics</div></div>
+    </div>
+    <button class="btn-continue" onclick="goTo(7)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- Step 7: Looks + Hours -->
+  <div class="step" id="step-7">
+    <button class="btn-back" onclick="goTo(6)">← back</button>
+    <div class="step-num" id="num-7"></div>
+    <div class="step-title">Roughly how many looks?</div>
+    <div class="option-list" id="opts-7">
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">A</div><div class="option-text">2 to 3</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">B</div><div class="option-text">3 to 5</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">C</div><div class="option-text">5 to 10</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">D</div><div class="option-text">10 or more</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">E</div><div class="option-text">Not applicable</div></div>
+    </div>
+
+    <div class="section-divider" style="margin-top: 36px;">Roughly how many hours?</div>
+    <div class="section-sub" style="margin-bottom: 0; padding-bottom: 0;">If you are handling your own production.</div>
+    <div class="option-list" id="opts-7b" style="margin-top: 16px;">
+      <div class="option-row" onclick="pick(this,'single',true);hideWriteIn('other-hours')"><div class="option-key">A</div><div class="option-text">2 hours</div></div>
+      <div class="option-row" onclick="pick(this,'single',true);hideWriteIn('other-hours')"><div class="option-key">B</div><div class="option-text">4 hours</div></div>
+      <div class="option-row" onclick="pick(this,'single',true);hideWriteIn('other-hours')"><div class="option-key">C</div><div class="option-text">6 hours</div></div>
+      <div class="option-row" onclick="pick(this,'single',true);hideWriteIn('other-hours')"><div class="option-key">D</div><div class="option-text">1 day</div></div>
+      <div class="option-row" onclick="pick(this,'single',true);hideWriteIn('other-hours')"><div class="option-key">E</div><div class="option-text">2 days</div></div>
+      <div class="option-row" onclick="pick(this,'single',true);hideWriteIn('other-hours')"><div class="option-key">F</div><div class="option-text">Multiple days</div></div>
+      <div class="option-row" onclick="pick(this,'single',true);showWriteIn('other-hours')"><div class="option-key">G</div><div class="option-text">Other</div></div>
+    </div>
+    <div class="write-in" id="other-hours">
+      <input class="text-input" placeholder="Give me an idea" autocomplete="off" />
+    </div>
+    <button class="btn-continue" onclick="goTo(8)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- Step 8: Where will images live + how long -->
+  <div class="step" id="step-8">
+    <button class="btn-back" onclick="goTo(7)">← back</button>
+    <div class="step-num" id="num-8"></div>
+    <div class="step-title">Where will these images live?</div>
+    <div class="step-sub">Select all that apply.</div>
+    <div class="option-list" id="opts-8">
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">A</div><div class="option-text">Social media</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">B</div><div class="option-text">Website and socials</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">C</div><div class="option-text">Print</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">D</div><div class="option-text">Out of home, billboards, transit or signage</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">E</div><div class="option-text">Paid media or advertising</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">F</div><div class="option-text">Unrestricted usage across all platforms</div></div>
+      <div class="option-row" onclick="pick(this,'multi')"><div class="option-key">G</div><div class="option-text">Not sure yet</div></div>
+    </div>
+
+    <div class="section-divider" style="margin-top: 36px;">How long do you need them for?</div>
+    <div class="section-sub" style="margin-bottom: 0; padding-bottom: 0; margin-bottom: 4px;">Select one.</div>
+    <div class="option-list" id="opts-8b" style="margin-top: 16px;">
+      <div class="option-row" onclick="pick(this,'single',true)"><div class="option-key">A</div><div class="option-text">Under a year</div></div>
+      <div class="option-row" onclick="pick(this,'single',true)"><div class="option-key">B</div><div class="option-text">One year, standard licensing</div></div>
+      <div class="option-row" onclick="pick(this,'single',true)"><div class="option-key">C</div><div class="option-text">Longer than a year or in perpetuity</div></div>
+      <div class="option-row" onclick="pick(this,'single',true)"><div class="option-key">D</div><div class="option-text">Not sure</div></div>
+    </div>
+    <button class="btn-continue" onclick="goTo(9)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- Step 9: Turnaround -->
+  <div class="step" id="step-9">
+    <button class="btn-back" onclick="goTo(8)">← back</button>
+    <div class="step-num" id="num-9"></div>
+    <div class="step-title">When do you need the final files?</div>
+    <div class="option-list" id="opts-9">
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">A</div><div class="option-text">Within 48 hours</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">B</div><div class="option-text">Within a week</div></div>
+      <div class="option-row" onclick="pick(this,'single')"><div class="option-key">C</div><div class="option-text">2 to 3 weeks</div></div>
+    </div>
+    <button class="btn-continue" onclick="goTo(10)">Continue <span class="arrow">→</span></button>
+  </div>
+
+  <!-- Step 10: Anything else -->
+  <div class="step" id="step-10">
+    <button class="btn-back" onclick="goTo(9)">← back</button>
+    <div class="step-num" id="num-10"></div>
+    <div class="step-title">Anything else I should know?</div>
+    <div class="step-sub">References, links, mood boards, budget range, timeline specifics, questions. Whatever helps me understand what you are picturing. More context means a faster, better response.</div>
+    <textarea class="textarea-input" placeholder="Optional but genuinely helpful"></textarea>
+    <div>
+      <button class="btn-continue" onclick="goTo(11)">Continue <span class="arrow">→</span></button>
+      <button class="btn-skip" onclick="goTo(11)">Skip</button>
+    </div>
+  </div>
+
+  <!-- Final screen -->
+  <div class="step" id="step-11">
+    <div class="finish-screen">
+      <div class="finish-line"></div>
+      <div class="finish-title">Received.<br>Talk soon!</div>
+      <div class="finish-sub">I'll go through everything and follow up within 24 hours via email.</div>
+      <div class="credit">Emilio Dümar</div>
+    </div>
+  </div>
+
+</div></div>
+
+<script>
+  var TOTAL = 10;
+
+  function goTo(n) {
+    document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById('step-' + n).classList.add('active');
+
+    var isFinish = (n === 11);
+    var pct = isFinish ? 100 : Math.round(((n - 1) / TOTAL) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+
+    var countEl = document.getElementById('topCount');
+    if (isFinish) {
+      countEl.textContent = '';
+    } else {
+      countEl.textContent = (n - 1) + ' / ' + TOTAL;
+    }
+
+    // Step num labels
+    for (var i = 1; i <= TOTAL; i++) {
+      var el = document.getElementById('num-' + i);
+      if (el) el.textContent = (i - 1) + ' / ' + TOTAL;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function pick(el, mode, subgroup) {
+    var parent = subgroup ? document.getElementById('opts-7b') || document.getElementById('opts-8b') : el.parentElement;
+    // Determine correct subgroup parent
+    if (subgroup) {
+      // figure out which subgroup by walking up
+      var pid = el.parentElement.id;
+      parent = document.getElementById(pid);
+    }
+    if (mode === 'single') {
+      parent.querySelectorAll('.option-row').forEach(function(r){ r.classList.remove('selected'); });
+      el.classList.add('selected');
+    } else {
+      el.classList.toggle('selected');
+    }
+  }
+
+  function showWriteIn(id) {
+    var el = document.getElementById(id);
+    if (el) { el.classList.add('visible'); el.querySelector('input, textarea') && el.querySelector('input, textarea').focus(); }
+  }
+
+  function hideWriteIn(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('visible');
+  }
+
+  // Enter to advance
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    var active = document.querySelector('.step.active');
+    if (!active) return;
+    var sid = parseInt(active.id.replace('step-', ''));
+    if (isNaN(sid) || sid >= 10) return;
+    var noAuto = [2, 3, 4, 5, 6, 7, 8, 9];
+    if (noAuto.indexOf(sid) === -1) goTo(sid + 1);
+  });
+
+  // Init
+  goTo(1);
+</script>
+</body>
+</html>
