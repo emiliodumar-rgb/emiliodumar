@@ -89,7 +89,7 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-  .option-list { margin-bottom: 4px; }
+  .option-list { margin-bottom: 6px; }
   .option-row {
     display: flex; align-items: center; gap: 16px;
     border-top: 1px solid var(--border);
@@ -219,7 +219,58 @@
       nav.site-nav { display: none !important; }
     }
     
-  </style>
+  /* ── MOBILE MENU (accordion) ─────────────────────────────── */
+.mobile-menu {
+  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
+  background: #fff; z-index: 190; overflow-y: auto; padding: 12px 0 40px;
+}
+.mobile-menu.open { display: block; }
+
+/* Accordion item */
+.mob-accordion { border-bottom: 1px solid #f0f0f0; }
+.mob-accordion__trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 14px 20px;
+  font-family: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a;
+  background: none; border: none; cursor: pointer; text-align: left;
+}
+.mob-accordion__arrow {
+  font-size: 18px; color: #aaa;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.mob-accordion.open .mob-accordion__arrow { transform: rotate(90deg); }
+.mob-accordion__panel {
+  display: none; padding: 0 0 8px;
+}
+.mob-accordion.open .mob-accordion__panel { display: block; }
+.mob-accordion__panel a {
+  display: block; padding: 9px 32px;
+  font-size: 13px; color: #555;
+  border-bottom: 1px solid #f8f8f8;
+  transition: color 0.15s;
+}
+.mob-accordion__panel a:last-child { border-bottom: none; }
+.mob-accordion__panel a:hover { color: #1a1a1a; }
+
+/* Standalone links */
+.mob-standalone {
+  display: block; padding: 14px 20px;
+  font-size: 16px; color: #1a1a1a;
+  border-bottom: 1px solid #f0f0f0;
+  text-decoration: none;
+}
+.mob-instagram {
+  display: flex; align-items: center; gap: 8px;
+}
+.mob-book-wrap { padding: 20px 20px 8px; }
+.mob-book-btn {
+  display: block; width: 100%; padding: 14px;
+  background: #1a1a1a; color: #fff;
+  text-align: center; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none;
+}
+</style>
 </head>
 <body>
 
@@ -521,73 +572,111 @@
 </div></div>
 
 <script>
-  var TOTAL = 10;
+(function () {
+  'use strict';
 
-  function goTo(n) {
-    document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
-    document.getElementById('step-' + n).classList.add('active');
+  /* ── MASONRY ───────────────────────────────────────────────── */
+  var ROW = 6, GAP = 6;
 
-    var isFinish = (n === 11);
-    var pct = isFinish ? 100 : Math.round(((n - 1) / TOTAL) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
+  function span(item) {
+    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
+    var img = item.querySelector('img');
+    if (!img || !img.naturalWidth) return;
+    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
+    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
+  }
 
-    var countEl = document.getElementById('topCount');
-    if (isFinish) {
-      countEl.textContent = '';
+  function layout() {
+    document.querySelectorAll('.project-grid__item').forEach(span);
+  }
+
+  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
+    var item = img.closest('.project-grid__item');
+    if (img.complete && img.naturalHeight > 0) {
+      span(item);
     } else {
-      countEl.textContent = (n - 1) + ' / ' + TOTAL;
+      img.addEventListener('load', function () { span(item); });
     }
-
-    // Step num labels
-    for (var i = 1; i <= TOTAL; i++) {
-      var el = document.getElementById('num-' + i);
-      if (el) el.textContent = (i - 1) + ' / ' + TOTAL;
-    }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function pick(el, mode, subgroup) {
-    var parent = subgroup ? document.getElementById('opts-7b') || document.getElementById('opts-8b') : el.parentElement;
-    // Determine correct subgroup parent
-    if (subgroup) {
-      // figure out which subgroup by walking up
-      var pid = el.parentElement.id;
-      parent = document.getElementById(pid);
-    }
-    if (mode === 'single') {
-      parent.querySelectorAll('.option-row').forEach(function(r){ r.classList.remove('selected'); });
-      el.classList.add('selected');
-    } else {
-      el.classList.toggle('selected');
-    }
-  }
-
-  function showWriteIn(id) {
-    var el = document.getElementById(id);
-    if (el) { el.classList.add('visible'); el.querySelector('input, textarea') && el.querySelector('input, textarea').focus(); }
-  }
-
-  function hideWriteIn(id) {
-    var el = document.getElementById(id);
-    if (el) el.classList.remove('visible');
-  }
-
-  // Enter to advance
-  document.addEventListener('keydown', function(e) {
-    if (e.key !== 'Enter') return;
-    var active = document.querySelector('.step.active');
-    if (!active) return;
-    var sid = parseInt(active.id.replace('step-', ''));
-    if (isNaN(sid) || sid >= 10) return;
-    var noAuto = [2, 3, 4, 5, 6, 7, 8, 9];
-    if (noAuto.indexOf(sid) === -1) goTo(sid + 1);
   });
 
-  // Init
-  goTo(1);
+  window.addEventListener('load', function () {
+    layout();
+    setTimeout(layout, 400);
+    setTimeout(layout, 1200);
+  });
+
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt); rt = setTimeout(layout, 120);
+  });
+
+  /* ── MOBILE MENU ───────────────────────────────────────────── */
+  var burger = document.getElementById('burger');
+  var menu   = document.getElementById('mobileMenu');
+
+  if (burger && menu) {
+    burger.addEventListener('click', function () {
+      var open = burger.classList.toggle('open');
+      menu.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    menu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.closest('.mob-accordion');
+        var wasOpen = acc.classList.contains('open');
+        menu.querySelectorAll('.mob-accordion').forEach(function (a) {
+          a.classList.remove('open');
+        });
+        if (!wasOpen) acc.classList.add('open');
+      });
+    });
+
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        menu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  /* ── LIGHTBOX ──────────────────────────────────────────────── */
+  var lightbox    = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var imgs = [];
+  var idx  = 0;
+
+  document.querySelectorAll('[data-lightbox]').forEach(function (el, i) {
+    imgs.push(el.dataset.lightbox);
+    el.addEventListener('click', function () { idx = i; openLB(imgs[i]); });
+  });
+
+  function openLB(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLB() {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+    document.body.style.overflow = '';
+  }
+  function prevLB() { idx = (idx - 1 + imgs.length) % imgs.length; lightboxImg.src = imgs[idx]; }
+  function nextLB() { idx = (idx + 1) % imgs.length; lightboxImg.src = imgs[idx]; }
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLB);
+  document.getElementById('lightboxPrev').addEventListener('click', prevLB);
+  document.getElementById('lightboxNext').addEventListener('click', nextLB);
+  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLB(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLB();
+    if (e.key === 'ArrowLeft')  prevLB();
+    if (e.key === 'ArrowRight') nextLB();
+  });
+
+})();
 </script>
-
-
 </body>
 </html>

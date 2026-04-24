@@ -171,8 +171,7 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   .mobile-header { display: flex; }
   .page-body { padding-top: 50px; }
   .home-tagline { padding: 18px 14px 12px; font-size: 12px; }
-  .home-grid { display: block; columns: 2; column-gap: 6px; padding: 0 14px; }
-  .home-grid__item { break-inside: avoid; margin-bottom: 6px; }
+  .home-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 6px; padding: 0 14px; }
   .site-footer { padding: 24px 14px; }
   .site-footer__center { position: static; transform: none; }
 }
@@ -220,6 +219,13 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 }
 .mob-instagram {
   display: flex; align-items: center; gap: 8px;
+}
+.mob-book-wrap { padding: 20px 20px 8px; }
+.mob-book-btn {
+  display: block; width: 100%; padding: 14px;
+  background: #1a1a1a; color: #fff;
+  text-align: center; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none;
 }
 </style>
 </head>
@@ -358,6 +364,10 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
       <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
     </svg>
   </a>
+
+  <div class="mob-book-wrap">
+    <a href="booking.html" class="mob-book-btn">Book Now</a>
+  </div>
 
 </nav>
 

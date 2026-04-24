@@ -116,7 +116,7 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-  .option-list { margin-bottom: 4px; }
+  .option-list { margin-bottom: 6px; }
   .option-row {
     display: flex; align-items: center; gap: 16px;
     border-top: 1px solid var(--border);
@@ -192,7 +192,7 @@
   }
   .upload-icon { font-size: 28px; margin-bottom: 12px; color: var(--muted); }
   .upload-label { font-size: 14px; color: var(--muted); line-height: 1.6; }
-  .upload-label strong { display: block; color: var(--text); font-weight: 500; margin-bottom: 4px; }
+  .upload-label strong { display: block; color: var(--text); font-weight: 500; margin-bottom: 6px; }
   .upload-preview { width: 100%; max-height: 260px; object-fit: cover; border-radius: 4px; display: none; margin-top: 16px; }
 
   .enter-hint {
@@ -275,7 +275,58 @@
       nav.site-nav { display: none !important; }
     }
     
-  </style>
+  /* ── MOBILE MENU (accordion) ─────────────────────────────── */
+.mobile-menu {
+  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
+  background: #fff; z-index: 190; overflow-y: auto; padding: 12px 0 40px;
+}
+.mobile-menu.open { display: block; }
+
+/* Accordion item */
+.mob-accordion { border-bottom: 1px solid #f0f0f0; }
+.mob-accordion__trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 14px 20px;
+  font-family: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a;
+  background: none; border: none; cursor: pointer; text-align: left;
+}
+.mob-accordion__arrow {
+  font-size: 18px; color: #aaa;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.mob-accordion.open .mob-accordion__arrow { transform: rotate(90deg); }
+.mob-accordion__panel {
+  display: none; padding: 0 0 8px;
+}
+.mob-accordion.open .mob-accordion__panel { display: block; }
+.mob-accordion__panel a {
+  display: block; padding: 9px 32px;
+  font-size: 13px; color: #555;
+  border-bottom: 1px solid #f8f8f8;
+  transition: color 0.15s;
+}
+.mob-accordion__panel a:last-child { border-bottom: none; }
+.mob-accordion__panel a:hover { color: #1a1a1a; }
+
+/* Standalone links */
+.mob-standalone {
+  display: block; padding: 14px 20px;
+  font-size: 16px; color: #1a1a1a;
+  border-bottom: 1px solid #f0f0f0;
+  text-decoration: none;
+}
+.mob-instagram {
+  display: flex; align-items: center; gap: 8px;
+}
+.mob-book-wrap { padding: 20px 20px 8px; }
+.mob-book-btn {
+  display: block; width: 100%; padding: 14px;
+  background: #1a1a1a; color: #fff;
+  text-align: center; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none;
+}
+</style>
 </head>
 <body>
 
@@ -754,120 +805,111 @@
 </div></div>
 
 <script>
-  var isModel = false;
+(function () {
+  'use strict';
 
-  // Flow arrays — 0 = welcome, 'done' = finish
-  var BASE_FLOW  = [0,1,2,3,4,5,6,7,8,9,'done'];
-  var MODEL_FLOW = [0,1,2,3,4,5,6,7,8,'m1','m2','m3',9,'done'];
+  /* ── MASONRY ───────────────────────────────────────────────── */
+  var ROW = 6, GAP = 6;
 
-  function flow() { return isModel ? MODEL_FLOW : BASE_FLOW; }
-
-  // Total numbered steps (1..n, excl welcome & done)
-  function totalSteps() { return isModel ? 12 : 9; }
-
-  function stepIndex(sid) { return flow().indexOf(sid); }
-
-  function goTo(sid) {
-    document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
-    document.getElementById('step-' + sid).classList.add('active');
-
-    var idx = stepIndex(sid);
-    var isSpecial = (sid === 0 || sid === 'done');
-
-    // Counter
-    document.getElementById('topCount').textContent = isSpecial ? '' : idx + ' / ' + totalSteps();
-
-    // Step num labels
-    var numEl = document.getElementById('num-' + sid);
-    if (numEl) numEl.textContent = isSpecial ? '' : idx + ' / ' + totalSteps();
-
-    // Progress
-    var pct = isSpecial ? (sid === 'done' ? 100 : 0) : Math.round((idx / totalSteps()) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  function span(item) {
+    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
+    var img = item.querySelector('img');
+    if (!img || !img.naturalWidth) return;
+    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
+    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
   }
 
-  function advance(sid) {
-    // Detect model selection after profession step
-    if (sid === 2) {
-      isModel = !!document.querySelector('#opts-2 .option-row[data-val="Model"].selected');
-    }
-    var f = flow();
-    var idx = f.indexOf(sid);
-    if (idx === -1 || idx >= f.length - 1) return;
-    goTo(f[idx + 1]);
+  function layout() {
+    document.querySelectorAll('.project-grid__item').forEach(span);
   }
 
-  function back(sid) {
-    var f = flow();
-    var idx = f.indexOf(sid);
-    if (idx <= 1) { goTo(0); return; }
-    goTo(f[idx - 1]);
-  }
-
-  function goToFinish() { goTo('done'); }
-
-  function pick(el, mode) {
-    var parent = el.parentElement;
-    if (mode === 'single') {
-      parent.querySelectorAll('.option-row').forEach(function(r){ r.classList.remove('selected'); });
-      el.classList.add('selected');
+  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
+    var item = img.closest('.project-grid__item');
+    if (img.complete && img.naturalHeight > 0) {
+      span(item);
     } else {
-      el.classList.toggle('selected');
-    }
-  }
-
-  function pickOther(el) {
-    el.classList.toggle('selected');
-    var wrap = document.getElementById('other-field-wrap');
-    var inp = document.getElementById('inp-other-profession');
-    if (el.classList.contains('selected')) {
-      wrap.style.display = 'block';
-      inp.focus();
-    } else {
-      wrap.style.display = 'none';
-      inp.value = '';
-    }
-  }
-
-  var waOn = false;
-  function toggleWA() {
-    waOn = !waOn;
-    var box = document.getElementById('waBox');
-    box.classList.toggle('on', waOn);
-    box.textContent = waOn ? '✓' : '';
-  }
-
-  function handlePhoto(input) {
-    var file = input.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var p = document.getElementById('photoPreview');
-      p.src = e.target.result; p.style.display = 'block';
-      document.getElementById('uploadIcon').style.display = 'none';
-      document.getElementById('uploadLabel').style.display = 'none';
-    };
-    reader.readAsDataURL(file);
-  }
-
-  // Enter key to advance (skip option-only steps)
-  var NO_AUTO = ['2','m2','m3','9','done'];
-  document.addEventListener('keydown', function(e) {
-    if (e.key !== 'Enter') return;
-    var active = document.querySelector('.step.active');
-    if (!active) return;
-    var sid = active.id.replace('step-','');
-    if (sid === '0') { goTo(1); return; }
-    if (NO_AUTO.indexOf(sid) === -1) {
-      advance(isNaN(+sid) ? sid : +sid);
+      img.addEventListener('load', function () { span(item); });
     }
   });
 
-  goTo(0);
+  window.addEventListener('load', function () {
+    layout();
+    setTimeout(layout, 400);
+    setTimeout(layout, 1200);
+  });
+
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt); rt = setTimeout(layout, 120);
+  });
+
+  /* ── MOBILE MENU ───────────────────────────────────────────── */
+  var burger = document.getElementById('burger');
+  var menu   = document.getElementById('mobileMenu');
+
+  if (burger && menu) {
+    burger.addEventListener('click', function () {
+      var open = burger.classList.toggle('open');
+      menu.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    menu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.closest('.mob-accordion');
+        var wasOpen = acc.classList.contains('open');
+        menu.querySelectorAll('.mob-accordion').forEach(function (a) {
+          a.classList.remove('open');
+        });
+        if (!wasOpen) acc.classList.add('open');
+      });
+    });
+
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        menu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  /* ── LIGHTBOX ──────────────────────────────────────────────── */
+  var lightbox    = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var imgs = [];
+  var idx  = 0;
+
+  document.querySelectorAll('[data-lightbox]').forEach(function (el, i) {
+    imgs.push(el.dataset.lightbox);
+    el.addEventListener('click', function () { idx = i; openLB(imgs[i]); });
+  });
+
+  function openLB(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLB() {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+    document.body.style.overflow = '';
+  }
+  function prevLB() { idx = (idx - 1 + imgs.length) % imgs.length; lightboxImg.src = imgs[idx]; }
+  function nextLB() { idx = (idx + 1) % imgs.length; lightboxImg.src = imgs[idx]; }
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLB);
+  document.getElementById('lightboxPrev').addEventListener('click', prevLB);
+  document.getElementById('lightboxNext').addEventListener('click', nextLB);
+  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLB(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLB();
+    if (e.key === 'ArrowLeft')  prevLB();
+    if (e.key === 'ArrowRight') nextLB();
+  });
+
+})();
 </script>
-
-
 </body>
 </html>
