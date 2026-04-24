@@ -86,17 +86,17 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 .project-header h1 { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; margin-bottom: 4px; }
 .project-header p { font-size: 13px; color: #666; font-style: italic; line-height: 1.5; }
 
-/* ── MASONRY GRID — CSS columns, no JS needed ───────────────── */
+/* ── MASONRY GRID ───────────────────────────────────────────── */
 .project-grid {
   padding: 20px 28px 0;
-  columns: 4;
-  column-gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 6px;
+  gap: 0 6px;
 }
 .project-grid__item {
-  break-inside: avoid;
   overflow: hidden;
   cursor: pointer;
-  margin-bottom: 6px;
 }
 .project-grid__item img {
   width: 100%;
@@ -191,18 +191,18 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 1200px) {
-  .project-grid { columns: 3; }
+  .project-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 900px) {
-  .project-grid { columns: 2; }
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 700px) {
   .site-nav { display: none; }
   .mobile-header { display: flex; }
   .page-body { padding-top: 50px; }
   .project-header { padding: 20px 14px 4px; }
-  .project-grid { columns: 2; column-gap: 4px; padding: 8px 8px 0; }
-  .project-grid__item { grid-row-end: auto !important; }
+  .project-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 4px; padding: 8px 8px 0; }
+  .project-grid__item { grid-row-end: auto !important; min-height: unset; }
   .proj-nav { padding: 32px 14px 0; flex-wrap: wrap; }
   .proj-nav__btn { min-width: 0; flex: 1; }
   .site-footer { padding: 24px 14px; flex-direction: column; gap: 10px; align-items: flex-start; }
@@ -401,23 +401,23 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   </div>
 
   <div class="project-grid" id="masonryGrid">
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d6d8e45e-ce68-4988-9b8a-1c5e09b66de7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-33.jpg?format=1500w"   alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d6d8e45e-ce68-4988-9b8a-1c5e09b66de7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-33.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d6d8e45e-ce68-4988-9b8a-1c5e09b66de7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-33.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d6d8e45e-ce68-4988-9b8a-1c5e09b66de7/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-33.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bc77ab60-f25e-43af-ac04-eef8e043327c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-174.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bc77ab60-f25e-43af-ac04-eef8e043327c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-174.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cfc2954c-243c-41b3-ae1e-3fd27ff7f09c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-139.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cfc2954c-243c-41b3-ae1e-3fd27ff7f09c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-139.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d50135dc-ba87-4892-9705-c94727961378/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-159.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d50135dc-ba87-4892-9705-c94727961378/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-159.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b4ee06c-63af-468c-b7fa-cdbb1caadc5c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-47.jpg?format=1500w"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b4ee06c-63af-468c-b7fa-cdbb1caadc5c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-47.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/aa5307eb-7cd4-4ddf-b3e3-2569d3a292a8/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-70.jpg?format=1500w"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/aa5307eb-7cd4-4ddf-b3e3-2569d3a292a8/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-70.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b4ee06c-63af-468c-b7fa-cdbb1caadc5c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-47.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b4ee06c-63af-468c-b7fa-cdbb1caadc5c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-47.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/aa5307eb-7cd4-4ddf-b3e3-2569d3a292a8/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-70.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/aa5307eb-7cd4-4ddf-b3e3-2569d3a292a8/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-70.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4381e203-f0c5-40d0-849b-c5f18a35689b/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-145.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4381e203-f0c5-40d0-849b-c5f18a35689b/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-145.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/372d9a0b-e9c1-41b2-a7b9-880658df75e6/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-78.jpg?format=1500w"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/372d9a0b-e9c1-41b2-a7b9-880658df75e6/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-78.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/372d9a0b-e9c1-41b2-a7b9-880658df75e6/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-78.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/372d9a0b-e9c1-41b2-a7b9-880658df75e6/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-78.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/59a0a620-0b4a-4080-9024-d5c3ff8d147c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-140.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/59a0a620-0b4a-4080-9024-d5c3ff8d147c/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-140.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a702b383-2b68-4f5b-9992-b06b0f4f3d05/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-45.jpg?format=1500w"  alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a702b383-2b68-4f5b-9992-b06b0f4f3d05/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-45.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a702b383-2b68-4f5b-9992-b06b0f4f3d05/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-45.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a702b383-2b68-4f5b-9992-b06b0f4f3d05/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-45.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1f105c42-9e1d-444d-82fa-e64ce309d616/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-176.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1f105c42-9e1d-444d-82fa-e64ce309d616/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-176.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ff5a1048-4561-4d90-910b-d2dba2b3b58d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-143.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ff5a1048-4561-4d90-910b-d2dba2b3b58d/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-143.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cc474a4-df55-4025-a0f2-d09b9617a7a3/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-141.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cc474a4-df55-4025-a0f2-d09b9617a7a3/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-141.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ab34761f-46fe-4580-9605-b2c9a17f87d2/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-146.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ab34761f-46fe-4580-9605-b2c9a17f87d2/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-146.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4a606894-a866-44ae-95a0-379d83f2b82e/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-152.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4a606894-a866-44ae-95a0-379d83f2b82e/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-152.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a5906dbb-89d7-4a95-9c3a-716d95960646/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-154.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a5906dbb-89d7-4a95-9c3a-716d95960646/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-154.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fa66538e-31d4-4e88-8bcb-38ce02f0ee57/EMILIODUMAR_CCV_SHIBUYA_PHOTOS.jpg?format=1500w"     alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fa66538e-31d4-4e88-8bcb-38ce02f0ee57/EMILIODUMAR_CCV_SHIBUYA_PHOTOS.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fa66538e-31d4-4e88-8bcb-38ce02f0ee57/EMILIODUMAR_CCV_SHIBUYA_PHOTOS.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fa66538e-31d4-4e88-8bcb-38ce02f0ee57/EMILIODUMAR_CCV_SHIBUYA_PHOTOS.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b93fbf5-1194-48a7-a26c-492964ac7121/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-163.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b93fbf5-1194-48a7-a26c-492964ac7121/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-163.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5bbcce01-5f03-4483-9e4c-d9fbbfb1008a/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-164.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5bbcce01-5f03-4483-9e4c-d9fbbfb1008a/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-164.jpg" /></div>
     <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f22aae9-57c6-4866-9351-86217c250eb1/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-170.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f22aae9-57c6-4866-9351-86217c250eb1/EMILIODUMAR_CCV_SHIBUYA_PHOTOS-170.jpg" /></div>
@@ -454,82 +454,105 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 (function () {
   'use strict';
 
-  /* ── MASONRY (desktop only) ──────────────────────────────── */
-  /* layout handled by CSS columns */
+  /* ── MASONRY ───────────────────────────────────────────────── */
+  var ROW = 6, GAP = 6;
 
-  var _rt;
-  window.addEventListener('resize', function() {
-    clearTimeout(_rt); _rt = setTimeout(layoutAll, 120);
+  function span(item) {
+    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
+    var img = item.querySelector('img');
+    if (!img || !img.naturalWidth) return;
+    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
+    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
+  }
+
+  function layout() {
+    document.querySelectorAll('.project-grid__item').forEach(span);
+  }
+
+  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
+    var item = img.closest('.project-grid__item');
+    if (img.complete && img.naturalHeight > 0) {
+      span(item);
+    } else {
+      img.addEventListener('load', function () { span(item); });
+    }
   });
 
-    /* ── MOBILE BURGER ─────────────────────────────────────────── */
-  var burger     = document.getElementById('burger');
-  var mobileMenu = document.getElementById('mobileMenu');
-  if (burger && mobileMenu) {
+  window.addEventListener('load', function () {
+    layout();
+    setTimeout(layout, 400);
+    setTimeout(layout, 1200);
+  });
+
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt); rt = setTimeout(layout, 120);
+  });
+
+  /* ── MOBILE MENU ───────────────────────────────────────────── */
+  var burger = document.getElementById('burger');
+  var menu   = document.getElementById('mobileMenu');
+
+  if (burger && menu) {
     burger.addEventListener('click', function () {
       var open = burger.classList.toggle('open');
-      mobileMenu.classList.toggle('open', open);
+      menu.classList.toggle('open', open);
       document.body.style.overflow = open ? 'hidden' : '';
     });
-    // Accordion triggers
-    mobileMenu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
+
+    menu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var acc = btn.closest('.mob-accordion');
         var wasOpen = acc.classList.contains('open');
-        // Close all
-        mobileMenu.querySelectorAll('.mob-accordion').forEach(function (a) {
+        menu.querySelectorAll('.mob-accordion').forEach(function (a) {
           a.classList.remove('open');
         });
-        // Toggle clicked
         if (!wasOpen) acc.classList.add('open');
       });
     });
-    // Close menu on link click
-    mobileMenu.querySelectorAll('a').forEach(function (a) {
+
+    menu.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
         burger.classList.remove('open');
-        mobileMenu.classList.remove('open');
+        menu.classList.remove('open');
         document.body.style.overflow = '';
       });
     });
-  });
   }
 
   /* ── LIGHTBOX ──────────────────────────────────────────────── */
   var lightbox    = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightboxImg');
-  var allImgs = [];
-  var currentIdx = 0;
+  var imgs = [];
+  var idx  = 0;
 
   document.querySelectorAll('[data-lightbox]').forEach(function (el, i) {
-    allImgs.push(el.dataset.lightbox);
-    el.addEventListener('click', function () {
-      currentIdx = i;
-      open(allImgs[i]);
-    });
+    imgs.push(el.dataset.lightbox);
+    el.addEventListener('click', function () { idx = i; openLB(imgs[i]); });
   });
 
-  function open(src) {
+  function openLB(src) {
     lightboxImg.src = src;
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
-  function close() {
+  function closeLB() {
     lightbox.classList.remove('open');
+    lightboxImg.src = '';
     document.body.style.overflow = '';
   }
-  function prev() { currentIdx = (currentIdx - 1 + allImgs.length) % allImgs.length; lightboxImg.src = allImgs[currentIdx]; }
-  function next() { currentIdx = (currentIdx + 1) % allImgs.length; lightboxImg.src = allImgs[currentIdx]; }
+  function prevLB() { idx = (idx - 1 + imgs.length) % imgs.length; lightboxImg.src = imgs[idx]; }
+  function nextLB() { idx = (idx + 1) % imgs.length; lightboxImg.src = imgs[idx]; }
 
-  document.getElementById('lightboxClose').addEventListener('click', close);
-  document.getElementById('lightboxPrev').addEventListener('click', prev);
-  document.getElementById('lightboxNext').addEventListener('click', next);
-  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) close(); });
+  document.getElementById('lightboxClose').addEventListener('click', closeLB);
+  document.getElementById('lightboxPrev').addEventListener('click', nextLB);
+  document.getElementById('lightboxNext').addEventListener('click', nextLB);
+  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLB(); });
   document.addEventListener('keydown', function (e) {
     if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape')      close();
-    if (e.key === 'ArrowLeft')   prev();
-    if (e.key === 'ArrowRight')  next();
+    if (e.key === 'Escape')     closeLB();
+    if (e.key === 'ArrowLeft')  prevLB();
+    if (e.key === 'ArrowRight') nextLB();
   });
 
 })();
