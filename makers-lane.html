@@ -70,19 +70,13 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 .burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-.mobile-menu {
-  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
-  background: #fff; z-index: 190; overflow-y: auto; padding: 20px 20px 40px;
-}
-.mobile-menu.open { display: block; }
-.mobile-menu__section { margin-bottom: 20px; }
-.mobile-menu__heading { font-size: 11px; color: #999; letter-spacing: 0.06em; margin-bottom: 8px; }
-.mobile-menu__section a {
-  display: block; font-size: 14px; color: #1a1a1a;
-  padding: 6px 0; border-bottom: 1px solid #f0f0f0; transition: color 0.15s;
-}
-.mobile-menu__section a:last-child { border-bottom: none; }
-.mobile-menu__standalone { display: block; font-size: 14px; color: #1a1a1a; padding: 8px 0; border-top: 1px solid #e8e8e8; margin-top: 8px; }
+/* mobile-menu replaced */
+
+
+
+
+
+
 
 /* ── PAGE BODY ──────────────────────────────────────────────── */
 .page-body { padding-top: 60px; }
@@ -200,20 +194,64 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 1200px) { .project-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 900px)  { .project-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px)  { .project-grid { display: block; columns: 2; column-gap: 4px; padding: 8px 8px 0; } }
 @media (max-width: 700px) {
   .site-nav { display: none; }
   .mobile-header { display: flex; }
   .page-body { padding-top: 50px; }
   .project-header { padding: 20px 14px 4px; }
-  .project-grid { grid-template-columns: repeat(2, 1fr); padding: 14px 14px 0; }
+  .project-grid { display: block; columns: 2; column-gap: 4px; padding: 8px 8px 0; }
   .proj-nav { padding: 32px 14px 0; }
   .proj-nav__btn { min-width: 0; }
   .site-footer { padding: 24px 14px; }
   .site-footer__center { position: static; transform: none; }
 }
-@media (max-width: 420px) { .project-grid { grid-template-columns: 1fr; } }
-  </style>
+
+  /* ── MOBILE MENU (accordion) ─────────────────────────────── */
+.mobile-menu {
+  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
+  background: #fff; z-index: 190; overflow-y: auto; padding: 12px 0 40px;
+}
+.mobile-menu.open { display: block; }
+
+/* Accordion item */
+.mob-accordion { border-bottom: 1px solid #f0f0f0; }
+.mob-accordion__trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 14px 20px;
+  font-family: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a;
+  background: none; border: none; cursor: pointer; text-align: left;
+}
+.mob-accordion__arrow {
+  font-size: 18px; color: #aaa;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.mob-accordion.open .mob-accordion__arrow { transform: rotate(90deg); }
+.mob-accordion__panel {
+  display: none; padding: 0 0 8px;
+}
+.mob-accordion.open .mob-accordion__panel { display: block; }
+.mob-accordion__panel a {
+  display: block; padding: 9px 32px;
+  font-size: 13px; color: #555;
+  border-bottom: 1px solid #f8f8f8;
+  transition: color 0.15s;
+}
+.mob-accordion__panel a:last-child { border-bottom: none; }
+.mob-accordion__panel a:hover { color: #1a1a1a; }
+
+/* Standalone links */
+.mob-standalone {
+  display: block; padding: 14px 20px;
+  font-size: 16px; color: #1a1a1a;
+  border-bottom: 1px solid #f0f0f0;
+  text-decoration: none;
+}
+.mob-instagram {
+  display: flex; align-items: center; gap: 8px;
+}
+</style>
 </head>
 <body>
 
@@ -285,45 +323,72 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 
 <!-- ── MOBILE MENU ──────────────────────────────────────────── -->
 <nav class="mobile-menu" id="mobileMenu">
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Commercial</p>
-    <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
-    <a href="rollie-nation.html">Rollie Nation</a>
-    <a href="cleonie.html">Cleonie</a>
-    <a href="baker-bleu.html">Baker Bleu</a>
-    <a href="ena-pelly.html">Ena Pelly</a>
-    <a href="inbluem.html">Inbluem</a>
-    <a href="the-wolf-gang.html">The Wolf Gang</a>
-    <a href="linden-cook.html">Linden Cook</a>
-    <a href="san-lorenzo.html">San Lorenzo</a>
-    <a href="utopia.html">Utopia</a>
-    <a href="rogue-season.html">Rogue Season</a>
-    <a href="maatsuyker.html">Maatsuyker</a>
-    <a href="yo-chi.html">YO-CHI</a>
+
+  <!-- Commercial accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-commercial">
+      Commercial <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-commercial">
+      <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+      <a href="rollie-nation.html">Rollie Nation</a>
+      <a href="cleonie.html">Cleonie</a>
+      <a href="baker-bleu.html">Baker Bleu</a>
+      <a href="ena-pelly.html">Ena Pelly</a>
+      <a href="inbluem.html">Inbluem</a>
+      <a href="the-wolf-gang.html">The Wolf Gang</a>
+      <a href="linden-cook.html">Linden Cook</a>
+      <a href="san-lorenzo.html">San Lorenzo</a>
+      <a href="utopia.html">Utopia</a>
+      <a href="rogue-season.html">Rogue Season</a>
+      <a href="maatsuyker.html">Maatsuyker</a>
+      <a href="yo-chi.html">YO-CHI</a>
+    </div>
   </div>
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Editorial</p>
-    <a href="grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
-    <a href="makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
-    <a href="rahart-adams.html">Rahart Adams — Arabian Moda</a>
-    <a href="wax-wings.html">Wax Wings — Enzomnia Magazine</a>
-    <a href="valley-summer.html">Valley Summer</a>
-    <a href="out-of-office.html">Out of Office</a>
-    <a href="learn-twice.html">Learn Twice — C Heads Magazine</a>
-    <a href="burbank-views.html">Burbank Views</a>
+
+  <!-- Editorial accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-editorial">
+      Editorial <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-editorial">
+      <a href="grit-grace.html">Grit &amp; Grace &mdash; Vanguard Magazine</a>
+      <a href="makers-lane.html">Makers Lane &mdash; Melbourne Fashion Week 2025</a>
+      <a href="rahart-adams.html">Rahart Adams &mdash; Arabian Moda</a>
+      <a href="wax-wings.html">Wax Wings &mdash; Enzomnia Magazine</a>
+      <a href="valley-summer.html">Valley Summer</a>
+      <a href="out-of-office.html">Out of Office</a>
+      <a href="learn-twice.html">Learn Twice &mdash; C Heads Magazine</a>
+      <a href="burbank-views.html">Burbank Views</a>
+    </div>
   </div>
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Personal</p>
-    <a href="portugal.html">Portugal</a>
-    <a href="new-york-city.html">New York City</a>
-    <a href="california.html">California</a>
-    <a href="indonesia.html">Indonesia</a>
-    <a href="peru.html">Peru</a>
-    <a href="colombia.html">Colombia</a>
-    <a href="tasmania.html">Tasmania</a>
-    <a href="mexico.html">Mexico</a>
+
+  <!-- Personal accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-personal">
+      Personal <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-personal">
+      <a href="portugal.html">Portugal</a>
+      <a href="new-york-city.html">New York City</a>
+      <a href="california.html">California</a>
+      <a href="indonesia.html">Indonesia</a>
+      <a href="peru.html">Peru</a>
+      <a href="colombia.html">Colombia</a>
+      <a href="tasmania.html">Tasmania</a>
+      <a href="mexico.html">Mexico</a>
+    </div>
   </div>
-  <a href="info.html" class="mobile-menu__standalone">Info</a>
+
+  <a href="info.html" class="mob-standalone">Info</a>
+  <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="mob-standalone mob-instagram" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+
 </nav>
 
 <!-- ── PAGE BODY ────────────────────────────────────────────── -->
@@ -335,45 +400,45 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   </div>
 
   <div class="project-grid">
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4bd17098-82b2-45ce-b735-f85426d47519/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-81.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4bd17098-82b2-45ce-b735-f85426d47519/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-81.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3632a65b-649e-40dc-b414-bd0c985fe2d8/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-48.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3632a65b-649e-40dc-b414-bd0c985fe2d8/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-48.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f8c4d977-5413-4c21-ae63-b69d39dd750c/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-50.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f8c4d977-5413-4c21-ae63-b69d39dd750c/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-50.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dc37940b-bac2-487d-b6e2-aca804fc6f64/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-167.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dc37940b-bac2-487d-b6e2-aca804fc6f64/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-167.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cd0fb7ba-f5dc-4151-ad2c-5ff961805c13/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-60.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cd0fb7ba-f5dc-4151-ad2c-5ff961805c13/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-60.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a0470f00-7a2d-420e-beb8-5581dbc603df/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-12.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a0470f00-7a2d-420e-beb8-5581dbc603df/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-12.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/30800d4f-510b-4efe-b530-7c95e9ecfce9/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-137.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/30800d4f-510b-4efe-b530-7c95e9ecfce9/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-137.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d337b363-47ea-4975-a18a-69fa925d3d1a/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-46.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d337b363-47ea-4975-a18a-69fa925d3d1a/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-46.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ba55ee28-9922-4dde-a610-69c15964d54e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-128.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ba55ee28-9922-4dde-a610-69c15964d54e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-128.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a2fa15fe-4fb6-4b40-b0a0-0cec3e3838d0/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-29.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a2fa15fe-4fb6-4b40-b0a0-0cec3e3838d0/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-29.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a88b562d-d141-4bd2-902c-70b7928e69e8/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-30.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a88b562d-d141-4bd2-902c-70b7928e69e8/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-30.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bea0497a-d343-4b54-9783-4f78ec761f0d/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-6.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bea0497a-d343-4b54-9783-4f78ec761f0d/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-6.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8172ce92-fbe9-48a7-9c81-05f1ab6a03bc/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-66.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8172ce92-fbe9-48a7-9c81-05f1ab6a03bc/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-66.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/175a38e5-0d59-400f-ae38-e6a18554da97/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-32.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/175a38e5-0d59-400f-ae38-e6a18554da97/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-32.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/118e8410-b565-495b-a9b6-defca0bca1e3/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-18.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/118e8410-b565-495b-a9b6-defca0bca1e3/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-18.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/77fa07c3-23e9-426e-ae25-ccc5d15960f9/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-53.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/77fa07c3-23e9-426e-ae25-ccc5d15960f9/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-53.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/229d8210-09fc-4b36-8755-d5d735555ba4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-58.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/229d8210-09fc-4b36-8755-d5d735555ba4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-58.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/119d506d-edb8-41c4-9f1b-f167ad177e8e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-61.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/119d506d-edb8-41c4-9f1b-f167ad177e8e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-61.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f8db00c-b488-4109-b5e4-04321f9b32b4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-84.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f8db00c-b488-4109-b5e4-04321f9b32b4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-84.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e43510a9-6f6e-40b2-9746-39ca993c2112/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-86.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e43510a9-6f6e-40b2-9746-39ca993c2112/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-86.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3ad400b-1644-4bda-a809-a134e790dd2a/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-121.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3ad400b-1644-4bda-a809-a134e790dd2a/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-121.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6db49f00-82e1-44bc-ac40-696c8db28a63/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-125.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6db49f00-82e1-44bc-ac40-696c8db28a63/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-125.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/79fe8b54-2ee8-44fe-9c1a-4bea28805735/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-127.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/79fe8b54-2ee8-44fe-9c1a-4bea28805735/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-127.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ee69e989-b383-49d4-8828-15ebfd17a249/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-134.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ee69e989-b383-49d4-8828-15ebfd17a249/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-134.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ada01de-cfb5-4c38-b82e-f739ebc9caf1/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-139.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ada01de-cfb5-4c38-b82e-f739ebc9caf1/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-139.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/7f790c1f-5c59-490d-badc-e63bef17017c/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-143.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/7f790c1f-5c59-490d-badc-e63bef17017c/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-143.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b121030-1567-4f91-b328-56514e0b15f2/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-147.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b121030-1567-4f91-b328-56514e0b15f2/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-147.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c5103fdf-8174-4cbb-8eba-2ef62b4f6dc4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-149.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c5103fdf-8174-4cbb-8eba-2ef62b4f6dc4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-149.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4922389b-090a-4f80-a118-bb521c7d4ab5/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-150.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4922389b-090a-4f80-a118-bb521c7d4ab5/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-150.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/05591ea2-7954-48bb-a01c-126cbae3a384/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-154.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/05591ea2-7954-48bb-a01c-126cbae3a384/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-154.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6bcb5397-9e15-49bb-bc6f-c8b93029e461/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-156.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6bcb5397-9e15-49bb-bc6f-c8b93029e461/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-156.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e2870eb3-2bbf-4a23-bbab-a657f0daf131/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-158.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e2870eb3-2bbf-4a23-bbab-a657f0daf131/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-158.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8858f469-5c9f-4de1-8a54-3a394cd832cc/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-160.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8858f469-5c9f-4de1-8a54-3a394cd832cc/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-160.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/be025418-eed2-4b97-816f-89a3e0f57800/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-164.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/be025418-eed2-4b97-816f-89a3e0f57800/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-164.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bb73c620-fc9a-4491-8bf9-46932343578e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-166.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bb73c620-fc9a-4491-8bf9-46932343578e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-166.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/82e71e8a-cfec-49ad-87a8-6c7ae469bc4b/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-168.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/82e71e8a-cfec-49ad-87a8-6c7ae469bc4b/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-168.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e381b7a1-fa48-4c5f-a812-e361f075808b/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-169.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e381b7a1-fa48-4c5f-a812-e361f075808b/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-169.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/47f885cd-6ad5-4fca-bebf-677bf963ec73/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-170.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/47f885cd-6ad5-4fca-bebf-677bf963ec73/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-170.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ba537eb6-acec-4836-8a5a-93aec4a41e4e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-171.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ba537eb6-acec-4836-8a5a-93aec4a41e4e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-171.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4bd17098-82b2-45ce-b735-f85426d47519/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-81.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4bd17098-82b2-45ce-b735-f85426d47519/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-81.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3632a65b-649e-40dc-b414-bd0c985fe2d8/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-48.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3632a65b-649e-40dc-b414-bd0c985fe2d8/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-48.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f8c4d977-5413-4c21-ae63-b69d39dd750c/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-50.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f8c4d977-5413-4c21-ae63-b69d39dd750c/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-50.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dc37940b-bac2-487d-b6e2-aca804fc6f64/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-167.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dc37940b-bac2-487d-b6e2-aca804fc6f64/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-167.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cd0fb7ba-f5dc-4151-ad2c-5ff961805c13/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-60.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/cd0fb7ba-f5dc-4151-ad2c-5ff961805c13/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-60.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a0470f00-7a2d-420e-beb8-5581dbc603df/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-12.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a0470f00-7a2d-420e-beb8-5581dbc603df/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-12.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/30800d4f-510b-4efe-b530-7c95e9ecfce9/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-137.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/30800d4f-510b-4efe-b530-7c95e9ecfce9/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-137.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d337b363-47ea-4975-a18a-69fa925d3d1a/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-46.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d337b363-47ea-4975-a18a-69fa925d3d1a/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-46.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ba55ee28-9922-4dde-a610-69c15964d54e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-128.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ba55ee28-9922-4dde-a610-69c15964d54e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-128.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a2fa15fe-4fb6-4b40-b0a0-0cec3e3838d0/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-29.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a2fa15fe-4fb6-4b40-b0a0-0cec3e3838d0/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-29.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a88b562d-d141-4bd2-902c-70b7928e69e8/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-30.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a88b562d-d141-4bd2-902c-70b7928e69e8/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-30.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bea0497a-d343-4b54-9783-4f78ec761f0d/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-6.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bea0497a-d343-4b54-9783-4f78ec761f0d/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-6.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8172ce92-fbe9-48a7-9c81-05f1ab6a03bc/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-66.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8172ce92-fbe9-48a7-9c81-05f1ab6a03bc/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-66.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/175a38e5-0d59-400f-ae38-e6a18554da97/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-32.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/175a38e5-0d59-400f-ae38-e6a18554da97/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-32.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/118e8410-b565-495b-a9b6-defca0bca1e3/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-18.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/118e8410-b565-495b-a9b6-defca0bca1e3/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-18.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/77fa07c3-23e9-426e-ae25-ccc5d15960f9/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-53.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/77fa07c3-23e9-426e-ae25-ccc5d15960f9/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-53.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/229d8210-09fc-4b36-8755-d5d735555ba4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-58.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/229d8210-09fc-4b36-8755-d5d735555ba4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-58.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/119d506d-edb8-41c4-9f1b-f167ad177e8e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-61.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/119d506d-edb8-41c4-9f1b-f167ad177e8e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-61.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f8db00c-b488-4109-b5e4-04321f9b32b4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-84.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3f8db00c-b488-4109-b5e4-04321f9b32b4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-84.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e43510a9-6f6e-40b2-9746-39ca993c2112/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-86.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e43510a9-6f6e-40b2-9746-39ca993c2112/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-86.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3ad400b-1644-4bda-a809-a134e790dd2a/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-121.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3ad400b-1644-4bda-a809-a134e790dd2a/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-121.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6db49f00-82e1-44bc-ac40-696c8db28a63/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-125.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6db49f00-82e1-44bc-ac40-696c8db28a63/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-125.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/79fe8b54-2ee8-44fe-9c1a-4bea28805735/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-127.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/79fe8b54-2ee8-44fe-9c1a-4bea28805735/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-127.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ee69e989-b383-49d4-8828-15ebfd17a249/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-134.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ee69e989-b383-49d4-8828-15ebfd17a249/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-134.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ada01de-cfb5-4c38-b82e-f739ebc9caf1/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-139.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ada01de-cfb5-4c38-b82e-f739ebc9caf1/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-139.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/7f790c1f-5c59-490d-badc-e63bef17017c/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-143.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/7f790c1f-5c59-490d-badc-e63bef17017c/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-143.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b121030-1567-4f91-b328-56514e0b15f2/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-147.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1b121030-1567-4f91-b328-56514e0b15f2/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-147.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c5103fdf-8174-4cbb-8eba-2ef62b4f6dc4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-149.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c5103fdf-8174-4cbb-8eba-2ef62b4f6dc4/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-149.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4922389b-090a-4f80-a118-bb521c7d4ab5/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-150.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4922389b-090a-4f80-a118-bb521c7d4ab5/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-150.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/05591ea2-7954-48bb-a01c-126cbae3a384/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-154.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/05591ea2-7954-48bb-a01c-126cbae3a384/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-154.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6bcb5397-9e15-49bb-bc6f-c8b93029e461/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-156.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6bcb5397-9e15-49bb-bc6f-c8b93029e461/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-156.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e2870eb3-2bbf-4a23-bbab-a657f0daf131/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-158.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e2870eb3-2bbf-4a23-bbab-a657f0daf131/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-158.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8858f469-5c9f-4de1-8a54-3a394cd832cc/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-160.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8858f469-5c9f-4de1-8a54-3a394cd832cc/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-160.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/be025418-eed2-4b97-816f-89a3e0f57800/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-164.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/be025418-eed2-4b97-816f-89a3e0f57800/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-164.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bb73c620-fc9a-4491-8bf9-46932343578e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-166.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bb73c620-fc9a-4491-8bf9-46932343578e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-166.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/82e71e8a-cfec-49ad-87a8-6c7ae469bc4b/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-168.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/82e71e8a-cfec-49ad-87a8-6c7ae469bc4b/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-168.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e381b7a1-fa48-4c5f-a812-e361f075808b/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-169.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e381b7a1-fa48-4c5f-a812-e361f075808b/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-169.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/47f885cd-6ad5-4fca-bebf-677bf963ec73/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-170.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/47f885cd-6ad5-4fca-bebf-677bf963ec73/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-170.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ba537eb6-acec-4836-8a5a-93aec4a41e4e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-171.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ba537eb6-acec-4836-8a5a-93aec4a41e4e/EMILIODUMAR_MAKERSLANE_BACKSTAGE_-171.jpg" /></div>
   </div>
 
   <!-- ── PREV / NEXT ───────────────────────────────────────────── -->
@@ -410,53 +475,66 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   'use strict';
 
   /* ── MASONRY ───────────────────────────────────────────────── */
-  var ROW_PX = 6;
-  var GAP_PX = 6;
+  var ROW = 6, GAP = 6;
 
-  function setSpan(item) {
+  function span(item) {
+    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
     var img = item.querySelector('img');
-    if (!img) return;
-    var colW = item.getBoundingClientRect().width;
-    var renderedH = img.naturalHeight > 0
-      ? (colW * img.naturalHeight / img.naturalWidth)
-      : img.getBoundingClientRect().height;
-    var spans = Math.ceil((renderedH + GAP_PX) / ROW_PX);
-    item.style.gridRowEnd = 'span ' + spans;
+    if (!img || !img.naturalWidth) return;
+    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
+    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
   }
 
-  function resizeAll() {
-    document.querySelectorAll('.project-grid__item').forEach(setSpan);
+  function layout() {
+    document.querySelectorAll('.project-grid__item').forEach(span);
   }
 
   document.querySelectorAll('.project-grid__item img').forEach(function (img) {
+    var item = img.closest('.project-grid__item');
     if (img.complete && img.naturalHeight > 0) {
-      setSpan(img.closest('.project-grid__item'));
+      span(item);
     } else {
-      img.addEventListener('load', function () {
-        setSpan(img.closest('.project-grid__item'));
-      });
+      img.addEventListener('load', function () { span(item); });
     }
   });
 
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resizeAll, 100);
+  window.addEventListener('load', function () {
+    layout();
+    setTimeout(layout, 400);
+    setTimeout(layout, 1200);
   });
 
-  /* ── MOBILE BURGER ─────────────────────────────────────────── */
-  var burger     = document.getElementById('burger');
-  var mobileMenu = document.getElementById('mobileMenu');
-  if (burger && mobileMenu) {
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt); rt = setTimeout(layout, 120);
+  });
+
+  /* ── MOBILE MENU ───────────────────────────────────────────── */
+  var burger = document.getElementById('burger');
+  var menu   = document.getElementById('mobileMenu');
+
+  if (burger && menu) {
     burger.addEventListener('click', function () {
       var open = burger.classList.toggle('open');
-      mobileMenu.classList.toggle('open', open);
+      menu.classList.toggle('open', open);
       document.body.style.overflow = open ? 'hidden' : '';
     });
-    mobileMenu.querySelectorAll('a').forEach(function (a) {
+
+    menu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.closest('.mob-accordion');
+        var wasOpen = acc.classList.contains('open');
+        menu.querySelectorAll('.mob-accordion').forEach(function (a) {
+          a.classList.remove('open');
+        });
+        if (!wasOpen) acc.classList.add('open');
+      });
+    });
+
+    menu.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
         burger.classList.remove('open');
-        mobileMenu.classList.remove('open');
+        menu.classList.remove('open');
         document.body.style.overflow = '';
       });
     });
@@ -465,18 +543,26 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   /* ── LIGHTBOX ──────────────────────────────────────────────── */
   var lightbox    = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightboxImg');
-  var allImgs = [];
-  var currentIdx = 0;
+  var imgs = [];
+  var idx  = 0;
 
   document.querySelectorAll('[data-lightbox]').forEach(function (el, i) {
-    allImgs.push(el.dataset.lightbox);
-    el.addEventListener('click', function () { currentIdx = i; openLB(allImgs[i]); });
+    imgs.push(el.dataset.lightbox);
+    el.addEventListener('click', function () { idx = i; openLB(imgs[i]); });
   });
 
-  function openLB(src) { lightboxImg.src = src; lightbox.classList.add('open'); document.body.style.overflow = 'hidden'; }
-  function closeLB()   { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
-  function prevLB()    { currentIdx = (currentIdx - 1 + allImgs.length) % allImgs.length; lightboxImg.src = allImgs[currentIdx]; }
-  function nextLB()    { currentIdx = (currentIdx + 1) % allImgs.length; lightboxImg.src = allImgs[currentIdx]; }
+  function openLB(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLB() {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+    document.body.style.overflow = '';
+  }
+  function prevLB() { idx = (idx - 1 + imgs.length) % imgs.length; lightboxImg.src = imgs[idx]; }
+  function nextLB() { idx = (idx + 1) % imgs.length; lightboxImg.src = imgs[idx]; }
 
   document.getElementById('lightboxClose').addEventListener('click', closeLB);
   document.getElementById('lightboxPrev').addEventListener('click', prevLB);

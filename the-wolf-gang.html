@@ -70,19 +70,13 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 .burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
 .burger.open span:nth-child(2) { opacity: 0; }
 .burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-.mobile-menu {
-  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
-  background: #fff; z-index: 190; overflow-y: auto; padding: 20px 20px 40px;
-}
-.mobile-menu.open { display: block; }
-.mobile-menu__section { margin-bottom: 20px; }
-.mobile-menu__heading { font-size: 11px; color: #999; letter-spacing: 0.06em; margin-bottom: 8px; }
-.mobile-menu__section a {
-  display: block; font-size: 14px; color: #1a1a1a;
-  padding: 6px 0; border-bottom: 1px solid #f0f0f0; transition: color 0.15s;
-}
-.mobile-menu__section a:last-child { border-bottom: none; }
-.mobile-menu__standalone { display: block; font-size: 14px; color: #1a1a1a; padding: 8px 0; border-top: 1px solid #e8e8e8; margin-top: 8px; }
+/* mobile-menu replaced */
+
+
+
+
+
+
 
 /* ── PAGE BODY ──────────────────────────────────────────────── */
 .page-body { padding-top: 60px; }
@@ -200,20 +194,64 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 1200px) { .project-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 900px)  { .project-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px)  { .project-grid { display: block; columns: 2; column-gap: 4px; padding: 8px 8px 0; } }
 @media (max-width: 700px) {
   .site-nav { display: none; }
   .mobile-header { display: flex; }
   .page-body { padding-top: 50px; }
   .project-header { padding: 20px 14px 4px; }
-  .project-grid { grid-template-columns: repeat(2, 1fr); padding: 14px 14px 0; }
+  .project-grid { display: block; columns: 2; column-gap: 4px; padding: 8px 8px 0; }
   .proj-nav { padding: 32px 14px 0; }
   .proj-nav__btn { min-width: 0; }
   .site-footer { padding: 24px 14px; }
   .site-footer__center { position: static; transform: none; }
 }
-@media (max-width: 420px) { .project-grid { grid-template-columns: 1fr; } }
-  </style>
+
+  /* ── MOBILE MENU (accordion) ─────────────────────────────── */
+.mobile-menu {
+  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
+  background: #fff; z-index: 190; overflow-y: auto; padding: 12px 0 40px;
+}
+.mobile-menu.open { display: block; }
+
+/* Accordion item */
+.mob-accordion { border-bottom: 1px solid #f0f0f0; }
+.mob-accordion__trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 14px 20px;
+  font-family: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a;
+  background: none; border: none; cursor: pointer; text-align: left;
+}
+.mob-accordion__arrow {
+  font-size: 18px; color: #aaa;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.mob-accordion.open .mob-accordion__arrow { transform: rotate(90deg); }
+.mob-accordion__panel {
+  display: none; padding: 0 0 8px;
+}
+.mob-accordion.open .mob-accordion__panel { display: block; }
+.mob-accordion__panel a {
+  display: block; padding: 9px 32px;
+  font-size: 13px; color: #555;
+  border-bottom: 1px solid #f8f8f8;
+  transition: color 0.15s;
+}
+.mob-accordion__panel a:last-child { border-bottom: none; }
+.mob-accordion__panel a:hover { color: #1a1a1a; }
+
+/* Standalone links */
+.mob-standalone {
+  display: block; padding: 14px 20px;
+  font-size: 16px; color: #1a1a1a;
+  border-bottom: 1px solid #f0f0f0;
+  text-decoration: none;
+}
+.mob-instagram {
+  display: flex; align-items: center; gap: 8px;
+}
+</style>
 </head>
 <body>
 
@@ -285,45 +323,72 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 
 <!-- ── MOBILE MENU ──────────────────────────────────────────── -->
 <nav class="mobile-menu" id="mobileMenu">
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Commercial</p>
-    <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
-    <a href="rollie-nation.html">Rollie Nation</a>
-    <a href="cleonie.html">Cleonie</a>
-    <a href="baker-bleu.html">Baker Bleu</a>
-    <a href="ena-pelly.html">Ena Pelly</a>
-    <a href="inbluem.html">Inbluem</a>
-    <a href="the-wolf-gang.html">The Wolf Gang</a>
-    <a href="linden-cook.html">Linden Cook</a>
-    <a href="san-lorenzo.html">San Lorenzo</a>
-    <a href="utopia.html">Utopia</a>
-    <a href="rogue-season.html">Rogue Season</a>
-    <a href="maatsuyker.html">Maatsuyker</a>
-    <a href="yo-chi.html">YO-CHI</a>
+
+  <!-- Commercial accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-commercial">
+      Commercial <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-commercial">
+      <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+      <a href="rollie-nation.html">Rollie Nation</a>
+      <a href="cleonie.html">Cleonie</a>
+      <a href="baker-bleu.html">Baker Bleu</a>
+      <a href="ena-pelly.html">Ena Pelly</a>
+      <a href="inbluem.html">Inbluem</a>
+      <a href="the-wolf-gang.html">The Wolf Gang</a>
+      <a href="linden-cook.html">Linden Cook</a>
+      <a href="san-lorenzo.html">San Lorenzo</a>
+      <a href="utopia.html">Utopia</a>
+      <a href="rogue-season.html">Rogue Season</a>
+      <a href="maatsuyker.html">Maatsuyker</a>
+      <a href="yo-chi.html">YO-CHI</a>
+    </div>
   </div>
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Editorial</p>
-    <a href="grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
-    <a href="makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
-    <a href="rahart-adams.html">Rahart Adams — Arabian Moda</a>
-    <a href="wax-wings.html">Wax Wings — Enzomnia Magazine</a>
-    <a href="valley-summer.html">Valley Summer</a>
-    <a href="out-of-office.html">Out of Office</a>
-    <a href="learn-twice.html">Learn Twice — C Heads Magazine</a>
-    <a href="burbank-views.html">Burbank Views</a>
+
+  <!-- Editorial accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-editorial">
+      Editorial <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-editorial">
+      <a href="grit-grace.html">Grit &amp; Grace &mdash; Vanguard Magazine</a>
+      <a href="makers-lane.html">Makers Lane &mdash; Melbourne Fashion Week 2025</a>
+      <a href="rahart-adams.html">Rahart Adams &mdash; Arabian Moda</a>
+      <a href="wax-wings.html">Wax Wings &mdash; Enzomnia Magazine</a>
+      <a href="valley-summer.html">Valley Summer</a>
+      <a href="out-of-office.html">Out of Office</a>
+      <a href="learn-twice.html">Learn Twice &mdash; C Heads Magazine</a>
+      <a href="burbank-views.html">Burbank Views</a>
+    </div>
   </div>
-  <div class="mobile-menu__section">
-    <p class="mobile-menu__heading">Personal</p>
-    <a href="portugal.html">Portugal</a>
-    <a href="new-york-city.html">New York City</a>
-    <a href="california.html">California</a>
-    <a href="indonesia.html">Indonesia</a>
-    <a href="peru.html">Peru</a>
-    <a href="colombia.html">Colombia</a>
-    <a href="tasmania.html">Tasmania</a>
-    <a href="mexico.html">Mexico</a>
+
+  <!-- Personal accordion -->
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-personal">
+      Personal <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-personal">
+      <a href="portugal.html">Portugal</a>
+      <a href="new-york-city.html">New York City</a>
+      <a href="california.html">California</a>
+      <a href="indonesia.html">Indonesia</a>
+      <a href="peru.html">Peru</a>
+      <a href="colombia.html">Colombia</a>
+      <a href="tasmania.html">Tasmania</a>
+      <a href="mexico.html">Mexico</a>
+    </div>
   </div>
-  <a href="info.html" class="mobile-menu__standalone">Info</a>
+
+  <a href="info.html" class="mob-standalone">Info</a>
+  <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="mob-standalone mob-instagram" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+
 </nav>
 
 <!-- ── PAGE BODY ────────────────────────────────────────────── -->
@@ -335,24 +400,24 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   </div>
 
   <div class="project-grid">
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c62e0e02-c500-46ab-8550-2120764a9baa/WOLFGANG_34.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c62e0e02-c500-46ab-8550-2120764a9baa/WOLFGANG_34.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e8e6a738-65af-4c23-9756-e3409c3a7947/WOLFGANG_FILM3.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e8e6a738-65af-4c23-9756-e3409c3a7947/WOLFGANG_FILM3.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b98d4252-4355-483f-abd4-5a8b4f116352/WOLFGANG_71.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b98d4252-4355-483f-abd4-5a8b4f116352/WOLFGANG_71.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5dee8994-2049-45c9-b2d0-ca17158cc875/WOLFGANG_FILM14.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5dee8994-2049-45c9-b2d0-ca17158cc875/WOLFGANG_FILM14.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c3ccdec2-af88-43ae-9cac-4a1ee9fac142/WOLFGANG_FILM19.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c3ccdec2-af88-43ae-9cac-4a1ee9fac142/WOLFGANG_FILM19.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/67bb8bdf-0167-4b66-ba49-d58acf9d48b9/WOLFGANG_79.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/67bb8bdf-0167-4b66-ba49-d58acf9d48b9/WOLFGANG_79.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ae82a5c8-b7d8-4a48-9d95-4d73d1002d12/WOLFGANG_FILM17.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ae82a5c8-b7d8-4a48-9d95-4d73d1002d12/WOLFGANG_FILM17.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fb251c4b-3ef9-47ff-bb86-1f3faaf2683d/WOLFGANG_93.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fb251c4b-3ef9-47ff-bb86-1f3faaf2683d/WOLFGANG_93.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cba3080-201a-4cb3-be89-e292a08c90f7/WOLFGANG_FILM4.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cba3080-201a-4cb3-be89-e292a08c90f7/WOLFGANG_FILM4.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d126baf7-e9df-4ad2-b2e8-ab1ae3a03f73/WOLFGANG_FILM5.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d126baf7-e9df-4ad2-b2e8-ab1ae3a03f73/WOLFGANG_FILM5.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/109e054b-af14-4eb0-9bdc-4ed601daa183/WOLFGANG_FILM2.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/109e054b-af14-4eb0-9bdc-4ed601daa183/WOLFGANG_FILM2.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b8aceab7-4b69-47e2-b910-8ae5dfa02ec5/WOLFGANG_88.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b8aceab7-4b69-47e2-b910-8ae5dfa02ec5/WOLFGANG_88.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dc0ed668-beae-4c28-a370-7af557d908fc/WOLFGANG_69.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dc0ed668-beae-4c28-a370-7af557d908fc/WOLFGANG_69.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/22a27561-abb8-47ac-9ec6-c0b510aeeeed/WOLFGANG_41.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/22a27561-abb8-47ac-9ec6-c0b510aeeeed/WOLFGANG_41.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3408dea6-270b-44ed-9513-36ff26a16d06/WOLFGANG_27.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3408dea6-270b-44ed-9513-36ff26a16d06/WOLFGANG_27.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c97fafd8-bcaf-4915-bd80-7bb672f1b0e4/WOLFGANG_24.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c97fafd8-bcaf-4915-bd80-7bb672f1b0e4/WOLFGANG_24.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dd56ad36-3bd3-4a7b-b976-98f5d4b8acae/WOLFGANG_23.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dd56ad36-3bd3-4a7b-b976-98f5d4b8acae/WOLFGANG_23.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3c419a62-e2c4-4e6a-aed6-27411e5f841d/WOLFGANG_15.jpg" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3c419a62-e2c4-4e6a-aed6-27411e5f841d/WOLFGANG_15.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c62e0e02-c500-46ab-8550-2120764a9baa/WOLFGANG_34.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c62e0e02-c500-46ab-8550-2120764a9baa/WOLFGANG_34.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e8e6a738-65af-4c23-9756-e3409c3a7947/WOLFGANG_FILM3.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e8e6a738-65af-4c23-9756-e3409c3a7947/WOLFGANG_FILM3.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b98d4252-4355-483f-abd4-5a8b4f116352/WOLFGANG_71.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b98d4252-4355-483f-abd4-5a8b4f116352/WOLFGANG_71.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5dee8994-2049-45c9-b2d0-ca17158cc875/WOLFGANG_FILM14.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5dee8994-2049-45c9-b2d0-ca17158cc875/WOLFGANG_FILM14.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c3ccdec2-af88-43ae-9cac-4a1ee9fac142/WOLFGANG_FILM19.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c3ccdec2-af88-43ae-9cac-4a1ee9fac142/WOLFGANG_FILM19.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/67bb8bdf-0167-4b66-ba49-d58acf9d48b9/WOLFGANG_79.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/67bb8bdf-0167-4b66-ba49-d58acf9d48b9/WOLFGANG_79.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ae82a5c8-b7d8-4a48-9d95-4d73d1002d12/WOLFGANG_FILM17.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/ae82a5c8-b7d8-4a48-9d95-4d73d1002d12/WOLFGANG_FILM17.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fb251c4b-3ef9-47ff-bb86-1f3faaf2683d/WOLFGANG_93.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/fb251c4b-3ef9-47ff-bb86-1f3faaf2683d/WOLFGANG_93.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cba3080-201a-4cb3-be89-e292a08c90f7/WOLFGANG_FILM4.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3cba3080-201a-4cb3-be89-e292a08c90f7/WOLFGANG_FILM4.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d126baf7-e9df-4ad2-b2e8-ab1ae3a03f73/WOLFGANG_FILM5.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d126baf7-e9df-4ad2-b2e8-ab1ae3a03f73/WOLFGANG_FILM5.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/109e054b-af14-4eb0-9bdc-4ed601daa183/WOLFGANG_FILM2.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/109e054b-af14-4eb0-9bdc-4ed601daa183/WOLFGANG_FILM2.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b8aceab7-4b69-47e2-b910-8ae5dfa02ec5/WOLFGANG_88.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b8aceab7-4b69-47e2-b910-8ae5dfa02ec5/WOLFGANG_88.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dc0ed668-beae-4c28-a370-7af557d908fc/WOLFGANG_69.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dc0ed668-beae-4c28-a370-7af557d908fc/WOLFGANG_69.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/22a27561-abb8-47ac-9ec6-c0b510aeeeed/WOLFGANG_41.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/22a27561-abb8-47ac-9ec6-c0b510aeeeed/WOLFGANG_41.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3408dea6-270b-44ed-9513-36ff26a16d06/WOLFGANG_27.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3408dea6-270b-44ed-9513-36ff26a16d06/WOLFGANG_27.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c97fafd8-bcaf-4915-bd80-7bb672f1b0e4/WOLFGANG_24.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c97fafd8-bcaf-4915-bd80-7bb672f1b0e4/WOLFGANG_24.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dd56ad36-3bd3-4a7b-b976-98f5d4b8acae/WOLFGANG_23.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dd56ad36-3bd3-4a7b-b976-98f5d4b8acae/WOLFGANG_23.jpg" /></div>
+    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3c419a62-e2c4-4e6a-aed6-27411e5f841d/WOLFGANG_15.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/3c419a62-e2c4-4e6a-aed6-27411e5f841d/WOLFGANG_15.jpg" /></div>
   </div>
 
   <!-- ── PREV / NEXT ───────────────────────────────────────────── -->
@@ -389,53 +454,66 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   'use strict';
 
   /* ── MASONRY ───────────────────────────────────────────────── */
-  var ROW_PX = 6;
-  var GAP_PX = 6;
+  var ROW = 6, GAP = 6;
 
-  function setSpan(item) {
+  function span(item) {
+    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
     var img = item.querySelector('img');
-    if (!img) return;
-    var colW = item.getBoundingClientRect().width;
-    var renderedH = img.naturalHeight > 0
-      ? (colW * img.naturalHeight / img.naturalWidth)
-      : img.getBoundingClientRect().height;
-    var spans = Math.ceil((renderedH + GAP_PX) / ROW_PX);
-    item.style.gridRowEnd = 'span ' + spans;
+    if (!img || !img.naturalWidth) return;
+    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
+    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
   }
 
-  function resizeAll() {
-    document.querySelectorAll('.project-grid__item').forEach(setSpan);
+  function layout() {
+    document.querySelectorAll('.project-grid__item').forEach(span);
   }
 
   document.querySelectorAll('.project-grid__item img').forEach(function (img) {
+    var item = img.closest('.project-grid__item');
     if (img.complete && img.naturalHeight > 0) {
-      setSpan(img.closest('.project-grid__item'));
+      span(item);
     } else {
-      img.addEventListener('load', function () {
-        setSpan(img.closest('.project-grid__item'));
-      });
+      img.addEventListener('load', function () { span(item); });
     }
   });
 
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resizeAll, 100);
+  window.addEventListener('load', function () {
+    layout();
+    setTimeout(layout, 400);
+    setTimeout(layout, 1200);
   });
 
-  /* ── MOBILE BURGER ─────────────────────────────────────────── */
-  var burger     = document.getElementById('burger');
-  var mobileMenu = document.getElementById('mobileMenu');
-  if (burger && mobileMenu) {
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt); rt = setTimeout(layout, 120);
+  });
+
+  /* ── MOBILE MENU ───────────────────────────────────────────── */
+  var burger = document.getElementById('burger');
+  var menu   = document.getElementById('mobileMenu');
+
+  if (burger && menu) {
     burger.addEventListener('click', function () {
       var open = burger.classList.toggle('open');
-      mobileMenu.classList.toggle('open', open);
+      menu.classList.toggle('open', open);
       document.body.style.overflow = open ? 'hidden' : '';
     });
-    mobileMenu.querySelectorAll('a').forEach(function (a) {
+
+    menu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.closest('.mob-accordion');
+        var wasOpen = acc.classList.contains('open');
+        menu.querySelectorAll('.mob-accordion').forEach(function (a) {
+          a.classList.remove('open');
+        });
+        if (!wasOpen) acc.classList.add('open');
+      });
+    });
+
+    menu.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
         burger.classList.remove('open');
-        mobileMenu.classList.remove('open');
+        menu.classList.remove('open');
         document.body.style.overflow = '';
       });
     });
@@ -444,18 +522,26 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   /* ── LIGHTBOX ──────────────────────────────────────────────── */
   var lightbox    = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightboxImg');
-  var allImgs = [];
-  var currentIdx = 0;
+  var imgs = [];
+  var idx  = 0;
 
   document.querySelectorAll('[data-lightbox]').forEach(function (el, i) {
-    allImgs.push(el.dataset.lightbox);
-    el.addEventListener('click', function () { currentIdx = i; openLB(allImgs[i]); });
+    imgs.push(el.dataset.lightbox);
+    el.addEventListener('click', function () { idx = i; openLB(imgs[i]); });
   });
 
-  function openLB(src) { lightboxImg.src = src; lightbox.classList.add('open'); document.body.style.overflow = 'hidden'; }
-  function closeLB()   { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
-  function prevLB()    { currentIdx = (currentIdx - 1 + allImgs.length) % allImgs.length; lightboxImg.src = allImgs[currentIdx]; }
-  function nextLB()    { currentIdx = (currentIdx + 1) % allImgs.length; lightboxImg.src = allImgs[currentIdx]; }
+  function openLB(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLB() {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+    document.body.style.overflow = '';
+  }
+  function prevLB() { idx = (idx - 1 + imgs.length) % imgs.length; lightboxImg.src = imgs[idx]; }
+  function nextLB() { idx = (idx + 1) % imgs.length; lightboxImg.src = imgs[idx]; }
 
   document.getElementById('lightboxClose').addEventListener('click', closeLB);
   document.getElementById('lightboxPrev').addEventListener('click', prevLB);
