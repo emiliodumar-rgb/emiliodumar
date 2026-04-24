@@ -125,43 +125,59 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   position: relative;
 }
 .site-footer__center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  text-align: center;
 }
 .site-footer a { font-size: 12px; color: #1a1a1a; transition: color 0.15s; }
 .site-footer a:hover { color: #666; }
+.site-footer > *:last-child { text-align: right; }
 
 /* ── LIGHTBOX ───────────────────────────────────────────────── */
 .lightbox {
   position: fixed; inset: 0;
-  background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   z-index: 500; display: none;
   align-items: center; justify-content: center;
 }
 .lightbox.open { display: flex; }
+.lightbox__viewer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 96vw;
+  max-height: 96vh;
+}
 .lightbox__img {
-  max-width: 88vw; max-height: 90vh;
+  max-width: 80vw; max-height: 88vh;
   object-fit: contain; display: block;
   background: #fff;
   box-shadow: 0 8px 48px rgba(0,0,0,0.18);
 }
 .lightbox__close {
   position: absolute; top: 20px; right: 24px;
-  font-size: 28px; color: #1a1a1a; background: none; border: none;
-  cursor: pointer; line-height: 1; opacity: 0.5; transition: opacity 0.15s;
+  font-size: 22px; color: #1a1a1a;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid #ddd; border-radius: 50%;
+  cursor: pointer; line-height: 1; opacity: 0.7; transition: opacity 0.15s;
 }
 .lightbox__close:hover { opacity: 1; }
 .lightbox__prev, .lightbox__next {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  font-size: 28px; color: #1a1a1a; background: none; border: none;
-  cursor: pointer; padding: 16px; opacity: 0.4; transition: opacity 0.15s; line-height: 1;
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: #1a1a1a;
+  background: #fff; border: 1px solid #ddd; border-radius: 50%;
+  cursor: pointer; opacity: 0.7; transition: opacity 0.15s;
+  user-select: none; -webkit-user-select: none;
 }
-.lightbox__prev { left: 8px; }
-.lightbox__next { right: 8px; }
 .lightbox__prev:hover, .lightbox__next:hover { opacity: 1; }
+@media (max-width: 700px) {
+  .lightbox__viewer { gap: 12px; }
+  .lightbox__img { max-width: 72vw; }
+  .lightbox__prev, .lightbox__next { width: 36px; height: 36px; font-size: 18px; }
+}
 
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 700px) {
@@ -171,7 +187,6 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   .home-tagline { padding: 18px 14px 12px; font-size: 12px; }
   .home-grid { column-count: 2; padding: 0 14px; column-gap: 6px; }
   .site-footer { padding: 24px 14px; }
-  .site-footer__center { position: static; transform: none; }
 }
 
   /* ── MOBILE MENU (accordion) ─────────────────────────────── */
@@ -462,9 +477,11 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 <!-- ── LIGHTBOX ─────────────────────────────────────────────── -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox__close" id="lightboxClose">&times;</button>
-  <button class="lightbox__prev"  id="lightboxPrev">&#8249;</button>
-  <img class="lightbox__img" id="lightboxImg" src="" alt="" />
-  <button class="lightbox__next"  id="lightboxNext">&#8250;</button>
+  <div class="lightbox__viewer">
+    <button class="lightbox__prev"  id="lightboxPrev">&#8249;</button>
+    <img class="lightbox__img" id="lightboxImg" src="" alt="" />
+    <button class="lightbox__next"  id="lightboxNext">&#8250;</button>
+  </div>
 </div>
 
 <script>
@@ -538,6 +555,16 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
     if (e.key === 'ArrowLeft')  prevLB();
     if (e.key === 'ArrowRight') nextLB();
   });
+
+  /* ── SWIPE SUPPORT ─────────────────────────────────────────── */
+  var swipeStartX = 0;
+  lightbox.addEventListener('touchstart', function (e) {
+    swipeStartX = e.changedTouches[0].clientX;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', function (e) {
+    var diff = swipeStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { diff > 0 ? nextLB() : prevLB(); }
+  }, { passive: true });
 
 })();
 </script>
