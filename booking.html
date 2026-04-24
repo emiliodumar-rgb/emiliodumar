@@ -591,48 +591,30 @@
   }
 
   function updateProgress(n) {
-    var pct = n >= TOTAL_STEPS + 1 ? 100 : Math.round(((n - 1) / TOTAL_STEPS) * 100);
+    var pct = (typeof n === 'number' && n > TOTAL_STEPS) ? 100
+              : Math.round(((n - 1) / TOTAL_STEPS) * 100);
     var fill = document.getElementById('progressFill');
     if (fill) fill.style.width = pct + '%';
     var count = document.getElementById('topCount');
-    if (count) {
-      if (n <= TOTAL_STEPS) {
-        count.textContent = n + ' / ' + TOTAL_STEPS;
-      } else {
-        count.textContent = '';
-      }
-    }
-    /* number labels inside each step */
+    if (count) count.textContent = (n <= TOTAL_STEPS) ? n + ' / ' + TOTAL_STEPS : '';
     var num = document.getElementById('num-' + n);
     if (num) num.textContent = n + ' / ' + TOTAL_STEPS;
   }
 
-  function pick(el, mode, secondary) {
-    var list = secondary
-      ? el.closest('.option-list') || el.parentElement
-      : el.closest('.option-list') || el.parentElement;
-
+  function pick(el, mode) {
+    var list = el.closest('.option-list') || el.parentElement;
     if (mode === 'single') {
-      Array.from(list.querySelectorAll('.option-row')).forEach(function (row) {
-        row.classList.remove('selected');
-      });
+      Array.from(list.querySelectorAll('.option-row')).forEach(function(r){ r.classList.remove('selected'); });
       el.classList.add('selected');
     } else {
       el.classList.toggle('selected');
     }
   }
 
-  function showWriteIn(id) {
-    var el = document.getElementById(id);
-    if (el) el.classList.add('visible');
-  }
-  function hideWriteIn(id) {
-    var el = document.getElementById(id);
-    if (el) el.classList.remove('visible');
-  }
+  function showWriteIn(id) { var e=document.getElementById(id); if(e) e.classList.add('visible'); }
+  function hideWriteIn(id) { var e=document.getElementById(id); if(e) e.classList.remove('visible'); }
 
-  /* Enter key advances on text-input steps */
-  document.addEventListener('keydown', function (e) {
+  document.addEventListener('keydown', function(e) {
     if (e.key !== 'Enter') return;
     var step = document.getElementById('step-' + currentStep);
     if (!step) return;
@@ -640,78 +622,14 @@
     if (btn) btn.click();
   });
 
-  /* expose to inline onclick handlers */
   window.goTo        = goTo;
   window.pick        = pick;
   window.showWriteIn = showWriteIn;
   window.hideWriteIn = hideWriteIn;
 
-  /* init */
   updateProgress(1);
 
-  /* ── MASONRY ───────────────────────────────────────────────── */
-  var ROW = 6, GAP = 6, COLS = 4;
-
-  function layout() {
-    var items = Array.from(
-      document.querySelectorAll('.project-grid__item, .home-grid__item')
-    );
-    if (!items.length) return;
-
-    if (window.innerWidth <= 700) {
-      items.forEach(function (item) {
-        item.style.gridColumn   = '';
-        item.style.gridRowStart = '';
-        item.style.gridRowEnd   = 'auto';
-      });
-      return;
-    }
-
-    var grid = items[0].closest('.project-grid, .home-grid');
-    if (!grid) return;
-    var gridWidth = grid.getBoundingClientRect().width;
-    var colWidth  = (gridWidth - (COLS - 1) * GAP) / COLS;
-    if (colWidth <= 0) return;
-
-    var rowStart = 1;
-    for (var i = 0; i < items.length; i += COLS) {
-      var group   = items.slice(i, i + COLS);
-      var maxSpan = 0;
-      group.forEach(function (item, j) {
-        var img = item.querySelector('img');
-        var sp;
-        if (img && img.naturalWidth && img.naturalHeight) {
-          var h = colWidth * img.naturalHeight / img.naturalWidth;
-          sp = Math.ceil((h + GAP) / ROW);
-        } else {
-          sp = Math.ceil((colWidth * 1.33 + GAP) / ROW); /* default 4:3 */
-        }
-        item.style.gridColumn   = (j + 1).toString();
-        item.style.gridRowStart = rowStart.toString();
-        item.style.gridRowEnd   = 'span ' + sp;
-        if (sp > maxSpan) maxSpan = sp;
-      });
-      rowStart += maxSpan;
-    }
-  }
-
-  document.querySelectorAll(
-    '.project-grid__item img, .home-grid__item img'
-  ).forEach(function (img) {
-    img.addEventListener('load', layout);
-  });
-
-  document.addEventListener('DOMContentLoaded', layout);
-  window.addEventListener('load', function () {
-    layout();
-    setTimeout(layout, 400);
-    setTimeout(layout, 1200);
-  });
-
-  var rt;
-  window.addEventListener('resize', function () {
-    clearTimeout(rt); rt = setTimeout(layout, 120);
-  });
+  /* ── LAYOUT: CSS columns handles masonry — no JS needed ─── */
 
   /* ── MOBILE MENU ───────────────────────────────────────────── */
   var burger = document.getElementById('burger');

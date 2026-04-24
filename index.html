@@ -91,23 +91,23 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   line-height: 1.5;
 }
 
-/* ── HOME MASONRY GRID ──────────────────────────────────────── */
-/* Same masonry technique as project pages — JS sets row spans  */
-/* so every image sits flush at its natural crop, no white gaps */
+/* ── HOME GRID (CSS columns — true flush masonry) ──────────── */
 .home-grid {
   padding: 0 28px 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 6px;
+  column-count: 4;
   column-gap: 6px;
 }
 .home-grid__item {
-  overflow: hidden;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 6px;
   cursor: pointer;
 }
 .home-grid__item img {
   width: 100%;
-  height: auto;           /* original crop — never clipped */
+  height: auto;
   display: block;
   transition: opacity 0.25s ease;
 }
@@ -380,40 +380,75 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   <!-- Images click-through to lightbox                         -->
   <div class="home-grid">
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753606730788-7J84ZVYZ4Q6BJ1F6JAPJ/saudade%2Bfinal%2B-61.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753606730788-7J84ZVYZ4Q6BJ1F6JAPJ/saudade%2Bfinal%2B-61.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c91d827f-e19b-4ed6-a30f-8f4efb25e0de/EMILIODUMAR_BROOKE-8.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c91d827f-e19b-4ed6-a30f-8f4efb25e0de/EMILIODUMAR_BROOKE-8.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a1d66f44-d09d-479f-b08a-cc87e4dc7d70/saudade_edited-13-2.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a1d66f44-d09d-479f-b08a-cc87e4dc7d70/saudade_edited-13-2.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753609869758-04JRTSTL1ZVGHCAYN0JK/000053%2B2.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753609869758-04JRTSTL1ZVGHCAYN0JK/000053%2B2.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/93d4192c-4620-47ec-a1b1-109a15f09542/EMILIODUMAR_LC_FILM_-6.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/93d4192c-4620-47ec-a1b1-109a15f09542/EMILIODUMAR_LC_FILM_-6.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/23a86f81-372e-489d-9289-64d5f98d1e40/EMILIODUMAR_ENAPELLY_BLACKFRIDAY_-240.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/23a86f81-372e-489d-9289-64d5f98d1e40/EMILIODUMAR_ENAPELLY_BLACKFRIDAY_-240.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1747184228500-GH5AFNPFL1T32VUYCPUB/000066.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1747184228500-GH5AFNPFL1T32VUYCPUB/000066.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/68d5b7f1-b488-48fe-ac55-ba702e6bc120/EMILIODUMAR_BROOKE-15.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/68d5b7f1-b488-48fe-ac55-ba702e6bc120/EMILIODUMAR_BROOKE-15.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f2bbe33f-6c44-4922-82a4-3e674d72a5d1/EMILIODUMAR_ARMADALE_ALL-62.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f2bbe33f-6c44-4922-82a4-3e674d72a5d1/EMILIODUMAR_ARMADALE_ALL-62.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5c11c726-1cc0-446e-9635-1f1ff309204d/EMILIODUMAR_ENAPELLY_BLACKFRIDAY_-225.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5c11c726-1cc0-446e-9635-1f1ff309204d/EMILIODUMAR_ENAPELLY_BLACKFRIDAY_-225.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/162ead89-ba55-4b04-b8e7-85a84145756a/EMILIODUMAR_LC_FILM_-7.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/162ead89-ba55-4b04-b8e7-85a84145756a/EMILIODUMAR_LC_FILM_-7.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/50c84913-eb29-4b55-89fe-262a12eb8330/saudade+final+-51.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/50c84913-eb29-4b55-89fe-262a12eb8330/saudade+final+-51.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e3f9c4f7-c8d4-404f-96e4-88db63d007f3/EMILIODUMAR_STUDIOESOTERIC_-52.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e3f9c4f7-c8d4-404f-96e4-88db63d007f3/EMILIODUMAR_STUDIOESOTERIC_-52.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b67232e-3a4a-4a32-876c-ddcd6595e391/SENE_EDITORIAL-19.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b67232e-3a4a-4a32-876c-ddcd6595e391/SENE_EDITORIAL-19.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bf837e06-97c9-4719-a4ae-eabe1c17cd8f/ojisan+film156.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bf837e06-97c9-4719-a4ae-eabe1c17cd8f/ojisan+film156.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b6a22cc6-3ad3-48c9-a140-ec39f46e196b/000061980008.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b6a22cc6-3ad3-48c9-a140-ec39f46e196b/000061980008.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753666258202-M017LZLXLNMMYSONWP6W/GRIT%2526GRACE_look2_5.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753666258202-M017LZLXLNMMYSONWP6W/GRIT%2526GRACE_look2_5.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753611310713-OX7JKBVJ60944OFA9AY7/000044.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753611310713-OX7JKBVJ60944OFA9AY7/000044.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1699934151398-9TPK6OTJNNL2OILDX5RX/Santa+Monica+Palms.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1699934151398-9TPK6OTJNNL2OILDX5RX/Santa+Monica+Palms.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1ea7a8e7-6cd6-4efd-94c0-ca7465ab2c2c/saudade+final+-42.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1ea7a8e7-6cd6-4efd-94c0-ca7465ab2c2c/saudade+final+-42.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d0a1267a-04d8-41bf-b97a-6ea31eb8ca8f/3.+Free+Spirit.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d0a1267a-04d8-41bf-b97a-6ea31eb8ca8f/3.+Free+Spirit.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c16fe6bd-336e-4484-9f94-9e6f7e686cc8/000028.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c16fe6bd-336e-4484-9f94-9e6f7e686cc8/000028.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b6dd0c43-a7e1-461b-87e8-ed4a2d1bc4e1/DAMESHEK+WORKSHOP-09.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b6dd0c43-a7e1-461b-87e8-ed4a2d1bc4e1/DAMESHEK+WORKSHOP-09.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/308a4ecc-aaae-44b8-8ac1-0dab9307f9d2/saudade+final+-60.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/308a4ecc-aaae-44b8-8ac1-0dab9307f9d2/saudade+final+-60.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dad7b2f5-62b2-441c-8151-bb6dcd67d182/saudade+final+-17.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dad7b2f5-62b2-441c-8151-bb6dcd67d182/saudade+final+-17.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b196884c-5ad8-466b-83f2-dc77154cfb7a/VALLE_JOURNAL_EMILIODUMAR15.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b196884c-5ad8-466b-83f2-dc77154cfb7a/VALLE_JOURNAL_EMILIODUMAR15.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/578ecf3f-5863-476a-9fa4-46603d7c9875/ROGUE+SEASON+SUMB+PHOTOS+_+41.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/578ecf3f-5863-476a-9fa4-46603d7c9875/ROGUE+SEASON+SUMB+PHOTOS+_+41.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9f00ea89-521c-44f3-923d-45113188f3be/IMG_4192.JPG?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9f00ea89-521c-44f3-923d-45113188f3be/IMG_4192.JPG" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/0afec5c0-14ef-419f-ade1-9996bcb768c1/saudade+final+-67.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/0afec5c0-14ef-419f-ade1-9996bcb768c1/saudade+final+-67.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c53d40b8-d527-42ef-9518-9d8806c0abb4/CLEONIE+_+SUMBA+_+45.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c53d40b8-d527-42ef-9518-9d8806c0abb4/CLEONIE+_+SUMBA+_+45.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/55b35f6a-2138-484d-8cd4-dfc73cd29d3d/Wax+Wings-14.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/55b35f6a-2138-484d-8cd4-dfc73cd29d3d/Wax+Wings-14.jpg" /></div>
-    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/01a92f03-3414-4ea3-9b07-ab8c61d71419/nyc+knick+knacks-7.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/01a92f03-3414-4ea3-9b07-ab8c61d71419/nyc+knick+knacks-7.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1701040367372-8VZXH6858DVMRU4UIP3Y/000025-2.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1701040367372-8VZXH6858DVMRU4UIP3Y/000025-2.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c91d827f-e19b-4ed6-a30f-8f4efb25e0de/EMILIODUMAR_BROOKE-8.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c91d827f-e19b-4ed6-a30f-8f4efb25e0de/EMILIODUMAR_BROOKE-8.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/23a86f81-372e-489d-9289-64d5f98d1e40/EMILIODUMAR_ENAPELLY_BLACKFRIDAY_-240.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/23a86f81-372e-489d-9289-64d5f98d1e40/EMILIODUMAR_ENAPELLY_BLACKFRIDAY_-240.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5c11c726-1cc0-446e-9635-1f1ff309204d/EMILIODUMAR_ENAPELLY_BLACKFRIDAY_-225.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5c11c726-1cc0-446e-9635-1f1ff309204d/EMILIODUMAR_ENAPELLY_BLACKFRIDAY_-225.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b67232e-3a4a-4a32-876c-ddcd6595e391/SENE_EDITORIAL-19.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/6b67232e-3a4a-4a32-876c-ddcd6595e391/SENE_EDITORIAL-19.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753611310713-OX7JKBVJ60944OFA9AY7/000044.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753611310713-OX7JKBVJ60944OFA9AY7/000044.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c16fe6bd-336e-4484-9f94-9e6f7e686cc8/000028.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c16fe6bd-336e-4484-9f94-9e6f7e686cc8/000028.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b196884c-5ad8-466b-83f2-dc77154cfb7a/VALLE_JOURNAL_EMILIODUMAR15.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b196884c-5ad8-466b-83f2-dc77154cfb7a/VALLE_JOURNAL_EMILIODUMAR15.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c53d40b8-d527-42ef-9518-9d8806c0abb4/CLEONIE+_+SUMBA+_+45.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c53d40b8-d527-42ef-9518-9d8806c0abb4/CLEONIE+_+SUMBA+_+45.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5bbd30d3-bbf5-4e6a-b99c-ee79be1bebb3/vyMPclhw.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5bbd30d3-bbf5-4e6a-b99c-ee79be1bebb3/vyMPclhw.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a1d66f44-d09d-479f-b08a-cc87e4dc7d70/saudade_edited-13-2.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a1d66f44-d09d-479f-b08a-cc87e4dc7d70/saudade_edited-13-2.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1747184228500-GH5AFNPFL1T32VUYCPUB/000066.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1747184228500-GH5AFNPFL1T32VUYCPUB/000066.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/162ead89-ba55-4b04-b8e7-85a84145756a/EMILIODUMAR_LC_FILM_-7.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/162ead89-ba55-4b04-b8e7-85a84145756a/EMILIODUMAR_LC_FILM_-7.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bf837e06-97c9-4719-a4ae-eabe1c17cd8f/ojisan+film156.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bf837e06-97c9-4719-a4ae-eabe1c17cd8f/ojisan+film156.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1699934151398-9TPK6OTJNNL2OILDX5RX/Santa+Monica+Palms.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1699934151398-9TPK6OTJNNL2OILDX5RX/Santa+Monica+Palms.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b6dd0c43-a7e1-461b-87e8-ed4a2d1bc4e1/DAMESHEK+WORKSHOP-09.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b6dd0c43-a7e1-461b-87e8-ed4a2d1bc4e1/DAMESHEK+WORKSHOP-09.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/578ecf3f-5863-476a-9fa4-46603d7c9875/ROGUE+SEASON+SUMB+PHOTOS+_+41.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/578ecf3f-5863-476a-9fa4-46603d7c9875/ROGUE+SEASON+SUMB+PHOTOS+_+41.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/55b35f6a-2138-484d-8cd4-dfc73cd29d3d/Wax+Wings-14.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/55b35f6a-2138-484d-8cd4-dfc73cd29d3d/Wax+Wings-14.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/81cda902-0fa0-4934-92c6-42ead477e6d3/000003.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/81cda902-0fa0-4934-92c6-42ead477e6d3/000003.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753609869758-04JRTSTL1ZVGHCAYN0JK/000053%2B2.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1753609869758-04JRTSTL1ZVGHCAYN0JK/000053%2B2.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/68d5b7f1-b488-48fe-ac55-ba702e6bc120/EMILIODUMAR_BROOKE-15.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/68d5b7f1-b488-48fe-ac55-ba702e6bc120/EMILIODUMAR_BROOKE-15.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/50c84913-eb29-4b55-89fe-262a12eb8330/saudade+final+-51.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/50c84913-eb29-4b55-89fe-262a12eb8330/saudade+final+-51.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b6a22cc6-3ad3-48c9-a140-ec39f46e196b/000061980008.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/b6a22cc6-3ad3-48c9-a140-ec39f46e196b/000061980008.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1ea7a8e7-6cd6-4efd-94c0-ca7465ab2c2c/saudade+final+-42.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1ea7a8e7-6cd6-4efd-94c0-ca7465ab2c2c/saudade+final+-42.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/308a4ecc-aaae-44b8-8ac1-0dab9307f9d2/saudade+final+-60.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/308a4ecc-aaae-44b8-8ac1-0dab9307f9d2/saudade+final+-60.jpg" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9f00ea89-521c-44f3-923d-45113188f3be/IMG_4192.JPG?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9f00ea89-521c-44f3-923d-45113188f3be/IMG_4192.JPG" /></div>
+    
+    <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/01a92f03-3414-4ea3-9b07-ab8c61d71419/nyc+knick+knacks-7.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/01a92f03-3414-4ea3-9b07-ab8c61d71419/nyc+knick+knacks-7.jpg" /></div>
+    
     <div class="home-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1701042312333-RR9PWSPP5NFB88WVI0W1/000001+2.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/1701042312333-RR9PWSPP5NFB88WVI0W1/000001+2.jpg" /></div>
   </div>
 
@@ -438,69 +473,7 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 (function () {
   'use strict';
 
-  /* ── MASONRY ───────────────────────────────────────────────── */
-  var ROW = 6, GAP = 6, COLS = 4;
-
-  function layout() {
-    var items = Array.from(
-      document.querySelectorAll('.project-grid__item, .home-grid__item')
-    );
-    if (!items.length) return;
-
-    if (window.innerWidth <= 700) {
-      items.forEach(function (item) {
-        item.style.gridColumn   = '';
-        item.style.gridRowStart = '';
-        item.style.gridRowEnd   = 'auto';
-      });
-      return;
-    }
-
-    var grid = items[0].closest('.project-grid, .home-grid');
-    if (!grid) return;
-    var gridWidth = grid.getBoundingClientRect().width;
-    var colWidth  = (gridWidth - (COLS - 1) * GAP) / COLS;
-    if (colWidth <= 0) return;
-
-    var rowStart = 1;
-    for (var i = 0; i < items.length; i += COLS) {
-      var group   = items.slice(i, i + COLS);
-      var maxSpan = 0;
-      group.forEach(function (item, j) {
-        var img = item.querySelector('img');
-        var sp;
-        if (img && img.naturalWidth && img.naturalHeight) {
-          var h = colWidth * img.naturalHeight / img.naturalWidth;
-          sp = Math.ceil((h + GAP) / ROW);
-        } else {
-          sp = Math.ceil((colWidth * 1.33 + GAP) / ROW); /* default 4:3 */
-        }
-        item.style.gridColumn   = (j + 1).toString();
-        item.style.gridRowStart = rowStart.toString();
-        item.style.gridRowEnd   = 'span ' + sp;
-        if (sp > maxSpan) maxSpan = sp;
-      });
-      rowStart += maxSpan;
-    }
-  }
-
-  document.querySelectorAll(
-    '.project-grid__item img, .home-grid__item img'
-  ).forEach(function (img) {
-    img.addEventListener('load', layout);
-  });
-
-  document.addEventListener('DOMContentLoaded', layout);
-  window.addEventListener('load', function () {
-    layout();
-    setTimeout(layout, 400);
-    setTimeout(layout, 1200);
-  });
-
-  var rt;
-  window.addEventListener('resize', function () {
-    clearTimeout(rt); rt = setTimeout(layout, 120);
-  });
+  /* ── LAYOUT: CSS columns handles masonry — no JS needed ─── */
 
   /* ── MOBILE MENU ───────────────────────────────────────────── */
   var burger = document.getElementById('burger');

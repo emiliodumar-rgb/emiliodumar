@@ -808,40 +808,104 @@
 (function () {
   'use strict';
 
-  /* ── MASONRY ───────────────────────────────────────────────── */
-  var ROW = 6, GAP = 6;
+  /* ── NETWORK CASTING FORM ──────────────────────────────────── */
+  var TOTAL_STEPS = 8;
+  var currentStep = 0;        /* 0 = welcome screen */
+  var isModel     = false;
 
-  function span(item) {
-    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
-    var img = item.querySelector('img');
-    if (!img || !img.naturalWidth) return;
-    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
-    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
+  /* step routing map — defines what comes after each step */
+  /* advance(n) → look up next; back(n) → look up prev    */
+  var NEXT = { 0:1, 1:2, 2:3, 3:4, 4:5, 5:6, 6:7, 7:8,
+               8:'m1', 'm1':'m2', 'm2':'m3', 'm3':9, 9:'done' };
+  var PREV = { 1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 7:6, 8:7,
+               'm1':8, 'm2':'m1', 'm3':'m2', 9:'m3' };
+
+  function goTo(n) {
+    var from = document.getElementById('step-' + currentStep);
+    var to   = document.getElementById('step-' + n);
+    if (!to) return;
+    if (from) from.classList.remove('active');
+    to.classList.add('active');
+    currentStep = n;
+    updateProgress(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function layout() {
-    document.querySelectorAll('.project-grid__item').forEach(span);
-  }
-
-  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
-    var item = img.closest('.project-grid__item');
-    if (img.complete && img.naturalHeight > 0) {
-      span(item);
-    } else {
-      img.addEventListener('load', function () { span(item); });
+  function advance(n) {
+    /* check model flag on profession step */
+    if (n === 2) {
+      var rows = document.querySelectorAll('#opts-2 .option-row.selected');
+      isModel = false;
+      rows.forEach(function(r) {
+        if ((r.dataset.val || r.querySelector('.option-text').textContent.trim()) === 'Model')
+          isModel = true;
+      });
     }
+    /* skip model steps if not a model */
+    var next = NEXT[n];
+    if (!isModel && (next === 'm1' || next === 'm2' || next === 'm3')) {
+      next = 9;
+    }
+    if (next !== undefined) goTo(next);
+  }
+
+  function back(n) {
+    var prev = PREV[n];
+    if (!isModel && (prev === 'm3' || prev === 'm2' || prev === 'm1')) {
+      prev = 8;
+    }
+    if (prev !== undefined) goTo(prev);
+  }
+
+  function updateProgress(n) {
+    var stepNum = typeof n === 'number' ? n : 0;
+    var pct = stepNum <= 0 ? 0 :
+              stepNum >= TOTAL_STEPS ? 100 :
+              Math.round((stepNum / TOTAL_STEPS) * 100);
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct + '%';
+    var count = document.getElementById('topCount');
+    if (count) {
+      if (typeof n === 'number' && n >= 1 && n <= TOTAL_STEPS)
+        count.textContent = n + ' / ' + TOTAL_STEPS;
+      else
+        count.textContent = '';
+    }
+    var num = document.getElementById('num-' + n);
+    if (num && typeof n === 'number') num.textContent = n + ' / ' + TOTAL_STEPS;
+  }
+
+  function pick(el, mode) {
+    var list = el.closest('.option-list') || el.parentElement;
+    if (mode === 'single') {
+      Array.from(list.querySelectorAll('.option-row')).forEach(function(r){ r.classList.remove('selected'); });
+      el.classList.add('selected');
+    } else {
+      el.classList.toggle('selected');
+    }
+  }
+
+  function pickOther(el) {
+    pick(el, 'multi');
+    var wrap = document.getElementById('other-field-wrap');
+    if (wrap) wrap.style.display = el.classList.contains('selected') ? 'block' : 'none';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    var step = document.getElementById('step-' + currentStep);
+    if (!step) return;
+    var btn = step.querySelector('.btn-continue');
+    if (btn) btn.click();
   });
 
-  window.addEventListener('load', function () {
-    layout();
-    setTimeout(layout, 400);
-    setTimeout(layout, 1200);
-  });
+  window.goTo     = goTo;
+  window.advance  = advance;
+  window.back     = back;
+  window.pick     = pick;
+  window.pickOther = pickOther;
 
-  var rt;
-  window.addEventListener('resize', function () {
-    clearTimeout(rt); rt = setTimeout(layout, 120);
-  });
+  /* ── LAYOUT: CSS columns handles masonry — no JS needed ─── */
 
   /* ── MOBILE MENU ───────────────────────────────────────────── */
   var burger = document.getElementById('burger');
