@@ -201,8 +201,8 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   .mobile-header { display: flex; }
   .page-body { padding-top: 50px; }
   .project-header { padding: 20px 14px 4px; }
-  .project-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 4px; padding: 8px 8px 0; }
-  .project-grid__item { grid-row-end: auto !important; min-height: unset; }
+  .project-grid { display: block; columns: 2; column-gap: 4px; padding: 8px 8px 0; }
+  .project-grid__item { break-inside: avoid; margin-bottom: 4px; }
   .proj-nav { padding: 32px 14px 0; flex-wrap: wrap; }
   .proj-nav__btn { min-width: 0; flex: 1; }
   .site-footer { padding: 24px 14px; flex-direction: column; gap: 10px; align-items: flex-start; }
