@@ -86,18 +86,21 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 .project-header h1 { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; margin-bottom: 6px; }
 .project-header p { font-size: 13px; color: #666; font-style: italic; line-height: 1.5; }
 
-/* ── IMAGE GRID (CSS columns — true flush masonry) ─────────── */
+/* ── IMAGE GRID (flex columns — flush masonry) ──────────────── */
 .project-grid {
   padding: 20px 28px 0;
-  column-count: 4;
-  column-gap: 6px;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.project-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .project-grid__item {
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
   display: block;
-  width: 100%;
-  margin-bottom: 6px;
   cursor: pointer;
 }
 .project-grid__item img {
@@ -207,13 +210,15 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
-@media (max-width: 900px)  { .project-grid { column-count: 2; padding: 8px 8px 0; column-gap: 6px; } }
+
 @media (max-width: 700px) {
   .site-nav { display: none; }
   .mobile-header { display: flex; }
   .page-body { padding-top: 50px; }
   .project-header { padding: 20px 14px 4px; }
-  .project-grid { column-count: 2; padding: 8px 8px 0; column-gap: 6px; }
+  .project-grid { columns: 2; column-gap: 4px; padding: 8px 8px 0; display: block; }
+  .project-col { display: contents; }
+  .project-grid__item { break-inside: avoid; -webkit-column-break-inside: avoid; margin-bottom: 4px; }
   .proj-nav { padding: 32px 14px 0; }
   .proj-nav__btn { min-width: 0; }
   .site-footer { padding: 24px 14px; }
@@ -419,33 +424,30 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 
   <div class="project-header">
     <h1>Cleonie</h1>
-    <p>Campaign for Cleonie's Pacifica collection — Shot on location in Sumba, Indonesia</p>
+    <p>Shot on location in Sumba, Indonesia</p>
   </div>
 
   <div class="project-grid">
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c816237a-e5d1-48d7-a6ba-c513f6773ead/CLEONIE+_+SUMBA+_+1.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c816237a-e5d1-48d7-a6ba-c513f6773ead/CLEONIE+_+SUMBA+_+1.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dcb185f5-361c-439d-942a-2dd4181d6483/CLEONIE+_+SUMBA+_+32.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dcb185f5-361c-439d-942a-2dd4181d6483/CLEONIE+_+SUMBA+_+32.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3a7fb3a-a720-403d-8769-7e6eaa50dfd2/CLEONIE+_+SUMBA+_+49.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3a7fb3a-a720-403d-8769-7e6eaa50dfd2/CLEONIE+_+SUMBA+_+49.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c958fc65-ca48-4155-a3a8-3e03c0339618/CLEONIE+_+SUMBA+_+14.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c958fc65-ca48-4155-a3a8-3e03c0339618/CLEONIE+_+SUMBA+_+14.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8f911b7c-59e1-41b2-aa7f-fd98b9ca17ad/CLEONIE+_+SUMBA+_+30.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8f911b7c-59e1-41b2-aa7f-fd98b9ca17ad/CLEONIE+_+SUMBA+_+30.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/18ebaa81-69e4-47bb-838b-91e5b7714d4d/CLEONIE+_+SUMBA+_+54.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/18ebaa81-69e4-47bb-838b-91e5b7714d4d/CLEONIE+_+SUMBA+_+54.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c53d40b8-d527-42ef-9518-9d8806c0abb4/CLEONIE+_+SUMBA+_+45.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c53d40b8-d527-42ef-9518-9d8806c0abb4/CLEONIE+_+SUMBA+_+45.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/178fbe45-9f28-4a84-825f-29f668e540c4/CLEONIE+_+SUMBA+_+39.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/178fbe45-9f28-4a84-825f-29f668e540c4/CLEONIE+_+SUMBA+_+39.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a7772652-99a4-4143-aac5-4a18f0b350e2/CLEONIE+_+SUMBA+_+3.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a7772652-99a4-4143-aac5-4a18f0b350e2/CLEONIE+_+SUMBA+_+3.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f5ece526-3e5c-4d43-96ce-2a6197a562df/CLEONIE+_+SUMBA+_+38.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f5ece526-3e5c-4d43-96ce-2a6197a562df/CLEONIE+_+SUMBA+_+38.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c8f7b6b5-f401-4837-a35c-a8f37e673c51/CLEONIE+_+SUMBA+_+41.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c8f7b6b5-f401-4837-a35c-a8f37e673c51/CLEONIE+_+SUMBA+_+41.jpg" /></div>
-    
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/2a72e1d4-99d0-441a-ab0c-d604b38d605f/CLEONIE+_+SUMBA+_+5.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/2a72e1d4-99d0-441a-ab0c-d604b38d605f/CLEONIE+_+SUMBA+_+5.jpg" /></div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c816237a-e5d1-48d7-a6ba-c513f6773ead/CLEONIE+_+SUMBA+_+1.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c816237a-e5d1-48d7-a6ba-c513f6773ead/CLEONIE+_+SUMBA+_+1.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dcb185f5-361c-439d-942a-2dd4181d6483/CLEONIE+_+SUMBA+_+32.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/dcb185f5-361c-439d-942a-2dd4181d6483/CLEONIE+_+SUMBA+_+32.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3a7fb3a-a720-403d-8769-7e6eaa50dfd2/CLEONIE+_+SUMBA+_+49.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d3a7fb3a-a720-403d-8769-7e6eaa50dfd2/CLEONIE+_+SUMBA+_+49.jpg" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c958fc65-ca48-4155-a3a8-3e03c0339618/CLEONIE+_+SUMBA+_+14.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c958fc65-ca48-4155-a3a8-3e03c0339618/CLEONIE+_+SUMBA+_+14.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8f911b7c-59e1-41b2-aa7f-fd98b9ca17ad/CLEONIE+_+SUMBA+_+30.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/8f911b7c-59e1-41b2-aa7f-fd98b9ca17ad/CLEONIE+_+SUMBA+_+30.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/18ebaa81-69e4-47bb-838b-91e5b7714d4d/CLEONIE+_+SUMBA+_+54.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/18ebaa81-69e4-47bb-838b-91e5b7714d4d/CLEONIE+_+SUMBA+_+54.jpg" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c53d40b8-d527-42ef-9518-9d8806c0abb4/CLEONIE+_+SUMBA+_+45.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c53d40b8-d527-42ef-9518-9d8806c0abb4/CLEONIE+_+SUMBA+_+45.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/178fbe45-9f28-4a84-825f-29f668e540c4/CLEONIE+_+SUMBA+_+39.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/178fbe45-9f28-4a84-825f-29f668e540c4/CLEONIE+_+SUMBA+_+39.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a7772652-99a4-4143-aac5-4a18f0b350e2/CLEONIE+_+SUMBA+_+3.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/a7772652-99a4-4143-aac5-4a18f0b350e2/CLEONIE+_+SUMBA+_+3.jpg" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f5ece526-3e5c-4d43-96ce-2a6197a562df/CLEONIE+_+SUMBA+_+38.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f5ece526-3e5c-4d43-96ce-2a6197a562df/CLEONIE+_+SUMBA+_+38.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c8f7b6b5-f401-4837-a35c-a8f37e673c51/CLEONIE+_+SUMBA+_+41.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/c8f7b6b5-f401-4837-a35c-a8f37e673c51/CLEONIE+_+SUMBA+_+41.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/2a72e1d4-99d0-441a-ab0c-d604b38d605f/CLEONIE+_+SUMBA+_+5.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/2a72e1d4-99d0-441a-ab0c-d604b38d605f/CLEONIE+_+SUMBA+_+5.jpg" /></div>
+    </div>
   </div>
 
   <!-- ── PREV / NEXT ───────────────────────────────────────────── -->
@@ -550,12 +552,6 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
     if (e.key === 'ArrowLeft')  prevLB();
     if (e.key === 'ArrowRight') nextLB();
   });
-
-  /* ── SWIPE SUPPORT ─────────────────────────────────────────── */
-  var swipeStartX = 0;
-  lightbox.addEventListener('touchstart', function (e) {
-    swipeStartX = e.changedTouches[0].clientX;
-  }, { passive: true });
   lightbox.addEventListener('touchend', function (e) {
     var diff = swipeStartX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 40) { diff > 0 ? nextLB() : prevLB(); }
