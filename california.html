@@ -467,29 +467,58 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   'use strict';
 
   /* ── MASONRY ───────────────────────────────────────────────── */
-  var ROW = 6, GAP = 6;
-
-  function span(item) {
-    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
-    var img = item.querySelector('img');
-    if (!img || !img.naturalWidth) return;
-    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
-    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
-  }
+  var ROW = 6, GAP = 6, COLS = 4;
 
   function layout() {
-    document.querySelectorAll('.project-grid__item').forEach(span);
+    var items = Array.from(
+      document.querySelectorAll('.project-grid__item, .home-grid__item')
+    );
+    if (!items.length) return;
+
+    if (window.innerWidth <= 700) {
+      items.forEach(function (item) {
+        item.style.gridColumn   = '';
+        item.style.gridRowStart = '';
+        item.style.gridRowEnd   = 'auto';
+      });
+      return;
+    }
+
+    var grid = items[0].closest('.project-grid, .home-grid');
+    if (!grid) return;
+    var gridWidth = grid.getBoundingClientRect().width;
+    var colWidth  = (gridWidth - (COLS - 1) * GAP) / COLS;
+    if (colWidth <= 0) return;
+
+    var rowStart = 1;
+    for (var i = 0; i < items.length; i += COLS) {
+      var group   = items.slice(i, i + COLS);
+      var maxSpan = 0;
+      group.forEach(function (item, j) {
+        var img = item.querySelector('img');
+        var sp;
+        if (img && img.naturalWidth && img.naturalHeight) {
+          var h = colWidth * img.naturalHeight / img.naturalWidth;
+          sp = Math.ceil((h + GAP) / ROW);
+        } else {
+          sp = Math.ceil((colWidth * 1.33 + GAP) / ROW); /* default 4:3 */
+        }
+        item.style.gridColumn   = (j + 1).toString();
+        item.style.gridRowStart = rowStart.toString();
+        item.style.gridRowEnd   = 'span ' + sp;
+        if (sp > maxSpan) maxSpan = sp;
+      });
+      rowStart += maxSpan;
+    }
   }
 
-  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
-    var item = img.closest('.project-grid__item');
-    if (img.complete && img.naturalHeight > 0) {
-      span(item);
-    } else {
-      img.addEventListener('load', function () { span(item); });
-    }
+  document.querySelectorAll(
+    '.project-grid__item img, .home-grid__item img'
+  ).forEach(function (img) {
+    img.addEventListener('load', layout);
   });
 
+  document.addEventListener('DOMContentLoaded', layout);
   window.addEventListener('load', function () {
     layout();
     setTimeout(layout, 400);
