@@ -86,24 +86,26 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 .project-header h1 { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; margin-bottom: 6px; }
 .project-header p { font-size: 13px; color: #666; font-style: italic; line-height: 1.5; }
 
-/* ── MASONRY GRID ───────────────────────────────────────────── */
-/* grid-auto-rows is tiny (6px); JS sets each item's row span   */
-/* based on natural image dimensions so there's no white gap    */
+/* ── IMAGE GRID (flex columns — flush masonry) ──────────────── */
 .project-grid {
   padding: 20px 28px 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 6px;
-  column-gap: 6px;
-  /* no row-gap — the span calculation adds 6px padding itself  */
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.project-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .project-grid__item {
-  overflow: hidden;
+  display: block;
   cursor: pointer;
 }
 .project-grid__item img {
   width: 100%;
-  height: auto;         /* original crop — never clipped         */
+  height: auto;
   display: block;
   transition: opacity 0.25s ease;
 }
@@ -145,66 +147,81 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 /* ── FOOTER ─────────────────────────────────────────────────── */
 .site-footer {
   padding: 32px 28px 24px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   font-size: 11px;
   color: #aaa;
   letter-spacing: 0.03em;
 }
 .site-footer__center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  text-align: center;
 }
-.site-footer { position: relative; }
 .site-footer a { font-size: 12px; color: #1a1a1a; transition: color 0.15s; }
 .site-footer a:hover { color: #666; }
+.site-footer > *:last-child { text-align: right; }
 
 /* ── LIGHTBOX ───────────────────────────────────────────────── */
 .lightbox {
   position: fixed; inset: 0;
-  background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   z-index: 500; display: none;
   align-items: center; justify-content: center;
 }
 .lightbox.open { display: flex; }
+.lightbox__viewer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 96vw;
+  max-height: 96vh;
+}
 .lightbox__img {
-  max-width: 88vw; max-height: 90vh;
+  max-width: 80vw; max-height: 88vh;
   object-fit: contain; display: block;
   background: #fff;
   box-shadow: 0 8px 48px rgba(0,0,0,0.18);
 }
 .lightbox__close {
   position: absolute; top: 20px; right: 24px;
-  font-size: 28px; color: #1a1a1a; background: none; border: none;
-  cursor: pointer; line-height: 1; opacity: 0.5; transition: opacity 0.15s;
+  font-size: 22px; color: #1a1a1a;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid #ddd; border-radius: 50%;
+  cursor: pointer; line-height: 1; opacity: 0.7; transition: opacity 0.15s;
 }
 .lightbox__close:hover { opacity: 1; }
 .lightbox__prev, .lightbox__next {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  font-size: 28px; color: #1a1a1a; background: none; border: none;
-  cursor: pointer; padding: 16px; opacity: 0.4; transition: opacity 0.15s; line-height: 1;
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: #1a1a1a;
+  background: #fff; border: 1px solid #ddd; border-radius: 50%;
+  cursor: pointer; opacity: 0.7; transition: opacity 0.15s;
+  user-select: none; -webkit-user-select: none;
 }
-.lightbox__prev { left: 8px; }
-.lightbox__next { right: 8px; }
 .lightbox__prev:hover, .lightbox__next:hover { opacity: 1; }
+@media (max-width: 700px) {
+  .lightbox__viewer { gap: 12px; }
+  .lightbox__img { max-width: 72vw; }
+  .lightbox__prev, .lightbox__next { width: 36px; height: 36px; font-size: 18px; }
+}
 
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
-@media (max-width: 1200px) { .project-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 900px)  { .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 6px; padding: 8px 8px 0; } }
+
 @media (max-width: 700px) {
   .site-nav { display: none; }
   .mobile-header { display: flex; }
   .page-body { padding-top: 50px; }
   .project-header { padding: 20px 14px 4px; }
-  .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 6px; padding: 8px 8px 0; }
+  .project-grid { columns: 2; column-gap: 4px; padding: 8px 8px 0; display: block; }
+  .project-col { display: contents; }
+  .project-grid__item { break-inside: avoid; -webkit-column-break-inside: avoid; margin-bottom: 4px; }
   .proj-nav { padding: 32px 14px 0; }
   .proj-nav__btn { min-width: 0; }
   .site-footer { padding: 24px 14px; }
-  .site-footer__center { position: static; transform: none; }
 }
 
   /* ── MOBILE MENU (accordion) ─────────────────────────────── */
@@ -411,18 +428,26 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   </div>
 
   <div class="project-grid">
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/230bcc96-47d4-4706-99ef-0ab7ab08cb3b/EMILIODUMAR_YOCHI_-1.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/230bcc96-47d4-4706-99ef-0ab7ab08cb3b/EMILIODUMAR_YOCHI_-1.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f36dfab6-c7d7-478a-a5c0-0f4f3ac95c0b/EMILIODUMAR_YOCHI_-38.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f36dfab6-c7d7-478a-a5c0-0f4f3ac95c0b/EMILIODUMAR_YOCHI_-38.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/784ccc41-4784-4665-96cf-95d240f6fbc8/EMILIODUMAR_YOCHI_-26.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/784ccc41-4784-4665-96cf-95d240f6fbc8/EMILIODUMAR_YOCHI_-26.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e1b0592c-f5ae-4499-848b-52b4118027ee/EMILIODUMAR_YOCHI_-3.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e1b0592c-f5ae-4499-848b-52b4118027ee/EMILIODUMAR_YOCHI_-3.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/97f928e6-3e71-4a5e-92d5-14729738a7db/EMILIODUMAR_YOCHI_-30.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/97f928e6-3e71-4a5e-92d5-14729738a7db/EMILIODUMAR_YOCHI_-30.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5a9b7292-95d2-4618-bdaa-700e25365620/EMILIODUMAR_YOCHI_-24.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5a9b7292-95d2-4618-bdaa-700e25365620/EMILIODUMAR_YOCHI_-24.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/14006d30-4a6e-4b8f-8b4d-d4570783879a/EMILIODUMAR_YOCHI_-5.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/14006d30-4a6e-4b8f-8b4d-d4570783879a/EMILIODUMAR_YOCHI_-5.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87879803-8772-4cb2-b60b-568f77708488/EMILIODUMAR_YOCHI_-116.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87879803-8772-4cb2-b60b-568f77708488/EMILIODUMAR_YOCHI_-116.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ac94a6a-73d5-4d02-a7d2-8e61a73ce788/EMILIODUMAR_YOCHI_-12.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ac94a6a-73d5-4d02-a7d2-8e61a73ce788/EMILIODUMAR_YOCHI_-12.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9498d195-9984-4d20-b612-930b7433b8af/EMILIODUMAR_YOCHI_-20.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9498d195-9984-4d20-b612-930b7433b8af/EMILIODUMAR_YOCHI_-20.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bcc285fa-c552-46bf-a023-78dae636b99e/EMILIODUMAR_YOCHI_-21.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bcc285fa-c552-46bf-a023-78dae636b99e/EMILIODUMAR_YOCHI_-21.jpg" /></div>
-    <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d05aed5e-1b37-4ca8-898a-a33ba491adea/EMILIODUMAR_YOCHI_-34.jpg?format=1500w" alt="" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d05aed5e-1b37-4ca8-898a-a33ba491adea/EMILIODUMAR_YOCHI_-34.jpg" /></div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/230bcc96-47d4-4706-99ef-0ab7ab08cb3b/EMILIODUMAR_YOCHI_-1.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/230bcc96-47d4-4706-99ef-0ab7ab08cb3b/EMILIODUMAR_YOCHI_-1.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/230bcc96-47d4-4706-99ef-0ab7ab08cb3b/EMILIODUMAR_YOCHI_-1.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/230bcc96-47d4-4706-99ef-0ab7ab08cb3b/EMILIODUMAR_YOCHI_-1.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/230bcc96-47d4-4706-99ef-0ab7ab08cb3b/EMILIODUMAR_YOCHI_-1.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/97f928e6-3e71-4a5e-92d5-14729738a7db/EMILIODUMAR_YOCHI_-30.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/97f928e6-3e71-4a5e-92d5-14729738a7db/EMILIODUMAR_YOCHI_-30.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/97f928e6-3e71-4a5e-92d5-14729738a7db/EMILIODUMAR_YOCHI_-30.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/97f928e6-3e71-4a5e-92d5-14729738a7db/EMILIODUMAR_YOCHI_-30.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/97f928e6-3e71-4a5e-92d5-14729738a7db/EMILIODUMAR_YOCHI_-30.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ac94a6a-73d5-4d02-a7d2-8e61a73ce788/EMILIODUMAR_YOCHI_-12.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ac94a6a-73d5-4d02-a7d2-8e61a73ce788/EMILIODUMAR_YOCHI_-12.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ac94a6a-73d5-4d02-a7d2-8e61a73ce788/EMILIODUMAR_YOCHI_-12.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ac94a6a-73d5-4d02-a7d2-8e61a73ce788/EMILIODUMAR_YOCHI_-12.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/4ac94a6a-73d5-4d02-a7d2-8e61a73ce788/EMILIODUMAR_YOCHI_-12.jpg" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f36dfab6-c7d7-478a-a5c0-0f4f3ac95c0b/EMILIODUMAR_YOCHI_-38.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f36dfab6-c7d7-478a-a5c0-0f4f3ac95c0b/EMILIODUMAR_YOCHI_-38.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f36dfab6-c7d7-478a-a5c0-0f4f3ac95c0b/EMILIODUMAR_YOCHI_-38.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f36dfab6-c7d7-478a-a5c0-0f4f3ac95c0b/EMILIODUMAR_YOCHI_-38.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/f36dfab6-c7d7-478a-a5c0-0f4f3ac95c0b/EMILIODUMAR_YOCHI_-38.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5a9b7292-95d2-4618-bdaa-700e25365620/EMILIODUMAR_YOCHI_-24.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5a9b7292-95d2-4618-bdaa-700e25365620/EMILIODUMAR_YOCHI_-24.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5a9b7292-95d2-4618-bdaa-700e25365620/EMILIODUMAR_YOCHI_-24.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5a9b7292-95d2-4618-bdaa-700e25365620/EMILIODUMAR_YOCHI_-24.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/5a9b7292-95d2-4618-bdaa-700e25365620/EMILIODUMAR_YOCHI_-24.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9498d195-9984-4d20-b612-930b7433b8af/EMILIODUMAR_YOCHI_-20.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9498d195-9984-4d20-b612-930b7433b8af/EMILIODUMAR_YOCHI_-20.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9498d195-9984-4d20-b612-930b7433b8af/EMILIODUMAR_YOCHI_-20.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9498d195-9984-4d20-b612-930b7433b8af/EMILIODUMAR_YOCHI_-20.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/9498d195-9984-4d20-b612-930b7433b8af/EMILIODUMAR_YOCHI_-20.jpg" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/784ccc41-4784-4665-96cf-95d240f6fbc8/EMILIODUMAR_YOCHI_-26.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/784ccc41-4784-4665-96cf-95d240f6fbc8/EMILIODUMAR_YOCHI_-26.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/784ccc41-4784-4665-96cf-95d240f6fbc8/EMILIODUMAR_YOCHI_-26.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/784ccc41-4784-4665-96cf-95d240f6fbc8/EMILIODUMAR_YOCHI_-26.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/784ccc41-4784-4665-96cf-95d240f6fbc8/EMILIODUMAR_YOCHI_-26.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/14006d30-4a6e-4b8f-8b4d-d4570783879a/EMILIODUMAR_YOCHI_-5.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/14006d30-4a6e-4b8f-8b4d-d4570783879a/EMILIODUMAR_YOCHI_-5.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/14006d30-4a6e-4b8f-8b4d-d4570783879a/EMILIODUMAR_YOCHI_-5.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/14006d30-4a6e-4b8f-8b4d-d4570783879a/EMILIODUMAR_YOCHI_-5.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/14006d30-4a6e-4b8f-8b4d-d4570783879a/EMILIODUMAR_YOCHI_-5.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bcc285fa-c552-46bf-a023-78dae636b99e/EMILIODUMAR_YOCHI_-21.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bcc285fa-c552-46bf-a023-78dae636b99e/EMILIODUMAR_YOCHI_-21.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bcc285fa-c552-46bf-a023-78dae636b99e/EMILIODUMAR_YOCHI_-21.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bcc285fa-c552-46bf-a023-78dae636b99e/EMILIODUMAR_YOCHI_-21.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/bcc285fa-c552-46bf-a023-78dae636b99e/EMILIODUMAR_YOCHI_-21.jpg" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e1b0592c-f5ae-4499-848b-52b4118027ee/EMILIODUMAR_YOCHI_-3.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e1b0592c-f5ae-4499-848b-52b4118027ee/EMILIODUMAR_YOCHI_-3.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e1b0592c-f5ae-4499-848b-52b4118027ee/EMILIODUMAR_YOCHI_-3.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e1b0592c-f5ae-4499-848b-52b4118027ee/EMILIODUMAR_YOCHI_-3.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/e1b0592c-f5ae-4499-848b-52b4118027ee/EMILIODUMAR_YOCHI_-3.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87879803-8772-4cb2-b60b-568f77708488/EMILIODUMAR_YOCHI_-116.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87879803-8772-4cb2-b60b-568f77708488/EMILIODUMAR_YOCHI_-116.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87879803-8772-4cb2-b60b-568f77708488/EMILIODUMAR_YOCHI_-116.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87879803-8772-4cb2-b60b-568f77708488/EMILIODUMAR_YOCHI_-116.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/87879803-8772-4cb2-b60b-568f77708488/EMILIODUMAR_YOCHI_-116.jpg" /></div>
+      <div class="project-grid__item"><img src="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d05aed5e-1b37-4ca8-898a-a33ba491adea/EMILIODUMAR_YOCHI_-34.jpg?format=750w" alt="" srcset="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d05aed5e-1b37-4ca8-898a-a33ba491adea/EMILIODUMAR_YOCHI_-34.jpg?format=500w 500w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d05aed5e-1b37-4ca8-898a-a33ba491adea/EMILIODUMAR_YOCHI_-34.jpg?format=750w 750w, https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d05aed5e-1b37-4ca8-898a-a33ba491adea/EMILIODUMAR_YOCHI_-34.jpg?format=1000w 1000w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" data-lightbox="https://images.squarespace-cdn.com/content/v1/64d1bcf0cf0c2750aad95072/d05aed5e-1b37-4ca8-898a-a33ba491adea/EMILIODUMAR_YOCHI_-34.jpg" /></div>
+    </div>
   </div>
 
   <!-- ── PREV / NEXT ───────────────────────────────────────────── -->
@@ -449,49 +474,18 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 <!-- ── LIGHTBOX ─────────────────────────────────────────────── -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox__close" id="lightboxClose">&times;</button>
-  <button class="lightbox__prev"  id="lightboxPrev">&#8249;</button>
-  <img class="lightbox__img" id="lightboxImg" src="" alt="" />
-  <button class="lightbox__next"  id="lightboxNext">&#8250;</button>
+  <div class="lightbox__viewer">
+    <button class="lightbox__prev"  id="lightboxPrev">&#8249;</button>
+    <img class="lightbox__img" id="lightboxImg" src="" alt="" />
+    <button class="lightbox__next"  id="lightboxNext">&#8250;</button>
+  </div>
 </div>
 
 <script>
 (function () {
   'use strict';
 
-  /* ── MASONRY ───────────────────────────────────────────────── */
-  var ROW = 6, GAP = 6;
-
-  function span(item) {
-    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
-    var img = item.querySelector('img');
-    if (!img || !img.naturalWidth) return;
-    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
-    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
-  }
-
-  function layout() {
-    document.querySelectorAll('.project-grid__item').forEach(span);
-  }
-
-  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
-    var item = img.closest('.project-grid__item');
-    if (img.complete && img.naturalHeight > 0) {
-      span(item);
-    } else {
-      img.addEventListener('load', function () { span(item); });
-    }
-  });
-
-  window.addEventListener('load', function () {
-    layout();
-    setTimeout(layout, 400);
-    setTimeout(layout, 1200);
-  });
-
-  var rt;
-  window.addEventListener('resize', function () {
-    clearTimeout(rt); rt = setTimeout(layout, 120);
-  });
+  /* ── LAYOUT: CSS columns handles masonry — no JS needed ─── */
 
   /* ── MOBILE MENU ───────────────────────────────────────────── */
   var burger = document.getElementById('burger');
@@ -558,6 +552,10 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
     if (e.key === 'ArrowLeft')  prevLB();
     if (e.key === 'ArrowRight') nextLB();
   });
+  lightbox.addEventListener('touchend', function (e) {
+    var diff = swipeStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { diff > 0 ? nextLB() : prevLB(); }
+  }, { passive: true });
 
 })();
 </script>

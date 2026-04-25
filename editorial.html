@@ -163,21 +163,20 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 /* ── FOOTER ──────────────────────────────────────────────────── */
 .site-footer {
   padding: 40px 28px 24px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   font-size: 11px;
   color: #aaa;
   letter-spacing: 0.03em;
   position: relative;
 }
 .site-footer__center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  text-align: center;
 }
 .site-footer a { font-size: 12px; color: #1a1a1a; transition: color 0.15s; }
 .site-footer a:hover { color: #666; }
+.site-footer > *:last-child { text-align: right; }
 
 /* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media (max-width: 1100px) { .thumb-grid { padding: 0 10%; } }
@@ -190,7 +189,6 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
   .thumb-grid { grid-template-columns: repeat(2, 1fr); padding: 0 14px; gap: 6px; }
   .thumb-card__title { font-size: 11px; letter-spacing: 0.1em; }
   .site-footer { padding: 28px 14px 20px; }
-  .site-footer__center { position: static; transform: none; }
 }
   
 .proj-nav {
@@ -496,40 +494,7 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
 (function () {
   'use strict';
 
-  /* ── MASONRY ───────────────────────────────────────────────── */
-  var ROW = 6, GAP = 6;
-
-  function span(item) {
-    if (window.innerWidth <= 700) { item.style.gridRowEnd = 'auto'; return; }
-    var img = item.querySelector('img');
-    if (!img || !img.naturalWidth) return;
-    var h = item.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth;
-    item.style.gridRowEnd = 'span ' + Math.ceil((h + GAP) / ROW);
-  }
-
-  function layout() {
-    document.querySelectorAll('.project-grid__item').forEach(span);
-  }
-
-  document.querySelectorAll('.project-grid__item img').forEach(function (img) {
-    var item = img.closest('.project-grid__item');
-    if (img.complete && img.naturalHeight > 0) {
-      span(item);
-    } else {
-      img.addEventListener('load', function () { span(item); });
-    }
-  });
-
-  window.addEventListener('load', function () {
-    layout();
-    setTimeout(layout, 400);
-    setTimeout(layout, 1200);
-  });
-
-  var rt;
-  window.addEventListener('resize', function () {
-    clearTimeout(rt); rt = setTimeout(layout, 120);
-  });
+  /* ── LAYOUT: CSS columns handles masonry — no JS needed ─── */
 
   /* ── MOBILE MENU ───────────────────────────────────────────── */
   var burger = document.getElementById('burger');
@@ -596,6 +561,10 @@ button { cursor: pointer; background: none; border: none; font: inherit; }
     if (e.key === 'ArrowLeft')  prevLB();
     if (e.key === 'ArrowRight') nextLB();
   });
+  lightbox.addEventListener('touchend', function (e) {
+    var diff = swipeStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { diff > 0 ? nextLB() : prevLB(); }
+  }, { passive: true });
 
 })();
 </script>
