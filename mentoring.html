@@ -217,6 +217,19 @@
   .finish-title { font-size: 52px; font-weight: 700; line-height: 1.05; margin-bottom: 20px; }
   .finish-sub { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 400px; }
 
+  /* Validation */
+  .field-error { border-bottom-color: #c0392b !important; }
+  .err-msg { font-size: 12px; color: #c0392b; margin-top: 8px; display: none; }
+  .err-msg.show { display: block; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .shake { animation: shake 0.35s ease; }
+
   /* ── MOBILE ── */
   @media (max-width: 480px) {
     :root { --top-h: 52px; }
@@ -293,7 +306,8 @@
     <div class="field-group">
       <input class="text-input" id="inp-name" placeholder="Your name" autocomplete="off" autocorrect="off" />
     </div>
-    <button class="btn-continue" onclick="advance(1)">Continue <span class="arrow">→</span></button>
+    <span class="err-msg" id="err-name"></span>
+    <button class="btn-continue" onclick="advanceName()">Continue <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
 
@@ -355,6 +369,7 @@
         <input class="ig-input" id="inp-ig" placeholder="instagram (optional)" autocomplete="off" autocorrect="off" autocapitalize="none" />
       </div>
     </div>
+    <span class="err-msg" id="err-email"></span>
     <button class="btn-continue" onclick="submitForm()">Submit application <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
@@ -401,6 +416,22 @@
     if (sid === 5) setTimeout(function(){ document.getElementById('inp-email').focus(); }, 200);
   }
 
+  function advanceName() {
+    var name = document.getElementById('inp-name').value.trim();
+    var errEl = document.getElementById('err-name');
+    if (!name) {
+      document.getElementById('inp-name').classList.add('field-error');
+      errEl.textContent = 'Please enter your name to continue.';
+      errEl.classList.add('show');
+      document.getElementById('step-1').classList.add('shake');
+      setTimeout(function(){ document.getElementById('step-1').classList.remove('shake'); }, 400);
+      return;
+    }
+    document.getElementById('inp-name').classList.remove('field-error');
+    errEl.classList.remove('show');
+    advance(1);
+  }
+
   function advance(sid) {
     var idx = FLOW.indexOf(sid);
     if (idx === -1 || idx >= FLOW.length - 1) return;
@@ -430,10 +461,17 @@
     var email = document.getElementById('inp-email').value.trim();
     var ig    = document.getElementById('inp-ig').value.trim();
 
+    var name = document.getElementById('inp-name').value.trim();
     if (!email) {
-      document.getElementById('inp-email').focus();
+      document.getElementById('inp-email').classList.add('field-error');
+      var errEl = document.getElementById('err-email');
+      errEl.textContent = 'Email is required to submit.';
+      errEl.classList.add('show');
       return;
     }
+    document.getElementById('inp-email').classList.remove('field-error');
+    var errEl2 = document.getElementById('err-email');
+    if (errEl2) errEl2.classList.remove('show');
 
     // Show done screen immediately for UX — submission happens in background
     goTo('done');
@@ -462,6 +500,7 @@
     var sid = active.id.replace('step-','');
     var sidParsed = isNaN(+sid) ? sid : +sid;
     if (sidParsed === 0) { goTo(1); return; }
+    if (sidParsed === 1) { advanceName(); return; }
     if (sidParsed === 5) { submitForm(); return; }
     if (sidParsed !== 'done') advance(sidParsed);
   });

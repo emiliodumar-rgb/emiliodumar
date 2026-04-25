@@ -241,6 +241,19 @@
     .finish-sub { font-size: 14px; }
     .finish-line { margin-bottom: 32px; }
   }
+
+  /* Validation */
+  .field-error { border-bottom-color: #c0392b !important; }
+  .err-msg { font-size: 12px; color: #c0392b; margin-top: 8px; display: none; letter-spacing: 0.02em; }
+  .err-msg.show { display: block; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .shake { animation: shake 0.35s ease; }
 </style>
 </head>
 <body>
@@ -263,7 +276,8 @@
     </div>
     <div class="field-label">Your email</div>
     <div class="field-group"><input class="text-input" id="inp-email" placeholder="your@email.com" type="email" autocomplete="off" /></div>
-    <button class="btn-continue" onclick="goTo(2)">Continue <span class="arrow">→</span></button>
+    <span class="err-msg" id="err-1"></span>
+    <button class="btn-continue" onclick="goToStep2()">Continue <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
 
@@ -464,6 +478,33 @@
   var TOTAL = 10;
   var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwneZda57copa8LvqxqCrbJ3WWQylRJTDhCzmtP1dHLdz9bg-Sb5_5k3a7uyC8Jymel/exec';
 
+  function goToStep2() {
+    var first = document.getElementById('inp-first').value.trim();
+    var last  = document.getElementById('inp-last').value.trim();
+    var email = document.getElementById('inp-email').value.trim();
+    var errEl = document.getElementById('err-1');
+    var step  = document.getElementById('step-1');
+
+    if (!first || !last || !email) {
+      if (!first) document.getElementById('inp-first').classList.add('field-error');
+      else document.getElementById('inp-first').classList.remove('field-error');
+      if (!last) document.getElementById('inp-last').classList.add('field-error');
+      else document.getElementById('inp-last').classList.remove('field-error');
+      if (!email) document.getElementById('inp-email').classList.add('field-error');
+      else document.getElementById('inp-email').classList.remove('field-error');
+      errEl.textContent = 'Name and email are required to continue.';
+      errEl.classList.add('show');
+      step.classList.add('shake');
+      setTimeout(function(){ step.classList.remove('shake'); }, 400);
+      return;
+    }
+    errEl.classList.remove('show');
+    document.getElementById('inp-first').classList.remove('field-error');
+    document.getElementById('inp-last').classList.remove('field-error');
+    document.getElementById('inp-email').classList.remove('field-error');
+    goTo(2);
+  }
+
   function goTo(n) {
     document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
     document.getElementById('step-' + n).classList.add('active');
@@ -567,7 +608,7 @@
     var sid = parseInt(active.id.replace('step-', ''));
     if (isNaN(sid) || sid >= 10) return;
     var noAuto = [2, 3, 4, 5, 6, 7, 8, 9];
-    if (noAuto.indexOf(sid) === -1) goTo(sid + 1);
+    if (noAuto.indexOf(sid) === -1) { if (sid === 1) goToStep2(); else goTo(sid + 1); }
   });
 
   goTo(1);

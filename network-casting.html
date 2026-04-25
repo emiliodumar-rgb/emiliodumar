@@ -312,6 +312,24 @@
     transition: opacity 0.2s;
   }
   .ig-thumb:hover img { opacity: 0.85; }
+
+  /* Validation */
+  .field-error { border-bottom-color: #c0392b !important; }
+  .select-error { border-bottom-color: #c0392b !important; }
+  .option-error { outline: 1px solid #c0392b; border-radius: 4px; }
+  .err-msg {
+    font-size: 12px; color: #c0392b; margin-top: 8px;
+    display: none; letter-spacing: 0.02em;
+  }
+  .err-msg.show { display: block; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(6px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+  }
+  .shake { animation: shake 0.35s ease; }
 </style>
 </head>
 <body>
@@ -342,6 +360,7 @@
       <div class="field-group"><input class="text-input" id="inp-first" placeholder="First name" autocomplete="off" /></div>
       <div class="field-group"><input class="text-input" id="inp-last" placeholder="Last name" autocomplete="off" /></div>
     </div>
+    <span class="err-msg" id="err-1"></span>
     <button class="btn-continue" onclick="advance(1)">Continue <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
@@ -369,6 +388,7 @@
     <div id="other-field-wrap" style="display:none; margin-top:16px;">
       <input class="text-input" id="inp-other-profession" placeholder="Your profession" autocomplete="off" />
     </div>
+    <span class="err-msg" id="err-2"></span>
     <button class="btn-continue" onclick="advance(2)">Continue <span class="arrow">→</span></button>
   </div>
 
@@ -385,6 +405,7 @@
       </div>
     </div>
 
+    <span class="err-msg" id="err-3"></span>
     <button class="btn-continue" onclick="advance(3)">Continue <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
@@ -397,6 +418,7 @@
     <div class="field-group">
       <input class="text-input" id="inp-email" placeholder="your@email.com" type="email" autocomplete="off" />
     </div>
+    <span class="err-msg" id="err-4"></span>
     <button class="btn-continue" onclick="advance(4)">Continue <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
@@ -413,6 +435,7 @@
       <div class="wa-box" id="waBox"></div>
       <span class="wa-label">On WhatsApp</span>
     </div>
+    <span class="err-msg" id="err-5"></span>
     <button class="btn-continue" onclick="advance(5)">Continue <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
@@ -572,6 +595,7 @@
         </datalist>
       </div>
     </div>
+    <span class="err-msg" id="err-6"></span>
     <button class="btn-continue" onclick="advance(6)">Continue <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
@@ -617,6 +641,7 @@
         <input class="text-input" id="inp-height" placeholder="Height (e.g. 5'9)" autocomplete="off" />
       </div>
     </div>
+    <span class="err-msg" id="err-m1"></span>
     <button class="btn-continue" onclick="advance('m1')">Continue <span class="arrow">→</span></button>
     <div class="enter-hint">press <span class="enter-key">Enter ↵</span></div>
   </div>
@@ -636,6 +661,7 @@
       <div class="option-row" onclick="pick(this,'single')"><div class="option-key">F</div><div class="option-text">Coloured / Dyed</div></div>
       <div class="option-row" onclick="pick(this,'single')"><div class="option-key">G</div><div class="option-text">Other</div></div>
     </div>
+    <span class="err-msg" id="err-m2"></span>
     <button class="btn-continue" onclick="advance('m2')">Continue <span class="arrow">→</span></button>
   </div>
 
@@ -650,6 +676,7 @@
       <div class="option-row" onclick="pick(this,'single')"><div class="option-key">B</div><div class="option-text">Maybe later</div></div>
       <div class="option-row" onclick="pick(this,'single')"><div class="option-key">C</div><div class="option-text">No thanks</div></div>
     </div>
+    <span class="err-msg" id="err-m3"></span>
     <button class="btn-continue" onclick="advance('m3')">Continue <span class="arrow">→</span></button>
   </div>
 
@@ -665,6 +692,7 @@
       <div class="option-row" onclick="pick(this,'single')"><div class="option-key">D</div><div class="option-text">Industry referral</div></div>
       <div class="option-row" onclick="pick(this,'single')"><div class="option-key">E</div><div class="option-text">Other</div></div>
     </div>
+    <span class="err-msg" id="err-9"></span>
     <button class="btn-continue" onclick="goToFinish()">Submit <span class="arrow">→</span></button>
   </div>
 
@@ -727,7 +755,86 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function showErr(id, msg) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('show');
+    el.textContent = msg || 'This field is required.';
+    var parent = el.parentElement;
+    parent.classList.add('shake');
+    setTimeout(function(){ parent.classList.remove('shake'); }, 400);
+  }
+  function clearErr(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  }
+
+  function validate(sid) {
+    var ok = true;
+    if (sid === 1) {
+      var first = document.getElementById('inp-first').value.trim();
+      var last  = document.getElementById('inp-last').value.trim();
+      if (!first) { document.getElementById('inp-first').classList.add('field-error'); showErr('err-1', 'First name is required.'); ok = false; }
+      else { document.getElementById('inp-first').classList.remove('field-error'); clearErr('err-1'); }
+      if (!last)  { document.getElementById('inp-last').classList.add('field-error');  ok = false; }
+      else { document.getElementById('inp-last').classList.remove('field-error'); }
+    }
+    if (sid === 2) {
+      var sel = document.querySelectorAll('#opts-2 .option-row.selected');
+      if (sel.length === 0) { document.getElementById('opts-2').classList.add('option-error'); showErr('err-2', 'Please select at least one profession.'); ok = false; }
+      else { document.getElementById('opts-2').classList.remove('option-error'); clearErr('err-2'); }
+    }
+    if (sid === 3) {
+      var ig = document.getElementById('inp-ig').value.trim();
+      if (!ig) { document.getElementById('inp-ig').classList.add('field-error'); showErr('err-3', 'Instagram username is required.'); ok = false; }
+      else { document.getElementById('inp-ig').classList.remove('field-error'); clearErr('err-3'); }
+    }
+    if (sid === 4) {
+      var email = document.getElementById('inp-email').value.trim();
+      if (!email) { document.getElementById('inp-email').classList.add('field-error'); showErr('err-4', 'Email is required.'); ok = false; }
+      else { document.getElementById('inp-email').classList.remove('field-error'); clearErr('err-4'); }
+    }
+    if (sid === 5) {
+      var phone = document.getElementById('inp-phone').value.trim();
+      if (!phone) { document.getElementById('inp-phone').classList.add('field-error'); showErr('err-5', 'Phone number is required.'); ok = false; }
+      else { document.getElementById('inp-phone').classList.remove('field-error'); clearErr('err-5'); }
+    }
+    if (sid === 6) {
+      var city    = document.getElementById('inp-city').value.trim();
+      var country = document.getElementById('inp-country').value.trim();
+      if (!city)    { document.getElementById('inp-city').classList.add('field-error');    showErr('err-6', 'City and country are required.'); ok = false; }
+      else { document.getElementById('inp-city').classList.remove('field-error'); clearErr('err-6'); }
+      if (!country) { document.getElementById('inp-country').classList.add('field-error'); ok = false; }
+      else { document.getElementById('inp-country').classList.remove('field-error'); }
+    }
+    if (sid === 'm1') {
+      var age = document.getElementById('inp-age').value.trim();
+      var ht  = document.getElementById('inp-height').value.trim();
+      if (!age) { document.getElementById('inp-age').classList.add('select-error'); showErr('err-m1', 'Age and height are required.'); ok = false; }
+      else { document.getElementById('inp-age').classList.remove('select-error'); clearErr('err-m1'); }
+      if (!ht)  { document.getElementById('inp-height').classList.add('field-error'); ok = false; }
+      else { document.getElementById('inp-height').classList.remove('field-error'); }
+    }
+    if (sid === 'm2') {
+      var hc = document.querySelectorAll('#opts-m2 .option-row.selected');
+      if (hc.length === 0) { document.getElementById('opts-m2').classList.add('option-error'); showErr('err-m2', 'Please select a hair colour.'); ok = false; }
+      else { document.getElementById('opts-m2').classList.remove('option-error'); clearErr('err-m2'); }
+    }
+    if (sid === 'm3') {
+      var ps = document.querySelectorAll('#opts-m3 .option-row.selected');
+      if (ps.length === 0) { document.getElementById('opts-m3').classList.add('option-error'); showErr('err-m3', 'Please select an option.'); ok = false; }
+      else { document.getElementById('opts-m3').classList.remove('option-error'); clearErr('err-m3'); }
+    }
+    if (sid === 9) {
+      var src = document.querySelectorAll('#opts-9 .option-row.selected');
+      if (src.length === 0) { document.getElementById('opts-9').classList.add('option-error'); showErr('err-9', 'Please select an option.'); ok = false; }
+      else { document.getElementById('opts-9').classList.remove('option-error'); clearErr('err-9'); }
+    }
+    return ok;
+  }
+
   function advance(sid) {
+    if (!validate(sid)) return;
     // Detect model selection after profession step
     if (sid === 2) {
       isModel = !!document.querySelector('#opts-2 .option-row[data-val="Model"].selected');
@@ -755,6 +862,7 @@
   }
 
   function goToFinish() {
+    if (!validate(9)) return;
     // Collect all professions
     var professions = getSelected('opts-2');
 
