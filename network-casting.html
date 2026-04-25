@@ -313,6 +313,42 @@
   }
   .ig-thumb:hover img { opacity: 0.85; }
 
+
+  /* Country search dropdown */
+  .country-wrap { position: relative; }
+  .country-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    list-style: none;
+    margin: 0; padding: 0;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .country-dropdown.open { display: block; }
+  .country-dropdown li {
+    padding: 12px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  }
+  .country-dropdown li:last-child { border-bottom: none; }
+  .country-dropdown li:hover,
+  .country-dropdown li.active { background: var(--accent-light); }
+  .country-dropdown li.no-match {
+    color: var(--muted); cursor: default; font-style: italic;
+  }
+  .country-dropdown li.no-match:hover { background: transparent; }
+
   /* Validation */
   .field-error { border-bottom-color: #c0392b !important; }
   .select-error { border-bottom-color: #c0392b !important; }
@@ -448,151 +484,10 @@
     <div class="two-col">
       <div class="field-group"><input class="text-input" id="inp-city" placeholder="City" autocomplete="off" /></div>
       <div class="field-group">
-                <input class="text-input" id="inp-country" list="country-list" placeholder="Type to search country..." autocomplete="off" />
-        <datalist id="country-list">
-          <option value="Australia">
-          <option value="New Zealand">
-          <option value="United States">
-          <option value="United Kingdom">
-          <option value="Canada">
-          <option value="Afghanistan">
-          <option value="Albania">
-          <option value="Algeria">
-          <option value="Andorra">
-          <option value="Angola">
-          <option value="Argentina">
-          <option value="Armenia">
-          <option value="Austria">
-          <option value="Azerbaijan">
-          <option value="Bahamas">
-          <option value="Bahrain">
-          <option value="Bangladesh">
-          <option value="Belarus">
-          <option value="Belgium">
-          <option value="Belize">
-          <option value="Benin">
-          <option value="Bolivia">
-          <option value="Bosnia and Herzegovina">
-          <option value="Botswana">
-          <option value="Brazil">
-          <option value="Brunei">
-          <option value="Bulgaria">
-          <option value="Burkina Faso">
-          <option value="Cambodia">
-          <option value="Cameroon">
-          <option value="Chile">
-          <option value="China">
-          <option value="Colombia">
-          <option value="Congo">
-          <option value="Costa Rica">
-          <option value="Croatia">
-          <option value="Cuba">
-          <option value="Cyprus">
-          <option value="Czech Republic">
-          <option value="Denmark">
-          <option value="Dominican Republic">
-          <option value="Ecuador">
-          <option value="Egypt">
-          <option value="El Salvador">
-          <option value="Estonia">
-          <option value="Ethiopia">
-          <option value="Fiji">
-          <option value="Finland">
-          <option value="France">
-          <option value="Georgia">
-          <option value="Germany">
-          <option value="Ghana">
-          <option value="Greece">
-          <option value="Guatemala">
-          <option value="Haiti">
-          <option value="Honduras">
-          <option value="Hungary">
-          <option value="Iceland">
-          <option value="India">
-          <option value="Indonesia">
-          <option value="Iraq">
-          <option value="Ireland">
-          <option value="Italy">
-          <option value="Jamaica">
-          <option value="Japan">
-          <option value="Jordan">
-          <option value="Kazakhstan">
-          <option value="Kenya">
-          <option value="Kosovo">
-          <option value="Kuwait">
-          <option value="Kyrgyzstan">
-          <option value="Laos">
-          <option value="Latvia">
-          <option value="Lebanon">
-          <option value="Libya">
-          <option value="Lithuania">
-          <option value="Luxembourg">
-          <option value="Malaysia">
-          <option value="Maldives">
-          <option value="Malta">
-          <option value="Mexico">
-          <option value="Moldova">
-          <option value="Monaco">
-          <option value="Mongolia">
-          <option value="Montenegro">
-          <option value="Morocco">
-          <option value="Mozambique">
-          <option value="Myanmar">
-          <option value="Namibia">
-          <option value="Nepal">
-          <option value="Netherlands">
-          <option value="Nicaragua">
-          <option value="Nigeria">
-          <option value="North Macedonia">
-          <option value="Norway">
-          <option value="Oman">
-          <option value="Pakistan">
-          <option value="Palestine">
-          <option value="Panama">
-          <option value="Papua New Guinea">
-          <option value="Paraguay">
-          <option value="Peru">
-          <option value="Philippines">
-          <option value="Poland">
-          <option value="Portugal">
-          <option value="Qatar">
-          <option value="Romania">
-          <option value="Russia">
-          <option value="Rwanda">
-          <option value="Saudi Arabia">
-          <option value="Senegal">
-          <option value="Serbia">
-          <option value="Singapore">
-          <option value="Slovakia">
-          <option value="Slovenia">
-          <option value="Somalia">
-          <option value="South Africa">
-          <option value="South Korea">
-          <option value="Spain">
-          <option value="Sri Lanka">
-          <option value="Sudan">
-          <option value="Sweden">
-          <option value="Switzerland">
-          <option value="Taiwan">
-          <option value="Tajikistan">
-          <option value="Tanzania">
-          <option value="Thailand">
-          <option value="Tonga">
-          <option value="Trinidad and Tobago">
-          <option value="Tunisia">
-          <option value="Turkey">
-          <option value="Turkmenistan">
-          <option value="Uganda">
-          <option value="Ukraine">
-          <option value="United Arab Emirates">
-          <option value="Uruguay">
-          <option value="Uzbekistan">
-          <option value="Venezuela">
-          <option value="Vietnam">
-          <option value="Yemen">
-          <option value="Zambia">
-          <option value="Zimbabwe">
-        </datalist>
+                <div class="country-wrap" id="countryWrap">
+          <input class="text-input" id="inp-country" placeholder="Type to search..." autocomplete="off" autocorrect="off" spellcheck="false" />
+          <ul class="country-dropdown" id="countryDropdown"></ul>
+        </div>
       </div>
     </div>
     <span class="err-msg" id="err-6"></span>
@@ -956,6 +851,71 @@
     if (NO_AUTO.indexOf(sid) !== -1) return;
     advance(isNaN(+sid) ? sid : +sid);
   });
+
+
+  // ── Country search ──
+  var COUNTRIES = ["Australia", "New Zealand", "United States", "United Kingdom", "Canada", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Belarus", "Belgium", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Cambodia", "Cameroon", "Chile", "China", "Colombia", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Guatemala", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Libya", "Lithuania", "Luxembourg", "Malaysia", "Maldives", "Malta", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nepal", "Netherlands", "Nicaragua", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saudi Arabia", "Senegal", "Serbia", "Singapore", "Slovakia", "Slovenia", "Somalia", "South Africa", "South Korea", "Spain", "Sri Lanka", "Sudan", "Sweden", "Switzerland", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "Uruguay", "Uzbekistan", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
+  var countryInput    = document.getElementById('inp-country');
+  var countryDropdown = document.getElementById('countryDropdown');
+  var countrySelected = false;
+
+  function renderCountries(filter) {
+    var q = filter.toLowerCase().trim();
+    countryDropdown.innerHTML = '';
+    if (!q) { countryDropdown.classList.remove('open'); return; }
+    var matches = COUNTRIES.filter(function(c) {
+      return c.toLowerCase().indexOf(q) !== -1;
+    });
+    if (matches.length === 0) {
+      var li = document.createElement('li');
+      li.className = 'no-match';
+      li.textContent = 'No countries found';
+      countryDropdown.appendChild(li);
+    } else {
+      matches.forEach(function(c) {
+        var li = document.createElement('li');
+        li.textContent = c;
+        li.addEventListener('mousedown', function(e) {
+          e.preventDefault(); // stop blur firing first
+          countryInput.value = c;
+          countrySelected = true;
+          countryDropdown.classList.remove('open');
+          countryInput.classList.remove('field-error');
+          document.getElementById('err-6') && document.getElementById('err-6').classList.remove('show');
+        });
+        li.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          countryInput.value = c;
+          countrySelected = true;
+          countryDropdown.classList.remove('open');
+          countryInput.classList.remove('field-error');
+          document.getElementById('err-6') && document.getElementById('err-6').classList.remove('show');
+        });
+        countryDropdown.appendChild(li);
+      });
+    }
+    countryDropdown.classList.add('open');
+  }
+
+  countryInput.addEventListener('input', function() {
+    countrySelected = false;
+    renderCountries(this.value);
+  });
+
+  countryInput.addEventListener('focus', function() {
+    if (this.value && !countrySelected) renderCountries(this.value);
+  });
+
+  countryInput.addEventListener('blur', function() {
+    setTimeout(function() { countryDropdown.classList.remove('open'); }, 150);
+  });
+
+  // Close dropdown when step changes
+  var _origGoTo = goTo;
+  goTo = function(sid) {
+    countryDropdown.classList.remove('open');
+    _origGoTo(sid);
+  };
 
   goTo(0);
 </script>
