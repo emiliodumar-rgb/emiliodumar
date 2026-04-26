@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stays — Emilio Dümar</title>
+  <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #fff; color: #1a1a1a; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { cursor: pointer; background: none; border: none; font: inherit; }
+
+.site-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: #fff; border-bottom: 1px solid #e8e8e8; height: 60px; display: flex; align-items: center; padding: 0 28px; justify-content: space-between; }
+.site-nav__logo { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; white-space: nowrap; flex-shrink: 0; }
+.site-nav__right { display: flex; align-items: center; }
+.nav-item { position: relative; }
+.nav-item__trigger { display: flex; align-items: center; padding: 0 18px; height: 60px; font-size: 14px; color: #1a1a1a; cursor: pointer; user-select: none; transition: color 0.15s; white-space: nowrap; }
+.nav-item__trigger:hover { color: #555; }
+.nav-item__dropdown { position: absolute; top: 60px; left: 0; min-width: 240px; background: #fff; border: 1px solid #e8e8e8; border-top: none; padding: 8px 0; display: none; z-index: 300; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+.nav-item:hover .nav-item__dropdown { display: block; }
+.nav-item__dropdown a { display: block; padding: 7px 20px; font-size: 13px; color: #1a1a1a; white-space: nowrap; transition: background 0.1s; }
+.nav-item__dropdown a:hover { background: #f5f5f5; }
+.nav-standalone-link { padding: 0 18px; height: 60px; display: flex; align-items: center; font-size: 14px; color: #1a1a1a; transition: color 0.15s; white-space: nowrap; }
+.nav-standalone-link:hover { color: #555; }
+.nav-instagram { padding: 0 6px 0 12px; height: 60px; display: flex; align-items: center; color: #1a1a1a; transition: color 0.15s; }
+.nav-instagram svg { width: 20px; height: 20px; }
+
+.mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 50px; background: #fff; border-bottom: 1px solid #e8e8e8; padding: 0 16px; align-items: center; justify-content: space-between; z-index: 200; }
+.mobile-header__logo { font-size: 14px; font-weight: 400; }
+.burger { display: flex; flex-direction: column; gap: 5px; padding: 5px; }
+.burger span { display: block; width: 22px; height: 1px; background: #1a1a1a; transition: transform 0.25s ease, opacity 0.25s ease; }
+.burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+.page-body { padding-top: 60px; }
+.project-header { padding: 32px 28px 4px; }
+.project-header h1 { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; margin-bottom: 6px; }
+.project-header p { font-size: 13px; color: #666; font-style: italic; line-height: 1.5; }
+
+.project-grid { padding: 20px 28px 0; display: flex; gap: 6px; align-items: flex-start; }
+.project-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.project-grid__item { display: block; cursor: pointer; }
+.project-grid__item img { width: 100%; height: auto; display: block; transition: opacity 0.25s ease; }
+.project-grid__item:hover img { opacity: 0.84; }
+
+.site-footer { padding: 32px 28px 24px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 11px; color: #aaa; letter-spacing: 0.03em; }
+.site-footer__center { text-align: center; }
+.site-footer a { font-size: 12px; color: #1a1a1a; transition: color 0.15s; }
+.site-footer a:hover { color: #666; }
+.site-footer > *:last-child { text-align: right; }
+
+.lightbox { position: fixed; inset: 0; background: rgba(255,255,255,0.88); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: 500; display: none; align-items: center; justify-content: center; }
+.lightbox.open { display: flex; }
+.lightbox__viewer { display: flex; align-items: center; gap: 20px; max-width: 96vw; max-height: 96vh; }
+.lightbox__img { max-width: 80vw; max-height: 88vh; object-fit: contain; display: block; background: #fff; box-shadow: 0 8px 48px rgba(0,0,0,0.18); }
+.lightbox__close { position: absolute; top: 20px; right: 24px; font-size: 22px; color: #1a1a1a; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid #ddd; border-radius: 50%; cursor: pointer; opacity: 0.7; transition: opacity 0.15s; }
+.lightbox__close:hover { opacity: 1; }
+.lightbox__prev, .lightbox__next { flex-shrink: 0; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #1a1a1a; background: #fff; border: 1px solid #ddd; border-radius: 50%; cursor: pointer; opacity: 0.7; transition: opacity 0.15s; user-select: none; -webkit-user-select: none; }
+.lightbox__prev:hover, .lightbox__next:hover { opacity: 1; }
+
+@media (max-width: 700px) {
+  .lightbox__viewer { gap: 12px; }
+  .lightbox__img { max-width: 72vw; }
+  .lightbox__prev, .lightbox__next { width: 36px; height: 36px; font-size: 18px; }
+  .site-nav { display: none; }
+  .mobile-header { display: flex; }
+  .page-body { padding-top: 50px; }
+  .project-header { padding: 20px 14px 4px; }
+  .project-grid { columns: 2; column-gap: 4px; padding: 8px 8px 0; display: block; }
+  .project-col { display: contents; }
+  .project-grid__item { break-inside: avoid; -webkit-column-break-inside: avoid; margin-bottom: 4px; }
+  .site-footer { padding: 24px 14px; }
+}
+
+.mobile-menu { display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0; background: #fff; z-index: 190; overflow-y: auto; padding: 12px 0 40px; }
+.mobile-menu.open { display: block; }
+.mob-accordion { border-bottom: 1px solid #f0f0f0; }
+.mob-accordion__trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 14px 20px; font-family: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a; background: none; border: none; cursor: pointer; text-align: left; }
+.mob-accordion__arrow { font-size: 18px; color: #aaa; transition: transform 0.2s ease; display: inline-block; }
+.mob-accordion.open .mob-accordion__arrow { transform: rotate(90deg); }
+.mob-accordion__panel { display: none; padding: 0 0 8px; }
+.mob-accordion.open .mob-accordion__panel { display: block; }
+.mob-accordion__panel a { display: block; padding: 9px 32px; font-size: 13px; color: #555; border-bottom: 1px solid #f8f8f8; transition: color 0.15s; }
+.mob-accordion__panel a:last-child { border-bottom: none; }
+.mob-accordion__panel a:hover { color: #1a1a1a; }
+.mob-standalone { display: block; padding: 14px 20px; font-size: 16px; color: #1a1a1a; border-bottom: 1px solid #f0f0f0; text-decoration: none; }
+.mob-instagram { display: flex; align-items: center; gap: 8px; }
+.mob-book-wrap { padding: 20px 20px 8px; }
+.mob-book-btn { display: block; width: 100%; padding: 14px; background: #1a1a1a; color: #fff; text-align: center; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="site-nav__logo">Emilio Dümar</a>
+  <div class="site-nav__right">
+    <div class="nav-item">
+      <a href="commercial.html" class="nav-item__trigger">Commercial</a>
+      <div class="nav-item__dropdown">
+        <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+        <a href="rollie-nation.html">Rollie Nation</a>
+        <a href="cleonie.html">Cleonie</a>
+        <a href="baker-bleu.html">Baker Bleu</a>
+        <a href="ena-pelly.html">Ena Pelly</a>
+        <a href="inbluem.html">Inbluem</a>
+        <a href="the-wolf-gang.html">The Wolf Gang</a>
+        <a href="linden-cook.html">Linden Cook</a>
+        <a href="san-lorenzo.html">San Lorenzo</a>
+        <a href="utopia.html">Utopia</a>
+        <a href="rogue-season.html">Rogue Season</a>
+        <a href="maatsuyker.html">Maatsuyker</a>
+        <a href="yo-chi.html">YO-CHI</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="editorial.html" class="nav-item__trigger">Editorial</a>
+      <div class="nav-item__dropdown">
+        <a href="grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
+        <a href="makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
+        <a href="rahart-adams.html">Rahart Adams — Arabian Moda</a>
+        <a href="wax-wings.html">Wax Wings — Enzomnia Magazine</a>
+        <a href="valley-summer.html">Valley Summer</a>
+        <a href="out-of-office.html">Out of Office</a>
+        <a href="learn-twice.html">Learn Twice — C Heads Magazine</a>
+        <a href="burbank-views.html">Burbank Views</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="personal.html" class="nav-item__trigger">Personal</a>
+      <div class="nav-item__dropdown">
+        <a href="portugal.html">Portugal</a>
+        <a href="new-york-city.html">New York City</a>
+        <a href="california.html">California</a>
+        <a href="indonesia.html">Indonesia</a>
+        <a href="peru.html">Peru</a>
+        <a href="colombia.html">Colombia</a>
+        <a href="tasmania.html">Tasmania</a>
+        <a href="mexico.html">Mexico</a>
+        <a href="japan.html">Japan</a>
+      </div>
+    </div>
+    <a href="info.html" class="nav-standalone-link">Info</a>
+    <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="nav-instagram" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+  </div>
+</nav>
+
+<header class="mobile-header">
+  <a href="index.html" class="mobile-header__logo">Emilio Dümar</a>
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu">
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-commercial">Commercial <span class="mob-accordion__arrow">›</span></button>
+    <div class="mob-accordion__panel" id="mob-commercial">
+      <a href="ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+      <a href="rollie-nation.html">Rollie Nation</a>
+      <a href="cleonie.html">Cleonie</a>
+      <a href="baker-bleu.html">Baker Bleu</a>
+      <a href="ena-pelly.html">Ena Pelly</a>
+      <a href="inbluem.html">Inbluem</a>
+      <a href="the-wolf-gang.html">The Wolf Gang</a>
+      <a href="linden-cook.html">Linden Cook</a>
+      <a href="san-lorenzo.html">San Lorenzo</a>
+      <a href="utopia.html">Utopia</a>
+      <a href="rogue-season.html">Rogue Season</a>
+      <a href="maatsuyker.html">Maatsuyker</a>
+      <a href="yo-chi.html">YO-CHI</a>
+    </div>
+  </div>
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-editorial">Editorial <span class="mob-accordion__arrow">›</span></button>
+    <div class="mob-accordion__panel" id="mob-editorial">
+      <a href="grit-grace.html">Grit &amp; Grace &mdash; Vanguard Magazine</a>
+      <a href="makers-lane.html">Makers Lane &mdash; Melbourne Fashion Week 2025</a>
+      <a href="rahart-adams.html">Rahart Adams &mdash; Arabian Moda</a>
+      <a href="wax-wings.html">Wax Wings &mdash; Enzomnia Magazine</a>
+      <a href="valley-summer.html">Valley Summer</a>
+      <a href="out-of-office.html">Out of Office</a>
+      <a href="learn-twice.html">Learn Twice &mdash; C Heads Magazine</a>
+      <a href="burbank-views.html">Burbank Views</a>
+    </div>
+  </div>
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-personal">Personal <span class="mob-accordion__arrow">›</span></button>
+    <div class="mob-accordion__panel" id="mob-personal">
+      <a href="portugal.html">Portugal</a>
+      <a href="new-york-city.html">New York City</a>
+      <a href="california.html">California</a>
+      <a href="indonesia.html">Indonesia</a>
+      <a href="peru.html">Peru</a>
+      <a href="colombia.html">Colombia</a>
+      <a href="tasmania.html">Tasmania</a>
+      <a href="mexico.html">Mexico</a>
+      <a href="japan.html">Japan</a>
+    </div>
+  </div>
+  <a href="info.html" class="mob-standalone">Info</a>
+  <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="mob-standalone mob-instagram" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+  <div class="mob-book-wrap">
+    <a href="booking.html" class="mob-book-btn">Book Now</a>
+  </div>
+</nav>
+
+<div class="page-body" id="page">
+
+  <div class="project-header">
+    <h1>Stays</h1>
+    <p>Selection of stays photography for clients</p>
+  </div>
+
+  <div class="project-grid">
+    <div class="project-col">
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-6.JPG" srcset="images/stays/EMILIODUMAR-STAYS-6.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-6.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-20.png" srcset="images/stays/EMILIODUMAR-STAYS-20.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-20.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-21.png" srcset="images/stays/EMILIODUMAR-STAYS-21.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-21.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-13.JPG" srcset="images/stays/EMILIODUMAR-STAYS-13.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-13.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-25.png" srcset="images/stays/EMILIODUMAR-STAYS-25.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-25.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-29.png" srcset="images/stays/EMILIODUMAR-STAYS-29.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-29.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-16.JPG" srcset="images/stays/EMILIODUMAR-STAYS-16.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-16.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-11.JPG" srcset="images/stays/EMILIODUMAR-STAYS-11.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-11.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-17.JPG" srcset="images/stays/EMILIODUMAR-STAYS-17.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-17.JPG" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-12.JPG" srcset="images/stays/EMILIODUMAR-STAYS-12.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-12.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-27.png" srcset="images/stays/EMILIODUMAR-STAYS-27.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-27.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-15.JPG" srcset="images/stays/EMILIODUMAR-STAYS-15.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-15.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-26.png" srcset="images/stays/EMILIODUMAR-STAYS-26.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-26.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-10.JPG" srcset="images/stays/EMILIODUMAR-STAYS-10.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-10.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-9.JPG" srcset="images/stays/EMILIODUMAR-STAYS-9.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-9.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-30.png" srcset="images/stays/EMILIODUMAR-STAYS-30.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-30.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-7.JPG" srcset="images/stays/EMILIODUMAR-STAYS-7.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-7.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-23.png" srcset="images/stays/EMILIODUMAR-STAYS-23.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-23.png" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-1.JPG" srcset="images/stays/EMILIODUMAR-STAYS-1.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-1.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-33.png" srcset="images/stays/EMILIODUMAR-STAYS-33.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-33.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-14.JPG" srcset="images/stays/EMILIODUMAR-STAYS-14.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-14.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-19.JPG" srcset="images/stays/EMILIODUMAR-STAYS-19.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-19.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-3.JPG" srcset="images/stays/EMILIODUMAR-STAYS-3.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-3.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-32.png" srcset="images/stays/EMILIODUMAR-STAYS-32.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-32.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-28.png" srcset="images/stays/EMILIODUMAR-STAYS-28.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-28.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-22.png" srcset="images/stays/EMILIODUMAR-STAYS-22.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-22.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-4.JPG" srcset="images/stays/EMILIODUMAR-STAYS-4.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-4.JPG" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-24.png" srcset="images/stays/EMILIODUMAR-STAYS-24.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-24.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-5.JPG" srcset="images/stays/EMILIODUMAR-STAYS-5.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-5.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-31.png" srcset="images/stays/EMILIODUMAR-STAYS-31.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-31.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-34.png" srcset="images/stays/EMILIODUMAR-STAYS-34.png 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-34.png" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-18.JPG" srcset="images/stays/EMILIODUMAR-STAYS-18.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-18.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-2.JPG" srcset="images/stays/EMILIODUMAR-STAYS-2.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-2.JPG" /></div>
+      <div class="project-grid__item"><img src="images/stays/EMILIODUMAR-STAYS-8.JPG" srcset="images/stays/EMILIODUMAR-STAYS-8.JPG 750w" sizes="(max-width: 700px) 50vw, 25vw" loading="lazy" alt="" data-lightbox="images/stays/EMILIODUMAR-STAYS-8.JPG" /></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span>&copy; Emilio Dümar</span>
+    <a href="info.html" class="site-footer__center">Contact</a>
+    <a href="#page" aria-label="Back to top">↑</a>
+  </footer>
+
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightboxClose">&times;</button>
+  <div class="lightbox__viewer">
+    <button class="lightbox__prev" id="lightboxPrev">&#8249;</button>
+    <img class="lightbox__img" id="lightboxImg" src="" alt="" />
+    <button class="lightbox__next" id="lightboxNext">&#8250;</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var burger = document.getElementById('burger');
+  var menu   = document.getElementById('mobileMenu');
+  if (burger && menu) {
+    burger.addEventListener('click', function () {
+      var open = burger.classList.toggle('open');
+      menu.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    menu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.closest('.mob-accordion');
+        var wasOpen = acc.classList.contains('open');
+        menu.querySelectorAll('.mob-accordion').forEach(function (a) { a.classList.remove('open'); });
+        if (!wasOpen) acc.classList.add('open');
+      });
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        menu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  var lightbox    = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var imgs = [];
+  var idx  = 0;
+
+  document.querySelectorAll('[data-lightbox]').forEach(function (el, i) {
+    imgs.push(el.dataset.lightbox);
+    el.addEventListener('click', function () { idx = i; openLB(imgs[i]); });
+  });
+
+  function openLB(src) { lightboxImg.src = src; lightbox.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeLB() { lightbox.classList.remove('open'); lightboxImg.src = ''; document.body.style.overflow = ''; }
+  function prevLB() { idx = (idx - 1 + imgs.length) % imgs.length; lightboxImg.src = imgs[idx]; }
+  function nextLB() { idx = (idx + 1) % imgs.length; lightboxImg.src = imgs[idx]; }
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLB);
+  document.getElementById('lightboxPrev').addEventListener('click', prevLB);
+  document.getElementById('lightboxNext').addEventListener('click', nextLB);
+  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLB(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLB();
+    if (e.key === 'ArrowLeft') prevLB();
+    if (e.key === 'ArrowRight') nextLB();
+  });
+})();
+</script>
+</body>
+</html>
