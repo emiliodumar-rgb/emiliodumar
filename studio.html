@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Commercial / Ecom Portfolio — Emilio Dümar</title>
+  <style>
+/* ── RESET ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #fff; color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img {
+  display: block; max-width: 100%; height: auto;
+  -webkit-user-drag: none; user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none; -moz-user-select: none; user-select: none;
+  pointer-events: none;
+}
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { cursor: pointer; background: none; border: none; font: inherit; }
+
+/* ── TOP NAV ────────────────────────────────────────────────── */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: #fff; border-bottom: 1px solid #e8e8e8;
+  height: 60px; display: flex; align-items: center;
+  padding: 0 28px; justify-content: space-between;
+}
+.site-nav__logo { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; white-space: nowrap; flex-shrink: 0; }
+.site-nav__right { display: flex; align-items: center; }
+.nav-standalone-link {
+  padding: 0 18px; height: 60px; display: flex; align-items: center;
+  font-size: 14px; color: #1a1a1a; transition: color 0.15s; white-space: nowrap;
+}
+.nav-standalone-link:hover { color: #555; }
+.nav-instagram {
+  padding: 0 6px 0 12px; height: 60px; display: flex; align-items: center;
+  color: #1a1a1a; transition: color 0.15s;
+}
+.nav-instagram svg { width: 20px; height: 20px; }
+
+/* ── MOBILE HEADER ──────────────────────────────────────────── */
+.mobile-header {
+  display: none; position: fixed; top: 0; left: 0; right: 0;
+  height: 50px; background: #fff; border-bottom: 1px solid #e8e8e8;
+  padding: 0 16px; align-items: center; justify-content: space-between; z-index: 200;
+}
+.mobile-header__logo { font-size: 14px; font-weight: 400; }
+
+/* ── PAGE BODY ──────────────────────────────────────────────── */
+.page-body { padding-top: 60px; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── PROJECT HEADER ─────────────────────────────────────────── */
+.project-header { padding: 32px 28px 4px; }
+.project-header h1 { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; margin-bottom: 6px; }
+.project-header p { font-size: 13px; color: #666; font-style: italic; line-height: 1.5; }
+
+/* ── IMAGE GRID (flex columns — flush masonry) ──────────────── */
+.project-grid {
+  padding: 20px 28px 0;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.project-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.project-grid__item {
+  display: block;
+}
+.project-grid__item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── PREV / NEXT PROJECT BUTTONS ────────────────────────────── */
+.proj-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 28px 0;
+  gap: 12px;
+}
+.proj-nav__btn {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 28px;
+  border: none;
+  text-decoration: none;
+  color: #1a1a1a;
+  transition: background 0.15s, color 0.15s;
+  min-width: 180px;
+}
+.proj-nav__btn:hover { background: #1a1a1a; color: #fff; }
+.proj-nav__btn--next { text-align: right; margin-left: auto; }
+.proj-nav__label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.5;
+}
+.proj-nav__name {
+  font-size: 13px;
+  color: inherit;
+  letter-spacing: 0.01em;
+}
+
+.site-footer {
+  padding: 32px 28px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 0.03em;
+  position: relative;
+}
+.site-footer__center {
+  text-align: center;
+}
+.site-footer a { font-size: 12px; color: #1a1a1a; transition: color 0.15s; }
+.site-footer a:hover { color: #666; }
+.site-footer > *:last-child { text-align: right; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .site-nav { display: none; }
+  .mobile-header { display: flex; }
+  .page-body { padding-top: 50px; }
+  .project-header { padding: 20px 14px 4px; }
+  .project-grid { columns: 2; column-gap: 4px; padding: 8px 8px 0; display: block; }
+  .project-col { display: contents; }
+  .project-grid__item { break-inside: avoid; -webkit-column-break-inside: avoid; margin-bottom: 4px; }
+  .proj-nav { padding: 32px 14px 0; flex-wrap: wrap; }
+  .proj-nav__btn { min-width: 0; flex: 1; }
+  .site-footer { padding: 24px 14px; flex-direction: column; gap: 10px; align-items: flex-start; }
+}
+  </style>
+</head>
+<body>
+
+<!-- ── TOP NAV ──────────────────────────────────────────────── -->
+<nav class="site-nav">
+  <a href="https://emiliodumar.com/index.html" class="site-nav__logo">Emilio Dümar</a>
+  <div class="site-nav__right">
+    <a href="https://emiliodumar.com/info.html" class="nav-standalone-link">Info</a>
+    <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="nav-instagram" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ── MOBILE HEADER ────────────────────────────────────────── -->
+<header class="mobile-header">
+  <a href="https://emiliodumar.com/index.html" class="mobile-header__logo">Emilio Dümar</a>
+</header>
+
+<!-- ── PAGE BODY ────────────────────────────────────────────── -->
+<div class="page-body" id="page">
+
+  <div class="project-header">
+    <h1>Commercial / Ecom Portfolio</h1>
+    <p>Selected Clients — Ena Pelly, Deering, Cleonie, Linden Cook, Rollie Nation, Ciao Ciao Vacation, San Lorenzo, Future Fur</p>
+  </div>
+
+  <div class="project-grid">
+    <div class="project-col">
+      <div class="project-grid__item"><img src="images/emiliodumar-ccv-bali-104.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7366.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7370.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7363.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-brooke-36.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-ccv-shibuya-photos-146.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7372.jpg" alt="" loading="lazy" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="images/img-7361.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7367.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7373.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7365.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-ccv-shibuya-photos-179.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-deering-25.jpg" alt="" loading="lazy" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="images/emiliodumar-brooke-32.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-deering-21.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7368.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7359.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7374.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7364.jpg" alt="" loading="lazy" /></div>
+    </div>
+    <div class="project-col">
+      <div class="project-grid__item"><img src="images/emiliodumar-ccv-bali-114.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-enapelly-autumn-78.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-ccv-bali-108.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7362.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/img-7369.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-ccv-bali-110.jpg" alt="" loading="lazy" /></div>
+      <div class="project-grid__item"><img src="images/emiliodumar-enapelly-autumn-53.jpg" alt="" loading="lazy" /></div>
+    </div>
+  </div>
+
+  <div class="proj-nav">
+    <span></span>
+    <a href="https://emiliodumar.com/commercial.html" class="proj-nav__btn proj-nav__btn--next">
+      <span class="proj-nav__label">More Work</span>
+      <span class="proj-nav__name">emiliodumar.com</span>
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <span>&copy; Emilio Dümar</span>
+    <a href="https://emiliodumar.com/info.html" class="site-footer__center">Contact</a>
+    <a href="#page" aria-label="Back to top">↑</a>
+  </footer>
+
+</div><!-- /.page-body -->
+
+<script>
+(function () {
+  'use strict';
+  // Block right-click, drag, and long-press save on grid images.
+  var grid = document.querySelector('.project-grid');
+  if (!grid) return;
+  document.querySelectorAll('.project-grid img').forEach(function (img) {
+    img.setAttribute('draggable', 'false');
+  });
+  grid.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  grid.addEventListener('dragstart', function (e) { e.preventDefault(); });
+})();
+</script>
+</body>
+</html>
