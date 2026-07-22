@@ -277,7 +277,7 @@
 <!-- MAIN PAGE -->
 <div class="page">
   <div class="profile">
-  <h1 class="profile-name" id="profileName">Emilio Dümar</h1>
+  <a href="https://emiliodumar.com/index.html" class="profile-name" id="profileName" style="text-decoration:none;color:inherit;">Emilio Dümar</a>
     <p class="profile-tagline" id="profileTagline">Photographer / Melbourne</p>
   </div>
 
@@ -289,18 +289,17 @@
 <script>
   // ─── CONFIG ───
   var ADMIN_PASSWORD = '212Falafel5!';
-  var STORAGE_KEY    = 'emilio_links';
+  var STORAGE_KEY    = 'emilio_links_v2';
 
   var DEFAULT = {
     name:    'Emilio Dümar',
     tagline: 'Photographer / Melbourne',
     photo:   '',
     links: [
-      { id: 1, label: 'Booking Inquiries',  url: 'booking.html',         visible: true },
-      { id: 2, label: 'Network Casting',    url: 'network-casting.html', visible: true },
-      { id: 3, label: 'Book a Session',     url: 'book-session.html',    visible: true },
-      { id: 4, label: '1:1 Mentoring',      url: 'mentoring.html',       visible: true },
-      { id: 5, label: 'Website',            url: '#',                    visible: true },
+      { id: 1, label: 'Booking Inquiries', url: 'https://emiliodumar.com/booking.html',         visible: true },
+      { id: 2, label: 'Network Casting',   url: 'https://emiliodumar.com/network-casting.html', visible: true },
+      { id: 3, label: '1:1 Mentoring',     url: 'https://emiliodumar.com/mentoring.html',       visible: true },
+      { id: 4, label: 'Website',           url: 'https://emiliodumar.com/index.html',           visible: true },
     ]
   };
 
@@ -319,6 +318,7 @@
   function renderPage() {
     // Name
     document.getElementById('profileName').textContent  = data.name;
+    document.getElementById('profileName').href = 'https://emiliodumar.com/index.html';
     document.getElementById('profileTagline').textContent = data.tagline;
     document.title = data.name;
 
