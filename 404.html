@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found — Emilio Dümar</title>
+  <style>
+/* ── RESET ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #fff; color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { cursor: pointer; background: none; border: none; font: inherit; }
+
+/* ── TOP NAV ────────────────────────────────────────────────── */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: #fff; border-bottom: 1px solid #e8e8e8;
+  height: 60px; display: flex; align-items: center;
+  padding: 0 28px; justify-content: space-between;
+}
+.site-nav__logo { font-size: 15px; font-weight: 400; letter-spacing: 0.01em; white-space: nowrap; flex-shrink: 0; }
+.site-nav__right { display: flex; align-items: center; }
+.nav-item { position: relative; }
+.nav-item__trigger {
+  display: flex; align-items: center; padding: 0 18px; height: 60px;
+  font-size: 14px; color: #1a1a1a; cursor: pointer; user-select: none;
+  transition: color 0.15s; white-space: nowrap;
+}
+.nav-item__trigger:hover { color: #555; }
+.nav-item__dropdown {
+  position: absolute; top: 60px; left: 0; min-width: 240px;
+  background: #fff; border: 1px solid #e8e8e8; border-top: none;
+  padding: 8px 0; display: none; z-index: 300;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.nav-item:hover .nav-item__dropdown { display: block; }
+.nav-item__dropdown a {
+  display: block; padding: 7px 20px; font-size: 13px; color: #1a1a1a;
+  white-space: nowrap; transition: background 0.1s;
+}
+.nav-item__dropdown a:hover { background: #f5f5f5; }
+.nav-standalone-link {
+  padding: 0 18px; height: 60px; display: flex; align-items: center;
+  font-size: 14px; color: #1a1a1a; transition: color 0.15s; white-space: nowrap;
+}
+.nav-standalone-link:hover { color: #555; }
+.nav-instagram {
+  padding: 0 6px 0 12px; height: 60px; display: flex; align-items: center;
+  color: #1a1a1a; transition: color 0.15s;
+}
+.nav-instagram svg { width: 20px; height: 20px; }
+
+/* ── MOBILE HEADER ──────────────────────────────────────────── */
+.mobile-header {
+  display: none; position: fixed; top: 0; left: 0; right: 0;
+  height: 50px; background: #fff; border-bottom: 1px solid #e8e8e8;
+  padding: 0 16px; align-items: center; justify-content: space-between; z-index: 200;
+}
+.mobile-header__logo { font-size: 14px; font-weight: 400; }
+.burger { display: flex; flex-direction: column; gap: 5px; padding: 5px; background: none; border: none; cursor: pointer; }
+.burger span { display: block; width: 22px; height: 1px; background: #1a1a1a; transition: transform 0.25s ease, opacity 0.25s ease; }
+.burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ── PAGE BODY ──────────────────────────────────────────────── */
+.page-body { padding-top: 60px; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── 404 CONTENT ───────────────────────────────────────────── */
+.error-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 28px;
+}
+.error-body__code {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 18px;
+}
+.error-body h1 {
+  font-size: clamp(28px, 6vw, 44px);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  margin-bottom: 14px;
+}
+.error-body p {
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+  line-height: 1.6;
+  max-width: 420px;
+  margin-bottom: 36px;
+}
+.error-body__link {
+  display: inline-flex;
+  padding: 14px 32px;
+  border: 1px solid #1a1a1a;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+.error-body__link:hover { background: #1a1a1a; color: #fff; }
+
+.site-footer {
+  padding: 32px 28px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 0.03em;
+  position: relative;
+}
+.site-footer__center { text-align: center; }
+.site-footer a { font-size: 12px; color: #1a1a1a; transition: color 0.15s; }
+.site-footer a:hover { color: #666; }
+.site-footer > *:last-child { text-align: right; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .site-nav { display: none; }
+  .mobile-header { display: flex; }
+  .page-body { padding-top: 50px; }
+  .error-body { padding: 40px 20px; }
+  .site-footer { padding: 24px 14px; flex-direction: column; gap: 10px; align-items: flex-start; }
+}
+
+/* ── MOBILE MENU (accordion) ─────────────────────────────── */
+.mobile-menu {
+  display: none; position: fixed; top: 50px; left: 0; right: 0; bottom: 0;
+  background: #fff; z-index: 190; overflow-y: auto; padding: 12px 0 40px;
+}
+.mobile-menu.open { display: block; }
+.mob-accordion { border-bottom: 1px solid #f0f0f0; }
+.mob-accordion__trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 14px 20px;
+  font-family: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a;
+  background: none; border: none; cursor: pointer; text-align: left;
+}
+.mob-accordion__arrow {
+  font-size: 18px; color: #aaa;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.mob-accordion.open .mob-accordion__arrow { transform: rotate(90deg); }
+.mob-accordion__panel { display: none; padding: 0 0 8px; }
+.mob-accordion.open .mob-accordion__panel { display: block; }
+.mob-accordion__panel a {
+  display: block; padding: 9px 32px;
+  font-size: 13px; color: #555;
+  border-bottom: 1px solid #f8f8f8;
+  transition: color 0.15s;
+}
+.mob-accordion__panel a:last-child { border-bottom: none; }
+.mob-accordion__panel a:hover { color: #1a1a1a; }
+.mob-standalone {
+  display: block; padding: 14px 20px;
+  font-size: 16px; color: #1a1a1a;
+  border-bottom: 1px solid #f0f0f0;
+  text-decoration: none;
+}
+.mob-instagram { display: flex; align-items: center; gap: 8px; }
+.mob-book-wrap { padding: 20px 20px 8px; }
+.mob-book-btn {
+  display: block; width: 100%; padding: 14px;
+  background: #1a1a1a; color: #fff;
+  text-align: center; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none;
+}
+  </style>
+</head>
+<body>
+
+<!-- ── TOP NAV ──────────────────────────────────────────────── -->
+<nav class="site-nav">
+  <a href="/index.html" class="site-nav__logo">Emilio Dümar</a>
+  <div class="site-nav__right">
+    <div class="nav-item">
+      <a href="/commercial.html" class="nav-item__trigger">Commercial</a>
+      <div class="nav-item__dropdown">
+        <a href="/ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+        <a href="/rollie-nation.html">Rollie Nation</a>
+        <a href="/cleonie.html">Cleonie</a>
+        <a href="/baker-bleu.html">Baker Bleu</a>
+        <a href="/ena-pelly.html">Ena Pelly</a>
+        <a href="/inbluem.html">Inbluem</a>
+        <a href="/the-wolf-gang.html">The Wolf Gang</a>
+        <a href="/linden-cook.html">Linden Cook</a>
+        <a href="/san-lorenzo.html">San Lorenzo</a>
+        <a href="/utopia.html">Utopia</a>
+        <a href="/rogue-season.html">Rogue Season</a>
+        <a href="/maatsuyker.html">Maatsuyker</a>
+        <a href="/yo-chi.html">YO-CHI</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="/editorial.html" class="nav-item__trigger">Editorial</a>
+      <div class="nav-item__dropdown">
+        <a href="/grit-grace.html">Grit &amp; Grace — Vanguard Magazine</a>
+        <a href="/makers-lane.html">Makers Lane — Melbourne Fashion Week 2025</a>
+        <a href="/rahart-adams.html">Rahart Adams — Arabian Moda</a>
+        <a href="/wax-wings.html">Wax Wings — Enzomnia Magazine</a>
+        <a href="/valley-summer.html">Valley Summer</a>
+        <a href="/out-of-office.html">Out of Office</a>
+        <a href="/learn-twice.html">Learn Twice — C Heads Magazine</a>
+        <a href="/burbank-views.html">Burbank Views</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="/personal.html" class="nav-item__trigger">Personal</a>
+      <div class="nav-item__dropdown">
+        <a href="/portugal.html">Portugal</a>
+        <a href="/new-york-city.html">New York City</a>
+        <a href="/california.html">California</a>
+        <a href="/indonesia.html">Indonesia</a>
+        <a href="/peru.html">Peru</a>
+        <a href="/colombia.html">Colombia</a>
+        <a href="/tasmania.html">Tasmania</a>
+        <a href="/mexico.html">Mexico</a>
+      </div>
+    </div>
+    <a href="/info.html" class="nav-standalone-link">Info</a>
+    <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="nav-instagram" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ── MOBILE HEADER ────────────────────────────────────────── -->
+<header class="mobile-header">
+  <a href="/index.html" class="mobile-header__logo">Emilio Dümar</a>
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ── MOBILE MENU ──────────────────────────────────────────── -->
+<nav class="mobile-menu" id="mobileMenu">
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-commercial">
+      Commercial <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-commercial">
+      <a href="/ciao-ciao-vacation.html">Ciao Ciao Vacation</a>
+      <a href="/rollie-nation.html">Rollie Nation</a>
+      <a href="/cleonie.html">Cleonie</a>
+      <a href="/baker-bleu.html">Baker Bleu</a>
+      <a href="/ena-pelly.html">Ena Pelly</a>
+      <a href="/inbluem.html">Inbluem</a>
+      <a href="/the-wolf-gang.html">The Wolf Gang</a>
+      <a href="/linden-cook.html">Linden Cook</a>
+      <a href="/san-lorenzo.html">San Lorenzo</a>
+      <a href="/utopia.html">Utopia</a>
+      <a href="/rogue-season.html">Rogue Season</a>
+      <a href="/maatsuyker.html">Maatsuyker</a>
+      <a href="/yo-chi.html">YO-CHI</a>
+    </div>
+  </div>
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-editorial">
+      Editorial <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-editorial">
+      <a href="/grit-grace.html">Grit &amp; Grace &mdash; Vanguard Magazine</a>
+      <a href="/makers-lane.html">Makers Lane &mdash; Melbourne Fashion Week 2025</a>
+      <a href="/rahart-adams.html">Rahart Adams &mdash; Arabian Moda</a>
+      <a href="/wax-wings.html">Wax Wings &mdash; Enzomnia Magazine</a>
+      <a href="/valley-summer.html">Valley Summer</a>
+      <a href="/out-of-office.html">Out of Office</a>
+      <a href="/learn-twice.html">Learn Twice &mdash; C Heads Magazine</a>
+      <a href="/burbank-views.html">Burbank Views</a>
+    </div>
+  </div>
+  <div class="mob-accordion">
+    <button class="mob-accordion__trigger" data-target="mob-personal">
+      Personal <span class="mob-accordion__arrow">›</span>
+    </button>
+    <div class="mob-accordion__panel" id="mob-personal">
+      <a href="/portugal.html">Portugal</a>
+      <a href="/new-york-city.html">New York City</a>
+      <a href="/california.html">California</a>
+      <a href="/indonesia.html">Indonesia</a>
+      <a href="/peru.html">Peru</a>
+      <a href="/colombia.html">Colombia</a>
+      <a href="/tasmania.html">Tasmania</a>
+      <a href="/mexico.html">Mexico</a>
+    </div>
+  </div>
+  <a href="/info.html" class="mob-standalone">Info</a>
+  <a href="https://www.instagram.com/emiliodumar" target="_blank" rel="noopener" class="mob-standalone mob-instagram" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+  <div class="mob-book-wrap">
+    <a href="/booking.html" class="mob-book-btn">Book Now</a>
+  </div>
+</nav>
+
+<!-- ── PAGE BODY ────────────────────────────────────────────── -->
+<div class="page-body">
+  <div class="error-body">
+    <div class="error-body__code">404</div>
+    <h1>This page doesn't exist</h1>
+    <p>The link you followed may be broken, or the page may have moved. Let's get you back on track.</p>
+    <a href="/index.html" class="error-body__link">Back to Home</a>
+  </div>
+
+  <footer class="site-footer">
+    <span>&copy; Emilio Dümar</span>
+    <a href="/info.html" class="site-footer__center">Contact</a>
+    <a href="/index.html" aria-label="Back to top">↑</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var burger = document.getElementById('burger');
+  var menu   = document.getElementById('mobileMenu');
+  if (burger && menu) {
+    burger.addEventListener('click', function () {
+      var open = burger.classList.toggle('open');
+      menu.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    menu.querySelectorAll('.mob-accordion__trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.closest('.mob-accordion');
+        var wasOpen = acc.classList.contains('open');
+        menu.querySelectorAll('.mob-accordion').forEach(function (a) { a.classList.remove('open'); });
+        if (!wasOpen) acc.classList.add('open');
+      });
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        menu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
